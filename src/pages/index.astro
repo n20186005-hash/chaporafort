@@ -1,0 +1,274 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WeatherSection from '../components/WeatherSection.astro';
+import FacilitiesSection from '../components/FacilitiesSection.astro';
+import StoriesSection from '../components/StoriesSection.astro';
+
+const siteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
+const heroUrl = Astro.site ? new URL('/images/chapora-fort-hero.jpg', Astro.site).href : undefined;
+const logoUrl = Astro.site ? new URL('/logo.svg', Astro.site).href : undefined;
+const pageTitle = 'चापोरा किल्ला | वागातोर, उत्तर गोवा प्रवासी मार्गदर्शक';
+const pageDesc = 'चापोरा किल्ल्याचो इतिहास, वेळा, खर्च, पार्किंग, प्रवास, वागातोर-अंजुना भोंवतणीची ठिकाणां, स्थानिक जेवण आनी भेटीचें नियोजन.';
+
+const attractionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TouristAttraction',
+  '@id': siteUrl ? `${siteUrl}#chapora-fort` : '#chapora-fort',
+  name: 'Chapora Fort',
+  alternateName: ['चापोरा किल्ला', 'चपोरा फोर्ट'],
+  description: 'बार्देश तालुक्यात, वागातोर जवळच्या डोंगरमाथ्यावर असलेला चापोरा किल्ला हा लाल लेटराइट दगडाचा ऐतिहासिक किल्ला असून चापोरा नदी, अरबी समुद्र आणि किनाऱ्यांची विस्तीर्ण दृश्ये देतो.',
+  ...(siteUrl ? { url: siteUrl } : {}),
+  ...(heroUrl ? { image: [heroUrl] } : {}),
+  telephone: '+91 832 249 4500',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Chapora Fort Trail, Vagator, Anjuna, Chapora',
+    addressLocality: 'Chapora',
+    addressRegion: 'Goa',
+    postalCode: '403509',
+    addressCountry: 'IN'
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 15.604637485009572,
+    longitude: 73.73438817702883
+  },
+  containedInPlace: {
+    '@type': 'AdministrativeArea',
+    name: 'Village Panchayat Anjuna-Caisua, Bardez, North Goa'
+  },
+  hasMap: 'https://maps.app.goo.gl/3z6axsvdHe2spoFg8',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: 4.2,
+    reviewCount: 27105,
+    bestRating: 5,
+    worstRating: 1
+  },
+  openingHoursSpecification: [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+    opens: '10:00',
+    closes: '17:00'
+  }],
+  sameAs: [
+    'https://www.goa.gov.in/places/chapora-fort/',
+    'https://goa-tourism.com/fort/chapora-fort/',
+    'https://maps.app.goo.gl/3z6axsvdHe2spoFg8'
+  ]
+};
+
+const faqs = [
+  ['चापोरा किल्ल्याक भेट दिवपाची बरी वेळ खंयची?', 'गोवा पर्यटनाच्या माहितीनुसार सांजवेळ बरी, कारण दनपाराचो उश्णपण कमी जाता आनी अरबी समुद्राचो सूर्यास्त पळोवपाक मेळटा. पावसाळ्यात वाट ओली आनी निसरडी आसूंक शकता.'],
+  ['किल्लो पळोवपाक कितलो वेळ राखचो?', 'किल्ल्याच्या भिंती, दृश्यबिंदू आनी चडण धरून साधारण १ ते २ वरां राखप उपेगी. फोटो वा सूर्यास्त खातीर जास्त वेळ राखूंक शकतात.'],
+  ['प्रवेश तिकीट आसा काय?', 'गोवा सरकार आनी गोवा पर्यटनाच्या चापोरा किल्ला पानांवर स्वतंत्र प्रवेश तिकीट दर नमूद ना. पार्किंग, वाहन वा इतर सेवांचे शुल्क वेगळें आसूंक शकता; निघचे आदी ताजी अधिकृत माहिती तपासात.'],
+  ['पार्किंग मेळटा काय?', 'किल्ल्याक चडपी वाटेच्या पायथ्याक वाहन उबोवपाची व्यवस्था मेळटा, पूण जागा मर्यादित आसूंक शकता. हंगाम, गर्दी आनी स्थानिक व्यवस्थापनाप्रमाणें शुल्क बदलूंक शकता.'],
+  ['वागातोर थावन किल्ल्याक कशें पावचें?', 'वागातोर भागातून रस्त्यान पायथ्याक पावून शेवटचो भाग पायी चडचो पडटा. मापुसा थावन अंजुना-वागातोर मार्गान बस सेवा मेळटा, अशी गोवा पर्यटनाची माहिती आसा.'],
+  ['ल्हान भुरग्यां वा चालपाक त्रास आशिल्ल्यां खातीर सोपें आसा काय?', 'शेवटची चडण उंच, उन्हातली आनी काही ठिकाणी असमान आसा. आरामदायी पादत्राणां, उदक आनी मधेमधे विसोवो घेवप उपेगी. व्हीलचेअर प्रवेश मर्यादित आसा.'],
+  ['किल्ल्याचेर शौचालय, उदक वा विसोव घेवपाची सोय आसा काय?', 'किल्ल्याच्या आतल्या प्रदेशांत सार्वजनिक शौचालय आनी पिवपाच्या उदकाची निश्चित सोय ना. वागातोर किनाऱ्याकडलो रस्तो, चापोरा गांव वा किनारपट्टीचेर कांय सोयी आसूंक शकतात. निघतना पिवपाचें उदक आनी जरुरीच्यो वस्तू सोबत दवरात.'],
+  ['जेवण, रावप, दुकानां, इंधन कशीं मेळटात?', 'भोंवतणच्या सोयींचो वर्गवारीन सविस्तर उल्लेख वयल्या ‘सुविधा’ भागांत दिला आसा – जेवण/उपाहार, गेस्टहाउस/हॉमस्टे/रिसॉर्ट, गांवांतलीं दुकानां, इंधन केंद्रां आनी विद्युत वाहन चार्जिंग. हें नाफायद्याचें मार्गदर्शक कोणाचोय खाजगी उपक्रम शिफारस करिना; अचूक जागा भेटेच्या वेळार नकाशांत पळयात.']
+];
+const faqSchema = {
+  '@context':'https://schema.org', '@type':'FAQPage',
+  mainEntity: faqs.map(([q,a]) => ({ '@type':'Question', name:q, acceptedAnswer:{ '@type':'Answer', text:a } }))
+};
+
+// E-E-A-T：项目主体 + 站点 + 页面（dateModified 固定为内容更新时间，避免构建漂移）
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': siteUrl ? `${siteUrl}#organization` : '#organization',
+  name: 'चापोरा किल्ला प्रवासी मार्गदर्शक',
+  description: 'चापोरा किल्ल्याचो स्वतंत्र, नाफायद्याचो प्रवासी माहिती मार्गदर्शक प्रकल्प.',
+  ...(siteUrl ? { url: siteUrl } : {}),
+  ...(logoUrl ? { logo: logoUrl } : {})
+};
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': siteUrl ? `${siteUrl}#website` : '#website',
+  ...(siteUrl ? { url: siteUrl } : {}),
+  name: 'चापोरा किल्ला प्रवासी मार्गदर्शक',
+  inLanguage: 'kok-Deva',
+  publisher: { '@id': siteUrl ? `${siteUrl}#organization` : '#organization' }
+};
+const webpageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': siteUrl ? `${siteUrl}#webpage` : '#webpage',
+  ...(siteUrl ? { url: siteUrl } : {}),
+  name: pageTitle,
+  description: pageDesc,
+  inLanguage: 'kok-Deva',
+  datePublished: '2026-09-03',
+  dateModified: '2026-09-03',
+  isPartOf: { '@id': siteUrl ? `${siteUrl}#website` : '#website' },
+  about: { '@id': siteUrl ? `${siteUrl}#chapora-fort` : '#chapora-fort' },
+  ...(heroUrl ? { primaryImageOfPage: { '@type': 'ImageObject', url: heroUrl } } : {})
+};
+---
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  jsonLd={[organizationSchema, websiteSchema, webpageSchema, attractionSchema, faqSchema]}
+>
+  <section class="relative isolate overflow-hidden bg-laterite-900 text-white">
+    <div class="absolute inset-0">
+      <div class="photo-frame h-full w-full">
+        <div class="photo-fallback"><span class="max-w-md text-sm opacity-80">चापोरा किल्ल्याचें स्थानिक छायाचित्र</span></div>
+        <img src="/images/chapora-fort-hero.jpg" alt="चापोरा किल्ल्याची लाल लेटराइट भिंत आनी अरबी समुद्र" width="1600" height="900" onerror="this.style.display='none'" />
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-r from-laterite-900/95 via-laterite-900/72 to-sea-900/25"></div>
+      <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-laterite-900 to-transparent"></div>
+    </div>
+    <div class="relative mx-auto grid min-h-[75vh] max-w-7xl items-end gap-8 px-5 pb-16 pt-28 lg:grid-cols-[1.1fr_.6fr] lg:px-8 lg:pb-24">
+      <div>
+        <p class="mb-5 inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold backdrop-blur">वागातोर · बार्देश · उत्तर गोवा</p>
+        <h1 class="max-w-4xl text-5xl font-black leading-[1.05] tracking-tight sm:text-7xl">चापोरा किल्ला</h1>
+        <p class="mt-5 max-w-2xl text-xl leading-9 text-sand-100/92">चापोरा नदी, अरबी समुद्र आनी वागातोरच्या किनाऱ्याक वयरसून पळयपी, लाल लेटराइट दगडाच्या तटबंदींत इतिहास आनी समुद्री क्षितिज एकठांय येता.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#भेट" class="rounded-full bg-sand-100 px-5 py-3 font-extrabold text-laterite-900 no-underline">भेट नियोजन</a>
+          <a href="#नकाशो" class="rounded-full border border-white/35 bg-white/10 px-5 py-3 font-extrabold text-white no-underline backdrop-blur">नकाशो पळयात</a>
+        </div>
+      </div>
+      <div class="rounded-3xl border border-white/20 bg-black/25 p-6 backdrop-blur-md">
+        <div class="flex items-end justify-between gap-4"><div><div class="text-sm text-sand-100/75">गुगल नकाशा गुणांकन</div><div class="mt-1 text-3xl font-black">4.2 <span class="text-lg">/ 5</span></div></div><div class="text-right text-sm text-sand-100/75">27,105 अभिप्राय</div></div>
+        <dl class="mt-6 grid gap-4 border-t border-white/15 pt-5 text-sm">
+          <div><dt class="text-sand-100/65">पत्तो</dt><dd class="mt-1 font-bold">चापोरा फोर्ट ट्रेल, वागातोर, अंजुना, चापोरा, गोवा 403509</dd></div>
+          <div><dt class="text-sand-100/65">दूरध्वनी</dt><dd class="mt-1 font-bold"><a href="tel:+918322494500">+91 832 249 4500</a></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="rampart-edge -mt-1 h-10 bg-laterite-500" aria-hidden="true"></section>
+
+  <section id="इतिहास" class="fort-grid bg-sand-50 py-20 lg:py-28">
+    <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[.85fr_1.15fr] lg:px-8">
+      <div>
+        <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">किल्ल्याची ओळख</p>
+        <h2 class="mt-3 text-4xl font-black tracking-tight text-laterite-900 sm:text-5xl">तटबंदी जी डोंगराच्या आकाराक धरून वळटा</h2>
+      </div>
+      <div class="space-y-5 text-lg leading-9 text-laterite-900/80">
+        <p>चापोरा किल्लो बार्देश तालुक्यांत, चापोरा नदीच्या मुखाक लागून उंच डोंगरमाथ्यार आसा. गोवा पर्यटन विकास महामंडळ ताका प्राचीन लेटराइट किल्लो म्हणटा; भिंती नैसर्गिक उतारांबरोबर वळतात, अनियमित बुरुज आनी तोफां खातीर खोल जागा दिसतात.</p>
+        <p>पोर्तुगीजांनी आदिलशाही काळांतल्या आधीच्या लष्करी ठाण्याच्या अवशेषांवर किल्ल्याचो वापर केला. 1684 आनी 1739 ह्या काळांत मराठ्यांनी ताबो घेतला; 1717 त पोर्तुगीजांनी पुनर्बांधणी करून भूमिगत मार्ग जोडले. उत्तर सीमा पुढें सरकल्यान किल्ल्याचें लष्करी महत्त्व कमी जालें आनी 1892 त तो सोडून दिलो.</p>
+        <p>आज आतील बराकां वा इमारती फारशा उरल्या नात; मुख्य अनुभव म्हणजें तटबंदी, उघडें पठार, चापोरा नदीचें मुख, वागातोर-अंजुना किनारे आनी अरबी समुद्राचो सूर्यास्त.</p>
+        <div class="mt-8 rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm">
+          <h3 class="text-base font-black uppercase tracking-[.14em] text-laterite-500">मुखेल काळ-ओळ</h3>
+          <ul class="mt-4 space-y-3 text-sm leading-6">
+            <li class="flex gap-4"><span class="w-20 shrink-0 font-black text-sea-700">आदिलशाही</span><span class="text-laterite-900/75">आदिलशाही राजवटींत ‘शाहापुरा’ नांवाचें सुरक्षा ठाणें; उपरांत पुर्तुगेजांनी बार्देश घेतल्यान किल्ल्याचो वापर केलो.</span></li>
+            <li class="flex gap-4"><span class="w-20 shrink-0 font-black text-laterite-500">1684 / 1739</span><span class="text-laterite-900/75">गोवा पर्यटनाच्या नोंदीप्रमाणें ह्या दोन काळांत मराठ्यांनी किल्ल्याचेर ताबो घेतलो.</span></li>
+            <li class="flex gap-4"><span class="w-20 shrink-0 font-black text-sea-700">1717</span><span class="text-laterite-900/75">पुर्तुगेजांनी परत घेवन पुनर्बांधणी केली – बुरुज, तोफां खातीर जागा आनी न्हंयेक वचपी आपत्कालीन वाट.</span></li>
+            <li class="flex gap-4"><span class="w-20 shrink-0 font-black text-laterite-500">1741</span><span class="text-laterite-900/75">‘नव्या जैतां’ उपरांत परत जिंकलो; सीमा उत्तरेकडे सरकल्यान लश्करी महत्त्व उणें जालें.</span></li>
+            <li class="flex gap-4"><span class="w-20 shrink-0 font-black text-sea-700">1892</span><span class="text-laterite-900/75">सैनिकी दृष्टीन किल्लो सोडून दिलो; आयज हो वारसा पर्यटकां खातीर उगडो आसा.</span></li>
+            <li class="flex gap-4"><span class="w-20 shrink-0 font-black text-laterite-500">2001</span><span class="text-laterite-900/75">‘दिल चाहता है’ चित्रपटांतलीं दृश्यां हांगा चित्रित जाल्लीं – किल्लो नव्या पिढयेक परिचित जालो.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mx-auto mt-14 grid max-w-7xl gap-5 px-5 md:grid-cols-3 lg:px-8">
+      <figure class="photo-frame aspect-[4/5] rounded-[2rem]"><div class="photo-fallback">तटबंदीचें छायाचित्र</div><img loading="lazy" src="/images/chapora-fort-walls.jpg" alt="चापोरा किल्ल्याची लेटराइट तटबंदी" width="900" height="1125" onerror="this.style.display='none'" /></figure>
+      <figure class="photo-frame aspect-[4/5] rounded-[2rem] md:translate-y-8"><div class="photo-fallback">किल्ल्याच्या आतील भागाचें छायाचित्र</div><img loading="lazy" src="/images/chapora-fort-interior.jpg" alt="चापोरा किल्ल्याच्या आतील मोकळ्या भागांतली तटबंदी" width="900" height="1125" onerror="this.style.display='none'" /></figure>
+      <figure class="photo-frame aspect-[4/5] rounded-[2rem]"><div class="photo-fallback">समुद्री दृश्याचें छायाचित्र</div><img loading="lazy" src="/images/chapora-fort-sea-view.jpg" alt="चापोरा किल्ल्यावयल्यान दिसपी अरबी समुद्र आनी किनारो" width="900" height="1125" onerror="this.style.display='none'" /></figure>
+    </div>
+  </section>
+
+  <section id="भेट" class="bg-sea-900 py-20 text-white lg:py-28">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <p class="text-sm font-black uppercase tracking-[.18em] text-sea-300">भेट नियोजन</p>
+      <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">चडण, उन आनी सूर्यास्त ध्यानांत दवरून वेळ आखात</h2>
+      <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-3xl bg-white/8 p-6 ring-1 ring-white/12"><div class="text-3xl">◷</div><h3 class="mt-5 text-xl font-black">उगडपाची वेळ</h3><p class="mt-2 leading-7 text-sea-100/80">गुगल नकाशांत 10:00–17:00 अशी वेळ दिसता. सुट्टी, देखभाल वा स्थानिक बदलांमुळे वेळा बदलूंक शकतात; भेटी आदी तपासात.</p></article>
+        <article class="rounded-3xl bg-white/8 p-6 ring-1 ring-white/12"><div class="text-3xl">₹</div><h3 class="mt-5 text-xl font-black">तिकीट / खर्च</h3><p class="mt-2 leading-7 text-sea-100/80">गोवा सरकार आनी गोवा पर्यटनाच्या किल्ला पानांवर स्वतंत्र प्रवेश दर नमूद ना. वाहन, पार्किंग वा इतर सेवांचे शुल्क वेगळें आसूंक शकता.</p></article>
+        <article class="rounded-3xl bg-white/8 p-6 ring-1 ring-white/12"><div class="text-3xl">P</div><h3 class="mt-5 text-xl font-black">पार्किंग</h3><p class="mt-2 leading-7 text-sea-100/80">चडपी वाटेच्या पायथ्याक पार्किंग मेळटा, पूण गर्दीच्या वेळार जागा मर्यादित आसूंक शकता. मौसमी शुल्क आसल्यार तें जाग्यार तपासात.</p></article>
+        <article class="rounded-3xl bg-white/8 p-6 ring-1 ring-white/12"><div class="text-3xl">☀</div><h3 class="mt-5 text-xl font-black">बरी वेळ / कितलो वेळ</h3><p class="mt-2 leading-7 text-sea-100/80">सांजवेळ उश्णपण कमी आनी सूर्यास्ताक योग्य. साधारण 1–2 वरां राखात; चडण खातीर उदक, टोपी आनी घट्ट पादत्राणां घेवात.</p></article>
+      </div>
+      <aside class="mt-8 rounded-3xl border border-sand-300/30 bg-sand-100/10 p-6 text-sm leading-7 text-sand-100/85">सुरक्षितता: किल्ल्याच्या तटांवर अनेक ठिकाणी आधुनिक रेलिंग ना. कड्यांच्या धारेर फोटो काडताना अंतर दवरात; पावसाळ्यात लेटराइट दगड आनी माती निसरडी जावंक शकता.</aside>
+    </div>
+  </section>
+
+  <WeatherSection />
+
+  <section id="प्रवास" class="bg-sand-50 py-20 lg:py-28">
+    <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[.9fr_1.1fr] lg:px-8">
+      <div>
+        <p class="text-sm font-black uppercase tracking-[.18em] text-sea-700">सविस्तर प्रवास</p>
+        <h2 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">मापुसा–वागातोर मार्ग, मागीर पायी चडण</h2>
+        <p class="mt-5 text-lg leading-8 text-laterite-900/75">गोवा पर्यटनाच्या माहितीनुसार मापुसा बाजार शहर चापोरा किल्ल्यापासून साधारण 10 किमी आसा, आनी मापुसा–अंजुना–वागातोर मार्गार बस सेवा मेळटा.</p>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2">
+        <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm"><h3 class="text-xl font-black text-laterite-900">बसान</h3><p class="mt-3 leading-7 text-laterite-900/70">मापुसा थावन अंजुना वा वागातोर वटेन वचपी बस मार्ग वापरूंक जाता. उतरपाची अचूक जागा ड्रायव्हर वा कंडक्टराक “चापोरा किल्ला” म्हणपून विचारात.</p></article>
+        <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm"><h3 class="text-xl font-black text-laterite-900">टॅक्सी / स्वतःचें वाहन</h3><p class="mt-3 leading-7 text-laterite-900/70">वागातोर–चापोरा रस्त्यान किल्ल्याच्या चडणीच्या पायथ्याक पावता. शेवटचो भाग पायी चडचो पडटा; गर्दीच्या वेळार लवकर पावप बरें.</p></article>
+        <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm"><h3 class="text-xl font-black text-laterite-900">पणजी थावन</h3><p class="mt-3 leading-7 text-laterite-900/70">उत्तर गोव्यात बार्देश वटेन मापुसा / वागातोर दिशेन रस्त्यान वचात. प्रवास वेळ वाहतूक आनी हंगामाप्रमाणें बदलटा; नकाशांत चालू वाहतूक तपासात.</p></article>
+        <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm"><h3 class="text-xl font-black text-laterite-900">पायी शेवटची चडण</h3><p class="mt-3 leading-7 text-laterite-900/70">वाट छोटी पूण उंच आसा. उश्ण दिवसांत सावली कमी मेळटा. उदक घेवात, हात मोकळे दवरात आनी निसरड्या पादत्राणां टाळात.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <FacilitiesSection />
+
+  <section id="नकाशो" class="bg-laterite-100 py-20">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">ठिकाण</p><h2 class="mt-2 text-4xl font-black text-laterite-900">चापोरा किल्ला नकाशो</h2></div><p class="max-w-xl text-sm leading-7 text-laterite-900/65">चापोरा फोर्ट ट्रेल, वागातोर, अंजुना, चापोरा, गोवा 403509 · निर्देशांक 15.604637, 73.734388</p></div>
+      <div class="overflow-hidden rounded-[2rem] border border-laterite-900/10 bg-white shadow-xl shadow-laterite-900/10">
+        <iframe title="चापोरा किल्ला गुगल नकाशो" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6834.903368503735!2d73.73438817702883!3d15.604637485009572!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfe9c66255a1e7%3A0x370be2005b85a107!2sChapora%20Fort!5e1!3m2!1skok!2sin!4v1788420890371!5m2!1skok!2sin&hl=kok&gl=IN" width="100%" height="520" style="border:0" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section id="भोंवतणी" class="bg-sand-50 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div>
+          <p class="text-sm font-black uppercase tracking-[.18em] text-sea-700">भोंवतणीचीं ठिकाणां</p>
+          <h2 class="mt-3 text-4xl font-black text-laterite-900">किल्ल्याचो भूगोल समजून घेवपाक जवळचीं थांब्यां</h2>
+          <div class="mt-7 space-y-4">
+            <article class="rounded-3xl border border-laterite-900/10 bg-white p-6"><h3 class="text-xl font-black">वागातोर किनारो</h3><p class="mt-2 leading-7 text-laterite-900/70">किल्ल्याच्या सावलींत दिसपी अर्धचंद्राकृती किनारो. किल्ल्यावयल्यान समुद्ररेषा पळयल्या उपरांत किनाऱ्याचेर उतरप सहज जोडता.</p></article>
+            <article class="rounded-3xl border border-laterite-900/10 bg-white p-6"><h3 class="text-xl font-black">अंजुना किनारो</h3><p class="mt-2 leading-7 text-laterite-900/70">किल्ल्याच्या दक्षिण वटेन दिसपी उत्तर गोव्याचो प्रसिद्ध किनारी भाग. रस्त्यान वागातोराक लागून असल्याने एका दिवसाच्या मार्गांत जोडूंक जाता.</p></article>
+            <article class="rounded-3xl border border-laterite-900/10 bg-white p-6"><h3 class="text-xl font-black">चापोरा नदीचें मुख</h3><p class="mt-2 leading-7 text-laterite-900/70">किल्ल्याच्या उत्तर वटेन नदी अरबी समुद्राक मेळटा. हाच भूगोल किल्ल्याच्या जुना सीमासुरक्षा भूमिकेचें कारण समजून घेवपाक मदत करता.</p></article>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">भोंवतणीचें जेवण</p>
+          <h2 class="mt-3 text-4xl font-black text-laterite-900">व्यावसायिक नावां ऐवजी स्थानिक चव शोधात</h2>
+          <p class="mt-5 text-lg leading-8 text-laterite-900/70">वागातोर–चापोरा–अंजुना परिसरांत समुद्री मासे, शाकाहारी थाळी, गोवा करी-भात, पोय, शाकुती आनी बेबिंका सारकें स्थानिक खाणें सोदूंक मेळटा. हें संकेतथळ कोणाच्याच उपाहारगृहाची पैसे घेऊन शिफारस करिना.</p>
+          <div class="mt-8 rounded-[2rem] bg-laterite-900 p-7 text-sand-100"><h3 class="text-xl font-black">खाण्याचो उपयोगी क्रम</h3><ol class="mt-4 space-y-3 text-sm leading-7 text-sand-100/80"><li><strong class="text-white">चडणी आदी:</strong> हलकें खाणें आनी पुरेसें उदक.</li><li><strong class="text-white">सूर्यास्तानंतर:</strong> वागातोर वा चापोरा भागांत स्थानिक जेवण.</li><li><strong class="text-white">अॅलर्जी / आहार:</strong> ऑर्डर दितना पदार्थांची सामग्री थेट विचारात.</li></ol></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-laterite-900 py-20 text-white">
+    <div class="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-[1.1fr_.9fr] lg:px-8">
+      <div class="photo-frame min-h-[420px] rounded-[2rem]"><div class="photo-fallback">किल्ल्याच्या कड्यां व समुद्राचें छायाचित्र</div><img loading="lazy" src="/images/chapora-fort-ramparts.jpg" alt="चापोरा किल्ल्याची तटबंदी आनी दूर दिसपी समुद्र" width="1200" height="900" onerror="this.style.display='none'" /></div>
+      <div class="flex flex-col justify-center"><p class="text-sm font-black uppercase tracking-[.18em] text-sand-300">भेटीची छोटी यादी</p><h2 class="mt-3 text-4xl font-black">किल्लो तसोच दवरून पळयात</h2><ul class="mt-7 space-y-4 text-lg leading-8 text-sand-100/80"><li>• कचरो परत घेवून वचात; दगड, भिंत वा पुरातन भागांचेर लिहूंक नाका.</li><li>• तटबंदीच्या कड्याक सुरक्षित अंतर दवरात.</li><li>• पावसाळ्यात घसरण टाळपाक घट्ट पादत्राणां वापरात.</li><li>• उश्ण हवेंत उदक, टोपी आनी सूर्यापासून संरक्षण घेवात.</li></ul></div>
+    </div>
+  </section>
+
+  <StoriesSection />
+
+  <section id="प्रश्नोत्तर" class="bg-sand-50 py-20 lg:py-28">
+    <div class="mx-auto max-w-4xl px-5 lg:px-8">
+      <p class="text-sm font-black uppercase tracking-[.18em] text-sea-700">सामान्य प्रश्न</p>
+      <h2 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">भेटी आदी वारंवार विचारले जाणारे प्रश्न</h2>
+      <div class="mt-9 divide-y divide-laterite-900/10 border-y border-laterite-900/10">
+        {faqs.map(([q,a]) => <details class="group py-5"><summary class="flex cursor-pointer list-none items-center justify-between gap-5 text-lg font-black text-laterite-900"><span>{q}</span><span class="text-2xl text-laterite-500 transition group-open:rotate-45">+</span></summary><p class="mt-3 pr-10 leading-8 text-laterite-900/70">{a}</p></details>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-laterite-100 py-16">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <h2 class="text-2xl font-black text-laterite-900">अधिकृत आनी प्राथमिक संदर्भ</h2>
+      <p class="mt-3 max-w-3xl text-sm leading-7 text-laterite-900/65">इतिहास, स्थान आनी प्रवेश नियोजन खातीर सरकारी वा अधिकृत पर्यटन स्रोतांक प्राधान्य दिलां. वेळा, वाहतूक वा प्रवेश व्यवस्था बदलूंक शकता, म्हणून महत्त्वाची माहिती निघचे आदी तपासात.</p>
+      <div class="mt-6 flex flex-wrap gap-3 text-sm font-bold">
+        <a class="rounded-full bg-white px-4 py-2 text-laterite-900 no-underline ring-1 ring-laterite-900/10" href="https://www.goa.gov.in/places/chapora-fort/" target="_blank" rel="noopener noreferrer">गोवा सरकार — चापोरा किल्ला</a>
+        <a class="rounded-full bg-white px-4 py-2 text-laterite-900 no-underline ring-1 ring-laterite-900/10" href="https://goa-tourism.com/fort/chapora-fort/" target="_blank" rel="noopener noreferrer">गोवा पर्यटन विकास महामंडळ</a>
+        <a class="rounded-full bg-white px-4 py-2 text-laterite-900 no-underline ring-1 ring-laterite-900/10" href="https://swayampurnagoa.goa.gov.in/resources/vp-secretaries/" target="_blank" rel="noopener noreferrer">अंजुना-कायसुवा ग्राम पंचायत — सरकारी निर्देशिका</a>
+        <a class="rounded-full bg-white px-4 py-2 text-laterite-900 no-underline ring-1 ring-laterite-900/10" href="https://tourism.gov.in/" target="_blank" rel="noopener noreferrer">भारत सरकार पर्यटन मंत्रालय</a>
+        <a class="rounded-full bg-white px-4 py-2 text-laterite-900 no-underline ring-1 ring-laterite-900/10" href="https://en.wikipedia.org/wiki/Chapora_Fort" target="_blank" rel="noopener noreferrer">विकिपीडिया – चापोरा किल्लो</a>
+        <a class="rounded-full bg-white px-4 py-2 text-laterite-900 no-underline ring-1 ring-laterite-900/10" href="https://hpip.org/en/heritage/details/1453" target="_blank" rel="noopener noreferrer">HPIP – पुर्तुगी प्रभाव वारसा नोंद</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,206 @@
+---
+// चापोरा किल्ल्याक खातीर Open-Meteo आधारीत हवामान मॉड्यूल.
+// हो प्रकल्प पूर्णपण स्थिर (static) होस्टिंग – Cloudflare Workers static assets – वयर आसा,
+// देखून चालू-सद्या (runtime) सर्व्हर कोड चलना. हाचे स्थानीं ब्राउझर Open-Meteo
+// (मोफत, कुळी ना, CORS-आधारीत) कडल्यान थेट माहिती हाडटा आनी ३० मिनिटां खातीर
+// localStorage अंतर्गत कॅश दवरता (वारंवार विनंती जावंची ना).
+// JavaScript बंद आसल्यारय "भेट करपाची बरी वेळ" सारकेंलें स्थिर भाग दिसतच रावता.
+// हवामान निर्देशांक (किल्लो 15.604637, 73.734388) आनी सगळे पर्याय तळाक आशिल्ल्या <script> खंडांत दवरल्यात.
+---
+<section id="हवामान" class="bg-laterite-100 py-20 lg:py-28">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">हवामान आनी योजना</p>
+    <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight text-laterite-900 sm:text-5xl">आतांचें हवामान आनी ७ दिसांचो पूर्वानुमान</h2>
+    <p class="mt-5 max-w-3xl text-lg leading-8 text-laterite-900/70">चडण, दृश्यां आनी सूर्यास्त – हीं सगळीं हवामानाचेर अवलंबून आसात. किल्ल्याचेर हवो उघडो आनी कड्याचेर सावली कमी आसता; निघचे आदी हवामान पळयतात.</p>
+
+    <!-- स्थिर (नेहमी दिसपी) सल्ला-भाग -->
+    <div class="mt-8 grid gap-4 md:grid-cols-3">
+      <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm">
+        <h3 class="text-lg font-black text-laterite-900">सगळ्यांत बरी वेळ</h3>
+        <p class="mt-2 text-sm leading-7 text-laterite-900/70">ऑक्टोबर ते मार्च ही कोरडी आनी सुखद वेळ. सांजवेळ सूर्यास्ता खातीर सगळ्यांत बरी; गर्दीय चड आसता.</p>
+      </article>
+      <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm">
+        <h3 class="text-lg font-black text-laterite-900">उन्हाळो (एप्रिल–मे)</h3>
+        <p class="mt-2 text-sm leading-7 text-laterite-900/70">दीस उश्ण आनी दमट आसतात. पहाटेचेर वा सांजे वचात; उदक, टोपी आनी सूर्यापसून संरक्षण सोबत दवरात.</p>
+      </article>
+      <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm">
+        <h3 class="text-lg font-black text-laterite-900">पावसाळो (जून–सप्टेंबर)</h3>
+        <p class="mt-2 text-sm leading-7 text-laterite-900/70">मुसळधार वर्साद आनी वाट निसरडी जावंक शकता. घट्ट पादत्राणां, अस्तुरो आनी सावधानेक देंवता.</p>
+      </article>
+    </div>
+
+    <!-- गतिमान भाग (JavaScript हाडटा) -->
+    <div class="mt-8 grid gap-6 lg:grid-cols-[.85fr_1.15fr]">
+      <article class="rounded-[2rem] border border-laterite-900/10 bg-white p-6 shadow-sm sm:p-7">
+        <p class="text-sm font-black uppercase tracking-[.15em] text-laterite-500">आयचें हवामान</p>
+        <div id="wx-now" class="mt-4 rounded-3xl bg-sand-100/60 p-6 text-sm text-laterite-900/70">हवामानाची माहिती उगडत आसा…</div>
+      </article>
+      <article class="rounded-[2rem] border border-laterite-900/10 bg-white p-6 shadow-sm sm:p-7">
+        <p class="text-sm font-black uppercase tracking-[.15em] text-laterite-500">पुढिल्ले ७ दीस</p>
+        <div id="wx-days" class="mt-4 rounded-3xl bg-sand-100/60 p-4 text-sm text-laterite-900/70">हवामानाची माहिती उगडत आसा…</div>
+      </article>
+    </div>
+    <p class="mt-5 text-xs leading-6 text-laterite-900/60">हवामान माहिती: Open-Meteo (मोफत, कुळी ना आशिल्ली सेवा). हो अंदाज आसा – प्रत्यक्ष परिस्थिती वेगळी आसूंक शकता. डेटा ३० मिनिटां खातीर कॅश केल्लो आसता; यात्रा करचे आदी नवेंतलो पूर्वानुमान तपासात.</p>
+  </div>
+</section>
+
+<script>
+  const LAT = '15.6046';
+  const LON = '73.7344';
+  const CACHE_KEY = 'chapora-weather-v1';
+  const CACHE_TTL = 30 * 60 * 1000; // ३० मिनिटां कॅश
+
+  const WD = ['रवि', 'सोम', 'मंगळ', 'बुध', 'गुरु', 'शुक्र', 'शनि'];
+  const MON = ['जानेवारी', 'फेब्रुवारी', 'मार्च', 'एप्रिल', 'मे', 'जून', 'जुलय', 'ऑगस्ट', 'सप्टेंबर', 'ऑक्टोबर', 'नोव्हेंबर', 'डिसेंबर'];
+
+  type WmEntry = { emoji: string; label: string };
+  const WM: Record<number, WmEntry> = {
+    0: { emoji: '☀️', label: 'साफ आकाश' },
+    1: { emoji: '🌤️', label: 'मुखेल्यान साफ' },
+    2: { emoji: '⛅', label: 'अंशतः दाट' },
+    3: { emoji: '☁️', label: 'दाट आकाश' },
+    45: { emoji: '🌫️', label: 'धुकें' },
+    48: { emoji: '🌫️', label: 'धुकें (दंव-गारो)' },
+    51: { emoji: '🌦️', label: 'हलकी रिमझिम' },
+    53: { emoji: '🌦️', label: 'रिमझिम' },
+    55: { emoji: '🌦️', label: 'जोराची रिमझिम' },
+    56: { emoji: '🌧️', label: 'गारवी रिमझिम' },
+    57: { emoji: '🌧️', label: 'गारवी रिमझिम' },
+    61: { emoji: '🌧️', label: 'हलकी वर्साद' },
+    63: { emoji: '🌧️', label: 'वर्साद' },
+    65: { emoji: '🌧️', label: 'जोराची वर्साद' },
+    66: { emoji: '🌧️', label: 'गारवी वर्साद' },
+    67: { emoji: '🌧️', label: 'गारवी वर्साद' },
+    71: { emoji: '🌨️', label: 'हलकी बर्फ' },
+    73: { emoji: '🌨️', label: 'बर्फ' },
+    75: { emoji: '🌨️', label: 'जोराची बर्फ' },
+    77: { emoji: '🌨️', label: 'बर्फाचे कण' },
+    80: { emoji: '🌧️', label: 'हलकी पावसाची झड' },
+    81: { emoji: '🌧️', label: 'पावसाची झड' },
+    82: { emoji: '🌧️', label: 'जोराची झड' },
+    85: { emoji: '🌨️', label: 'हलकी बर्फाची झड' },
+    86: { emoji: '🌨️', label: 'बर्फाची झड' },
+    95: { emoji: '⛈️', label: 'गरज-विजेचें वादळ' },
+    96: { emoji: '⛈️', label: 'वादळ, गारो शक्य' },
+    99: { emoji: '⛈️', label: 'जोराचें वादळ, गारो शक्य' }
+  };
+
+  interface WxCurrent { temperature_2m: number; apparent_temperature: number; relative_humidity_2m: number; weather_code: number; wind_speed_10m: number; precipitation: number; }
+  interface WxDaily { time: string[]; weather_code: number[]; temperature_2m_max: number[]; temperature_2m_min: number[]; precipitation_probability_max: (number | null)[]; }
+  interface WxPayload { current: WxCurrent; daily: WxDaily; }
+
+  const wmInfo = (code: number): WmEntry => WM[code] || { emoji: '🌡️', label: 'हवामान माहिती उपलब्ध ना' };
+
+  function el(html: string): HTMLElement {
+    const t = document.createElement('template');
+    t.innerHTML = html.trim();
+    return t.content.firstElementChild as HTMLElement;
+  }
+
+  function chip(label: string, value: string): string {
+    return '<div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">' + label +
+      '</span><strong class="text-lg text-laterite-900">' + value + '</strong></div>';
+  }
+
+  function renderError(): void {
+    const now = document.getElementById('wx-now');
+    if (now) {
+      now.innerHTML = '<p>हवामानाची माहिती आतां उगडूंक शकना. उपरांत परत प्रयत्न करात वा <a class="underline" href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> पळयात.</p>';
+    }
+    const days = document.getElementById('wx-days');
+    if (days) days.innerHTML = '<p>हवामानाची माहिती आतां उगडूंक शकना. उपरांत परत प्रयत्न करात.</p>';
+  }
+
+  function render(d: WxPayload): void {
+    const c = d.current;
+    const cur = wmInfo(c.weather_code);
+    const nowBox = document.getElementById('wx-now');
+    if (nowBox) {
+      nowBox.innerHTML = '';
+      nowBox.appendChild(el(
+        '<div class="flex flex-wrap items-center gap-5">' +
+          '<span class="text-6xl leading-none" role="img" aria-label="' + cur.label + '">' + cur.emoji + '</span>' +
+          '<div><strong class="block text-5xl font-black text-laterite-900">' + Math.round(c.temperature_2m) + '°C</strong>' +
+          '<span class="mt-1 block font-bold text-sea-700">' + cur.label + '</span></div>' +
+        '</div>'
+      ));
+      nowBox.appendChild(el(
+        '<div class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">' +
+          chip('जाणवपी तापमान', Math.round(c.apparent_temperature) + '°C') +
+          chip('आर्द्रता', c.relative_humidity_2m + '%') +
+          chip('वारो', Math.round(c.wind_speed_10m) + ' किमी/तास') +
+          chip('पावस', (c.precipitation || 0).toFixed(1) + ' मिमी') +
+        '</div>'
+      ));
+    }
+
+    const daysBox = document.getElementById('wx-days');
+    if (daysBox && d.daily && d.daily.time) {
+      daysBox.innerHTML = '';
+      const list = el('<ul class="divide-y divide-laterite-900/10"></ul>');
+      d.daily.time.forEach((date: string, i: number) => {
+        const dt = new Date(date + 'T00:00:00');
+        const wd = WD[dt.getDay()] || '';
+        const dateLabel = dt.getDate() + ' ' + MON[dt.getMonth()];
+        const w = wmInfo(d.daily.weather_code[i]);
+        const isToday = i === 0;
+        const pr = d.daily.precipitation_probability_max[i] != null
+          ? String(d.daily.precipitation_probability_max[i]) + '%' : '—';
+        const dayTag = isToday
+          ? '<span class="shrink-0 rounded-full bg-sea-500/15 px-2 py-0.5 text-xs font-black text-sea-700">आयज</span>'
+          : '<span class="hidden shrink-0 rounded-full bg-laterite-500/10 px-2 py-0.5 text-xs font-bold text-laterite-700 sm:inline">' + wd + '</span>';
+        const li = el(
+          '<li class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-3">' +
+            '<span class="w-36 shrink-0">' +
+              '<span class="block text-sm font-black text-laterite-900">' + wd + ' · ' + dateLabel + '</span>' +
+              (isToday ? '<span class="text-xs font-bold text-sea-700">आयजचो अंदाज</span>' : '') +
+            '</span>' +
+            '<span class="text-2xl leading-none" aria-hidden="true">' + w.emoji + '</span>' +
+            '<span class="min-w-0 flex-1 truncate text-sm font-semibold text-laterite-900/75">' + w.label + '</span>' +
+            '<span class="shrink-0 text-sm font-black text-laterite-900">' + Math.round(d.daily.temperature_2m_min[i]) + '° / ' + Math.round(d.daily.temperature_2m_max[i]) + '°</span>' +
+            '<span class="shrink-0 rounded-full bg-sea-500/12 px-2 py-0.5 text-xs font-bold text-sea-700">💧 ' + pr + '</span>' +
+            dayTag +
+          '</li>'
+        );
+        list.appendChild(li);
+      });
+      daysBox.appendChild(list);
+    }
+  }
+
+  async function loadWeather(): Promise<void> {
+    const now = Date.now();
+    let data: WxPayload | null = null;
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached) as { t: number; data: WxPayload } | null;
+        if (parsed && parsed.t && now - parsed.t < CACHE_TTL && parsed.data) data = parsed.data;
+      }
+    } catch { /* स्टोरेज मेळ्ळें ना जाल्यार कांय ना */ }
+
+    if (!data) {
+      const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + LAT +
+        '&longitude=' + LON +
+        '&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m' +
+        '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max' +
+        '&timezone=Asia%2FKolkata&forecast_days=7&wind_speed_unit=kmh';
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 15000);
+      try {
+        const res = await fetch(url, { signal: controller.signal });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        data = (await res.json()) as WxPayload;
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data })); } catch { /* ignore */ }
+      } catch {
+        renderError();
+        return;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    render(data as WxPayload);
+  }
+
+  loadWeather();
+</script>

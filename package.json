@@ -13,6 +13,7 @@
     "check": "astro check",
     "build": "astro build && node scripts/verify-dist.mjs",
     "preview": "astro preview",
+    "optimize:images": "node scripts/optimize-images.mjs",
     "deploy": "pnpm build && pnpm dlx wrangler@4.127.1 deploy"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
   "devDependencies": {
     "prettier": "3.9.6",
     "prettier-plugin-astro": "0.14.1",
+    "sharp": "0.34.3",
     "typescript": "6.0.3"
   }
 }

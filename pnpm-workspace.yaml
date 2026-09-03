@@ -1,0 +1,6 @@
+# pnpm 11 项目配置（工作区即单一项目，根 package 总是包含）。
+# allowBuilds: 允许 esbuild（Vite 依赖）与 sharp（图片压缩）执行安装后构建脚本；
+# pnpm v11 不再支持旧版 onlyBuiltDependencies。
+allowBuilds:
+  esbuild: true
+  sharp: true

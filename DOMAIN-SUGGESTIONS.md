@@ -1,5 +1,9 @@
 # डोमेन उमेदवार
 
+> **निर्णय (2026-09-03):** अधिकृत डोमेन म्हणून **https://chaporafort.com** निवडलां आनी `astro.config.mjs`,
+> `public/robots.txt`, `.env.example` आनी `README.md` हांचेर एकठांय वापरलां. खालचे `.in` उमेदवार
+> निवड आदींच्यो ऐतिहासिक नोंदी आसात.
+
 स्थानिक `.in` वापर आनी Chapora/Goa घटक ओळख ध्यानांत घेऊन उमेदवार:
 
 - chaporafortgoa.in

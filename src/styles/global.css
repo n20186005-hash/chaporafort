@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-laterite-50: #fbf5ef;
+  --color-laterite-100: #f2e2d3;
+  --color-laterite-300: #d79f77;
+  --color-laterite-500: #a95430;
+  --color-laterite-700: #71361f;
+  --color-laterite-900: #3a2117;
+  --color-sea-100: #dcefeb;
+  --color-sea-300: #86b9ae;
+  --color-sea-500: #3d7f75;
+  --color-sea-700: #28554f;
+  --color-sea-900: #183b38;
+  --color-sand-50: #fffdf8;
+  --color-sand-100: #f6edda;
+  --color-sand-300: #ddc59a;
+  --font-sans: "Noto Sans Devanagari", "Nirmala UI", "Mangal", system-ui, sans-serif;
+}
+
+:root { color-scheme: light; }
+html { scroll-behavior: smooth; background: #f6edda; }
+body { margin: 0; color: #2d211b; background: #fffdf8; font-family: var(--font-sans); }
+::selection { background: #d79f77; color: #261710; }
+a { text-underline-offset: 0.2em; }
+
+.fort-grid {
+  background-image:
+    linear-gradient(rgba(58,33,23,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58,33,23,.045) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+.rampart-edge {
+  clip-path: polygon(0 14%, 5% 14%, 5% 0, 12% 0, 12% 14%, 19% 14%, 19% 4%, 26% 4%, 26% 14%, 33% 14%, 33% 0, 40% 0, 40% 14%, 47% 14%, 47% 6%, 54% 6%, 54% 14%, 61% 14%, 61% 0, 68% 0, 68% 14%, 75% 14%, 75% 5%, 82% 5%, 82% 14%, 89% 14%, 89% 0, 96% 0, 96% 14%, 100% 14%, 100% 100%, 0 100%);
+}
+
+.photo-frame { position: relative; overflow: hidden; background: #71361f; }
+.photo-frame::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); pointer-events:none; }
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; display:block; }
+.photo-frame .photo-fallback { position:absolute; inset:0; display:grid; place-items:center; padding:2rem; text-align:center; color:#fff7ed; background:linear-gradient(135deg,#71361f,#183b38); z-index:0; }
+.photo-frame img { position:relative; z-index:1; }
+
+.prose-legal h2 { margin-top: 2rem; font-size: 1.4rem; font-weight: 800; color: #3a2117; }
+.prose-legal h3 { margin-top: 1.5rem; font-size: 1.1rem; font-weight: 800; color: #28554f; }
+.prose-legal p, .prose-legal li { line-height: 1.85; }
+.prose-legal ul { padding-left: 1.4rem; list-style: disc; }
+
+/* Sticky header 锚点定位补偿 */
+section[id] { scroll-margin-top: 5rem; }

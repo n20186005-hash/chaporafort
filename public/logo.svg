@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 96" role="img" aria-labelledby="title desc">
+  <title id="title">चापोरा किल्ला प्रवासी मार्गदर्शक</title>
+  <desc id="desc">लेटराइट किल्ल्याची तटबंदी, सूर्य आनी समुद्राच्या लाटांचें चिन्ह</desc>
+  <g transform="translate(4 4)">
+    <circle cx="44" cy="44" r="42" fill="#f6edda"/>
+    <path d="M16 52h56v13H16z" fill="#a95430"/>
+    <path d="M20 26h11v10h9V26h10v10h9V26h10v26H20z" fill="#71361f"/>
+    <path d="M12 62c11-7 20-7 32 0 11 7 21 7 32 0v11H12z" fill="#3d7f75"/>
+    <circle cx="63" cy="19" r="8" fill="#ddc59a"/>
+  </g>
+  <text x="104" y="42" fill="#3a2117" font-size="29" font-weight="800" font-family="Noto Sans Devanagari, Nirmala UI, sans-serif">चापोरा किल्ला</text>
+  <text x="104" y="67" fill="#28554f" font-size="15" font-weight="700" font-family="Noto Sans Devanagari, Nirmala UI, sans-serif">बार्देश · उत्तर गोवा प्रवासी मार्गदर्शक</text>
+</svg>

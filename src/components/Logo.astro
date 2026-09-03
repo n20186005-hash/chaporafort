@@ -1,0 +1,16 @@
+---
+const { compact = false } = Astro.props;
+---
+<a href="/" class="inline-flex items-center gap-3 no-underline" aria-label="चापोरा किल्ला मुखपान">
+  <svg class={compact ? "h-9 w-9" : "h-11 w-11"} viewBox="0 0 64 64" role="img" aria-label="चापोरा किल्ला चिन्ह">
+    <circle cx="32" cy="32" r="30" fill="#f6edda" />
+    <path d="M12 42h40v9H12z" fill="#a95430"/>
+    <path d="M15 23h8v7h6v-7h7v7h6v-7h7v19H15z" fill="#71361f"/>
+    <path d="M9 49c8-5 14-5 23 0 8 5 15 5 23 0v7H9z" fill="#3d7f75"/>
+    <circle cx="45" cy="15" r="6" fill="#ddc59a"/>
+  </svg>
+  <span class="leading-tight">
+    <span class="block text-[1.05rem] font-black tracking-tight text-laterite-900">चापोरा किल्ला</span>
+    {!compact && <span class="block text-xs font-semibold text-sea-700">बार्देश · उत्तर गोवा</span>}
+  </span>
+</a>
