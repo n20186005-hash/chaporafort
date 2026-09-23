@@ -1,10 +1,7 @@
 ---
 import Logo from './Logo.astro';
-import { type Locale, localeBase } from '../i18n/utils';
-import {
-  STATE_PROVINCE, STATE_PROVINCE_LOCAL, COUNTRY_NAME, COUNTRY_NAME_LOCAL,
-  CITY_NAME, CITY_NAME_LOCAL, LOCALITY_NAME, LOCALITY_NAME_LOCAL
-} from '../data/site';
+import { getI18n, navItems, localeBase, type Locale } from '../i18n/ui';
+import { COUNTRY_NAME, COUNTRY_NAME_LOCAL } from '../data/site';
 
 interface Props {
   locale: Locale;
@@ -12,87 +9,34 @@ interface Props {
 const { locale } = Astro.props;
 const base = localeBase(locale);
 
-const region = locale === 'en' ? STATE_PROVINCE : STATE_PROVINCE_LOCAL;
-const country = locale === 'en' ? COUNTRY_NAME : COUNTRY_NAME_LOCAL;
-const city = locale === 'en' ? CITY_NAME : CITY_NAME_LOCAL;
-const locality = locale === 'en' ? LOCALITY_NAME : LOCALITY_NAME_LOCAL;
 const gp = locale === 'en' ? 'Anjuna-Caisua Village Panchayat' : 'अंजुना-कायसुवा ग्राम पंचायत';
-
-const L = locale === 'en'
-  ? {
-      intro: 'This site is an independent, non-commercial tourist-information guide project. It is not affiliated with any government department, fort management body, or official organisation.',
-      info: `The tourism information here is compiled in line with public information from the ${gp} (under ${country} government records), the ${country} government, the Goa Tourism Development Corporation (GTDC) and the Ministry of Tourism, Government of India; it contains no commercial endorsements.`,
-      imgRights: 'Image rights: copyright of the photographs shown on this site belongs to the original photographers; licence details are given in the ',
-      termsLink: 'Terms of Service',
-      copyright: '© 2026 Chapora Fort Tourist Guide. All rights reserved.',
-      topics: 'Main topics',
-      nav: [
-        { id: 'history', label: 'History' },
-        { id: 'visit', label: 'Visit planning' },
-        { id: 'weather', label: 'Weather' },
-        { id: 'season', label: 'Seasonal plan' },
-        { id: 'transport', label: 'How to reach' },
-        { id: 'facilities', label: 'Facilities' },
-        { id: 'map', label: 'Map' },
-        { id: 'around', label: 'Around' },
-        { id: 'itinerary', label: 'Itineraries' },
-        { id: 'responsibility', label: 'Responsibility' },
-        { id: 'stories', label: 'Stories' },
-        { id: 'faq', label: 'FAQ' }
-      ],
-      privacy: 'Privacy policy',
-      terms: 'Terms of service',
-      cookies: 'Cookie policy'
-    }
-  : {
-      intro: 'हें संकेतथळ स्वतंत्र, नाफायद्याचें प्रवासी माहिती मार्गदर्शक प्रकल्प आसा. ताचो कसलोच सरकारी विभाग, किल्ला व्यवस्थापन संस्था वा अधिकृत संघटनेकडेन संबंद ना.',
-      info: `हांगाची पर्यटन माहिती ${gp} हद्दीची ${country} सरकारांत नोंद, ${country} सरकार, गोवा पर्यटन विकास महामंडळ आनी भारत सरकारच्या पर्यटन मंत्रालयाच्या सार्वजनिक माहितीकडेन ताळो घालून तयार केल्या; ह्यात व्यावसायिक शिफारशी नात.`,
-      imgRights: 'चित्र हक्क: ह्या संकेतथळार दाखयल्ल्या छायाचित्रांचो कॉपीराइट मूळ छायाचित्रकारांकडेन आसा; परवान्यांची माहिती ',
-      termsLink: 'सेवा अटींत',
-      copyright: '© 2026 चापोरा किल्ला प्रवासी मार्गदर्शक. सगळे हक्क राखीव.',
-      topics: 'मुखेल प्रकरणां',
-      nav: [
-        { id: 'history', label: 'इतिहास' },
-        { id: 'visit', label: 'भेट नियोजन' },
-        { id: 'weather', label: 'हवामान' },
-        { id: 'season', label: 'ऋतूनुरूप योजना' },
-        { id: 'transport', label: 'कशें पावचें' },
-        { id: 'facilities', label: 'सुविधा' },
-        { id: 'map', label: 'नकाशो' },
-        { id: 'around', label: 'भोंवतणी' },
-        { id: 'itinerary', label: 'वावर-मार्ग' },
-        { id: 'responsibility', label: 'जबाबदारी' },
-        { id: 'stories', label: 'कथा' },
-        { id: 'faq', label: 'प्रश्नोत्तर' }
-      ],
-      privacy: 'गोपनीयता धोरण',
-      terms: 'सेवा अटी',
-      cookies: 'कुकी मांडावळ'
-    };
+const country = locale === 'en' ? COUNTRY_NAME : COUNTRY_NAME_LOCAL;
+const ui = getI18n(locale, { gp, country });
+const nav = navItems(locale);
 ---
 <footer class="border-t border-laterite-900/10 bg-laterite-900 text-sand-100">
   <div class="mx-auto max-w-7xl px-5 py-12 lg:px-8">
     <div class="grid gap-9 lg:grid-cols-[.8fr_1.2fr]">
       <div>
         <div class="inline-flex rounded-xl bg-sand-50 p-2"><Logo compact={true} locale={locale} /></div>
-        <p class="mt-5 max-w-xl text-sm leading-7 text-sand-100/80">{L.intro}</p>
+        <p class="mt-5 max-w-xl text-sm leading-7 text-sand-100/80">{ui.footerIntro}</p>
       </div>
       <div class="space-y-4 text-sm leading-7 text-sand-100/80">
-        <p>{L.info}</p>
-        <p>{L.imgRights}<a class="font-bold text-white underline" href={`${base}/terms/#image-rights`}>{L.termsLink}</a>.</p>
-        <p>{L.copyright}</p>
-        <nav aria-label={locale === 'en' ? 'Page topics' : 'पानांतलीं मुखेल प्रकरणां'} class="border-t border-sand-100/15 pt-4">
-          <p class="text-xs font-black uppercase tracking-[.18em] text-sand-300">{L.topics}</p>
+        <p>{ui.footerInfo}</p>
+        <p>{ui.imgRights}<a class="font-bold text-white underline" href={`${base}/terms/#image-rights`}>{ui.termsLink}</a>.</p>
+        <p>{ui.copyright}</p>
+        <nav aria-label={ui.topicsNav} class="border-t border-sand-100/15 pt-4">
+          <p class="text-xs font-black uppercase tracking-[.18em] text-sand-300">{ui.footerTopics}</p>
           <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold text-white/90">
-            {L.nav.map((n) => (
+            {nav.map((n) => (
               <a href={`${base}/#${n.id}`}>{n.label}</a>
             ))}
           </div>
         </nav>
         <div class="flex flex-wrap gap-x-5 gap-y-2 pt-3 font-bold text-white">
-          <a href={`${base}/privacy/`}>{L.privacy}</a>
-          <a href={`${base}/terms/`}>{L.terms}</a>
-          <a href={`${base}/cookies/`}>{L.cookies}</a>
+          <a href={`${base}/privacy/`}>{ui.footerPrivacy}</a>
+          <a href={`${base}/terms/`}>{ui.footerTerms}</a>
+          <a href={`${base}/cookies/`}>{ui.footerCookies}</a>
         </div>
       </div>
     </div>

@@ -1,32 +1,18 @@
 ---
 import Logo from './Logo.astro';
-import { type Locale, localeBase } from '../i18n/utils';
+import { getI18n, navItems, localeBase, type Locale } from '../i18n/ui';
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const base = localeBase(locale);
+const ui = getI18n(locale);
 
-// नेव्हिगेशन लिंक – दोगांय भासांतले लेबल वेगळे, पूण अँकर (#इतिहास इ.) सगळ्यांक सामायिक.
-const nav = locale === 'en'
-  ? [
-      { id: 'history', label: 'History' },
-      { id: 'visit', label: 'Visit planning' },
-      { id: 'transport', label: 'How to reach' },
-      { id: 'around', label: 'Around' },
-      { id: 'faq', label: 'FAQ' }
-    ]
-  : [
-      { id: 'history', label: 'इतिहास' },
-      { id: 'visit', label: 'भेट नियोजन' },
-      { id: 'transport', label: 'कशें पावचें' },
-      { id: 'around', label: 'भोंवतणी' },
-      { id: 'faq', label: 'प्रश्नोत्तर' }
-    ];
-
-const mapOpen = locale === 'en' ? 'Open map' : 'नकाशो उगडात';
-const switchLabel = locale === 'en' ? 'कोंकणी' : 'English';
+// मुखेल नेव्हिगेशन (हेर पानांतलीं सगळीं प्रकरणां फूटरांत आसात).
+const nav = navItems(locale, ['history', 'visit', 'transport', 'around', 'faq']);
+const mapOpen = ui.openMap;
+const switchLabel = locale === 'en' ? ui.languageKonkani : ui.languageEnglish;
 const pathname = Astro.url.pathname;
 // भास बदलताना सद्याचें उप-पान (उदा. /terms ↔ /en/terms) जतन दवरात.
 const switchHref = locale === 'en'
@@ -36,7 +22,7 @@ const switchHref = locale === 'en'
 <header class="sticky top-0 z-50 border-b border-laterite-900/10 bg-sand-50/92 backdrop-blur-xl">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-3 lg:px-8">
     <Logo locale={locale} />
-    <nav aria-label={locale === 'en' ? 'Main navigation' : 'मुखेल नेव्हिगेशन'} class="hidden items-center gap-5 text-sm font-bold text-laterite-900 md:flex">
+    <nav aria-label={ui.mainNav} class="hidden items-center gap-5 text-sm font-bold text-laterite-900 md:flex">
       {nav.map((n) => (
         <a class="hover:text-laterite-500" href={`${base}/#${n.id}`}>{n.label}</a>
       ))}
