@@ -23,7 +23,15 @@ const { locale } = Astro.props;
 const siteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
 const heroUrl = Astro.site ? new URL('/images/chapora-fort-hero.jpg', Astro.site).href : undefined;
 const logoUrl = Astro.site ? new URL('/logo.svg', Astro.site).href : undefined;
-const geoTrail = GEO_HIERARCHY.map((g) => g.label).join(' → ');
+const geoTrail = locale === 'en'
+  ? GEO_HIERARCHY.map((g) => g.latin).join(' → ')
+  : GEO_HIERARCHY.map((g) => g.label).join(' → ');
+const heroAlt = locale === 'en'
+  ? `${ATTRACTION_FULL_NAME} – main view, ${CITY_NAME}, ${STATE_PROVINCE}, ${COUNTRY_NAME}`
+  : `${ATTRACTION_FULL_NAME_LOCAL} – मुखेल दृश्य, ${CITY_NAME_LOCAL}, ${STATE_PROVINCE}, ${COUNTRY_NAME}`;
+const photoAlt = locale === 'en'
+  ? `${ATTRACTION_FULL_NAME}, ${CITY_NAME}, ${STATE_PROVINCE}, ${COUNTRY_NAME}`
+  : `${ATTRACTION_FULL_NAME_LOCAL}, ${CITY_NAME_LOCAL}, ${COUNTRY_NAME}`;
 
 const L = locale === 'en'
   ? {
@@ -38,7 +46,7 @@ const L = locale === 'en'
       addrLabel: 'Address', plusLabel: 'Plus code', telLabel: 'Phone',
       histEyebrow: 'About the fort',
       histTitle: 'Ramparts that bend with the shape of the hill',
-      orgNote: `Entity note: ${ATTRACTION_FULL_NAME} and ${ATTRACTION_SHORT_NAME} are names of the same geographical entity. The fort is in ${CITY_NAME}, Bardez, North ${STATE_PROVINCE}, ${COUNTRY_NAME} — geo hierarchy: ${geoTrail}.`,
+      orgNote: `Entity note: ${ATTRACTION_FULL_NAME} is a historic laterite fort in ${CITY_NAME}, Bardez, North ${STATE_PROVINCE}, ${COUNTRY_NAME}. Geo hierarchy: ${geoTrail}.`,
       histP1: `Chapora Fort stands on a high hilltop near the mouth of the Chapora river, in Bardez. Goa Tourism calls it an ancient laterite fort; the walls follow the natural slopes, with irregular bastions and deep emplacements for cannons.`,
       histP2: `The Portuguese used the fort on the remains of an earlier Adil Shahi military post. Marathas took it in 1684 and 1739; in 1717 the Portuguese rebuilt it and added underground passages. As the northern border moved on, its military importance fell and it was abandoned in 1892.`,
       histP3: `Today few buildings remain inside; the main experience is the ramparts, the open plateau, the Chapora river mouth, the Vagator–Anjuna beaches and the Arabian Sea sunset.`,
@@ -64,7 +72,7 @@ const L = locale === 'en'
       mapDesc: `Chapora Fort Trail, Vagator, Anjuna, Chapora, Goa 403509 · Plus code ${PLUS_CODE} · coordinates ${LATITUDE}, ${LONGITUDE}`,
       mapIframeTitle: 'Chapora Fort Google Map',
       nearEyebrow: 'Around the fort', nearTitle: 'Nearby stops to understand the fort’s geography',
-      nearP: `Visiting Chapora Fort, ${NEARBY_LANDMARK_1_LOCAL} (${NEARBY_LANDMARK_1}) and ${NEARBY_LANDMARK_2_LOCAL} (${NEARBY_LANDMARK_2}) are easily combined — include them in one day’s around-route.`,
+      nearP: `Chapora Fort sits close to ${NEARBY_LANDMARK_1} and ${NEARBY_LANDMARK_2}; combine them in one day’s around-route.`,
       nearCards: [
         { t: 'Vagator Beach', p: 'The crescent beach seen below the fort. After the sea line from the fort, coming down to the beach is easy.' },
         { t: 'Anjuna Beach', p: 'The famous North Goa beach stretch seen south of the fort. Near Vagator by road, easy to add in a day’s route.' },
@@ -149,9 +157,9 @@ const faqsEn = [
   ['Is it easy for small kids or those with mobility issues?', 'The final climb is steep, sunny and uneven in places. Comfortable footwear, water and breaks help. Wheelchair access is limited.'],
   ['Are there toilets, water or rest facilities on the fort?', 'There is no guaranteed public toilet or drinking water inside the fort grounds. Some facilities may exist along the Vagator beach road, in Chapora village or on the coast. Carry your own water and essentials.'],
   ['Where to find food, stay, shops and fuel?', 'The “Facilities” section above lists them in detail — eateries, guesthouses/homestays/resorts, village shops, fuel stations and EV charging. This non-commercial guide recommends no private venture; check the exact spot on maps when visiting.'],
-  ['In which town / district is Chapora Fort?', `Chapora Fort is in ${CITY_NAME} (${CITY_NAME_LOCAL}), ${STATE_PROVINCE} state, ${COUNTRY_NAME}. It is in Bardez taluka, near the mouth of the Chapora river.`],
+  ['In which town / district is Chapora Fort?', `Chapora Fort is in ${CITY_NAME}, ${STATE_PROVINCE} state, ${COUNTRY_NAME}. It is in Bardez taluka, near the mouth of the Chapora river.`],
   ['Is entry free?', 'Goa government and Goa Tourism do not list a separate entry fee — viewing the fort is free. Parking, vehicle or other service charges may differ; check the latest official info before you go.'],
-  ['What is there to see around the fort?', `Nearby beaches like ${NEARBY_LANDMARK_1} (${NEARBY_LANDMARK_1_LOCAL}) and ${NEARBY_LANDMARK_2} (${NEARBY_LANDMARK_2}) are visible; the Chapora river mouth and the Arabian Sea sunset are also seen from the fort.`],
+  ['What is there to see around the fort?', `Nearby beaches like ${NEARBY_LANDMARK_1} and ${NEARBY_LANDMARK_2} are visible; the Chapora river mouth and the Arabian Sea sunset are also seen from the fort.`],
   ['How to reach the fort from the airport?', `From Mopa airport in North Goa the fort is about 40 km; from Dabolim airport about 45 km. From the airport a hired vehicle (taxi / app-cab) goes directly towards Vagator–Chapora — the final stretch is on foot.`],
   ['Is it good to visit the fort in monsoon?', 'In monsoon (June–September) the cloud scenery and greenery are great, but the path can be slippery and cliffs need caution. Carry water, sturdy footwear and a raincoat; the sunset clarity may be less.']
 ];
@@ -180,7 +188,7 @@ const attractionSchema = {
 const faqSchema = { '@context':'https://schema.org', '@type':'FAQPage', mainEntity: faqs.map(([q,a]) => ({ '@type':'Question', name:q, acceptedAnswer:{ '@type':'Answer', text:a } })) };
 const breadcrumbSchema = {
   '@context': 'https://schema.org', '@type': 'BreadcrumbList',
-  itemListElement: GEO_HIERARCHY.map((g, i) => ({ '@type': 'ListItem', position: i + 1, name: `${g.label} (${g.latin})`, ...(i === GEO_HIERARCHY.length - 1 ? { item: siteUrl || SITE_ORIGIN } : {}) }))
+  itemListElement: GEO_HIERARCHY.map((g, i) => ({ '@type': 'ListItem', position: i + 1, name: locale === 'en' ? g.latin : `${g.label} (${g.latin})`, ...(i === GEO_HIERARCHY.length - 1 ? { item: siteUrl || SITE_ORIGIN } : {}) }))
 };
 const organizationSchema = {
   '@context': 'https://schema.org', '@type': 'Organization',
@@ -214,7 +222,7 @@ const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
     <div class="absolute inset-0">
       <div class="photo-frame h-full w-full">
         <div class="photo-fallback"><span class="max-w-md text-sm opacity-80">{L.imgWalls}</span></div>
-        <img src="/images/chapora-fort-hero.jpg" alt={`${ATTRACTION_FULL_NAME} (Chapora Fort) – main view, ${CITY_NAME_LOCAL}, ${STATE_PROVINCE}, ${COUNTRY_NAME}`} width="1600" height="900" onerror="this.style.display='none'" />
+        <img src="/images/chapora-fort-hero.jpg" alt={heroAlt} width="1600" height="900" onerror="this.style.display='none'" />
       </div>
       <div class="absolute inset-0 bg-gradient-to-r from-laterite-900/95 via-laterite-900/72 to-sea-900/25"></div>
       <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-laterite-900 to-transparent"></div>
@@ -225,14 +233,14 @@ const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
         <nav aria-label="breadcrumb" class="mb-4 text-xs font-bold text-sand-100/70">
           <ol class="flex flex-wrap items-center gap-1.5">
             {L.heroBreadcrumbPre.map((g) => <li>{g}</li>)}
-            <li aria-current="page" class="text-sand-100">{ATTRACTION_FULL_NAME_LOCAL} <span class="text-sand-100/55">({ATTRACTION_FULL_NAME})</span></li>
+            <li aria-current="page" class="text-sand-100">{locale === 'en' ? ATTRACTION_FULL_NAME : `${ATTRACTION_FULL_NAME_LOCAL} (${ATTRACTION_FULL_NAME})`}</li>
           </ol>
         </nav>
         <h1 class="max-w-4xl text-5xl font-black leading-[1.05] tracking-tight sm:text-7xl">{ATTRACTION_FULL_NAME} <span class="mt-2 block text-2xl font-bold tracking-normal text-sand-100/85 sm:text-3xl">{L.heroH1Sub}</span></h1>
         <p class="mt-5 max-w-2xl text-xl leading-9 text-sand-100/92">{L.heroP}</p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <a href="#भेट" class="rounded-full bg-sand-100 px-5 py-3 font-extrabold text-laterite-900 no-underline">{L.btnPlan}</a>
-          <a href="#नकाशो" class="rounded-full border border-white/35 bg-white/10 px-5 py-3 font-extrabold text-white no-underline backdrop-blur">{L.btnMap}</a>
+          <a href="#visit" class="rounded-full bg-sand-100 px-5 py-3 font-extrabold text-laterite-900 no-underline">{L.btnPlan}</a>
+          <a href="#map" class="rounded-full border border-white/35 bg-white/10 px-5 py-3 font-extrabold text-white no-underline backdrop-blur">{L.btnMap}</a>
         </div>
       </div>
       <div class="rounded-3xl border border-white/20 bg-black/25 p-6 backdrop-blur-md">
@@ -248,7 +256,7 @@ const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
 
   <section class="rampart-edge -mt-1 h-10 bg-laterite-500" aria-hidden="true"></section>
 
-  <section id="इतिहास" class="fort-grid bg-sand-50 py-20 lg:py-28">
+  <section id="history" class="fort-grid bg-sand-50 py-20 lg:py-28">
     <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[.85fr_1.15fr] lg:px-8">
       <div>
         <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">{L.histEyebrow}</p>
@@ -270,13 +278,13 @@ const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
       </div>
     </div>
     <div class="mx-auto mt-14 grid max-w-7xl gap-5 px-5 md:grid-cols-3 lg:px-8">
-      <figure class="photo-frame aspect-[4/5] rounded-[2rem]"><div class="photo-fallback">{L.imgWalls}</div><img loading="lazy" src="/images/chapora-fort-walls.jpg" alt={`${ATTRACTION_FULL_NAME_LOCAL}, ${CITY_NAME_LOCAL}, ${COUNTRY_NAME}`} width="900" height="1125" onerror="this.style.display='none'" /></figure>
-      <figure class="photo-frame aspect-[4/5] rounded-[2rem] md:translate-y-8"><div class="photo-fallback">{L.imgInterior}</div><img loading="lazy" src="/images/chapora-fort-interior.jpg" alt={`${ATTRACTION_FULL_NAME_LOCAL}, ${CITY_NAME_LOCAL}, ${COUNTRY_NAME}`} width="900" height="1125" onerror="this.style.display='none'" /></figure>
-      <figure class="photo-frame aspect-[4/5] rounded-[2rem]"><div class="photo-fallback">{L.imgSea}</div><img loading="lazy" src="/images/chapora-fort-sea-view.jpg" alt={`${ATTRACTION_FULL_NAME_LOCAL}, ${CITY_NAME_LOCAL}, ${COUNTRY_NAME}`} width="900" height="1125" onerror="this.style.display='none'" /></figure>
+      <figure class="photo-frame aspect-[4/5] rounded-[2rem]"><div class="photo-fallback">{L.imgWalls}</div><img loading="lazy" src="/images/chapora-fort-walls.jpg" alt={photoAlt} width="900" height="1125" onerror="this.style.display='none'" /></figure>
+      <figure class="photo-frame aspect-[4/5] rounded-[2rem] md:translate-y-8"><div class="photo-fallback">{L.imgInterior}</div><img loading="lazy" src="/images/chapora-fort-interior.jpg" alt={photoAlt} width="900" height="1125" onerror="this.style.display='none'" /></figure>
+      <figure class="photo-frame aspect-[4/5] rounded-[2rem]"><div class="photo-fallback">{L.imgSea}</div><img loading="lazy" src="/images/chapora-fort-sea-view.jpg" alt={photoAlt} width="900" height="1125" onerror="this.style.display='none'" /></figure>
     </div>
   </section>
 
-  <section id="भेट" class="bg-sea-900 py-20 text-white lg:py-28">
+  <section id="visit" class="bg-sea-900 py-20 text-white lg:py-28">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <p class="text-sm font-black uppercase tracking-[.18em] text-sea-300">{L.visitEyebrow}</p>
       <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">{L.visitTitle}</h2>
@@ -294,7 +302,7 @@ const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
   <TransportSection locale={locale} />
   <FacilitiesSection locale={locale} />
 
-  <section id="नकाशो" class="bg-laterite-100 py-20">
+  <section id="map" class="bg-laterite-100 py-20">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <div class="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">{L.mapEyebrow}</p><h2 class="mt-2 text-4xl font-black text-laterite-900">{L.mapTitle}</h2></div><p class="max-w-xl text-sm leading-7 text-laterite-900/65">{L.mapDesc}</p></div>
       <div class="overflow-hidden rounded-[2rem] border border-laterite-900/10 bg-white shadow-xl shadow-laterite-900/10">
@@ -303,7 +311,7 @@ const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
     </div>
   </section>
 
-  <section id="भोंवतणी" class="bg-sand-50 py-20 lg:py-28">
+  <section id="around" class="bg-sand-50 py-20 lg:py-28">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <div class="grid gap-12 lg:grid-cols-2">
         <div>
@@ -330,7 +338,7 @@ const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
   <ResponsibilitySection locale={locale} />
   <StoriesSection locale={locale} />
 
-  <section id="प्रश्नोत्तर" class="bg-sand-50 py-20 lg:py-28">
+  <section id="faq" class="bg-sand-50 py-20 lg:py-28">
     <div class="mx-auto max-w-4xl px-5 lg:px-8">
       <p class="text-sm font-black uppercase tracking-[.18em] text-sea-700">{L.faqEyebrow}</p>
       <h2 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">{L.faqTitle}</h2>

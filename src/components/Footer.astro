@@ -27,18 +27,18 @@ const L = locale === 'en'
       copyright: '© 2026 Chapora Fort Tourist Guide. All rights reserved.',
       topics: 'Main topics',
       nav: [
-        { id: 'इतिहास', label: 'History' },
-        { id: 'भेट', label: 'Visit planning' },
-        { id: 'हवामान', label: 'Weather' },
-        { id: 'ऋतू', label: 'Seasonal plan' },
-        { id: 'प्रवास', label: 'How to reach' },
-        { id: 'सुविधा', label: 'Facilities' },
-        { id: 'नकाशो', label: 'Map' },
-        { id: 'भोंवतणी', label: 'Around' },
-        { id: 'मार्ग', label: 'Itineraries' },
-        { id: 'जबाबदारी', label: 'Responsibility' },
-        { id: 'कथा', label: 'Stories' },
-        { id: 'प्रश्नोत्तर', label: 'FAQ' }
+        { id: 'history', label: 'History' },
+        { id: 'visit', label: 'Visit planning' },
+        { id: 'weather', label: 'Weather' },
+        { id: 'season', label: 'Seasonal plan' },
+        { id: 'transport', label: 'How to reach' },
+        { id: 'facilities', label: 'Facilities' },
+        { id: 'map', label: 'Map' },
+        { id: 'around', label: 'Around' },
+        { id: 'itinerary', label: 'Itineraries' },
+        { id: 'responsibility', label: 'Responsibility' },
+        { id: 'stories', label: 'Stories' },
+        { id: 'faq', label: 'FAQ' }
       ],
       privacy: 'Privacy policy',
       terms: 'Terms of service',
@@ -52,18 +52,18 @@ const L = locale === 'en'
       copyright: '© 2026 चापोरा किल्ला प्रवासी मार्गदर्शक. सगळे हक्क राखीव.',
       topics: 'मुखेल प्रकरणां',
       nav: [
-        { id: 'इतिहास', label: 'इतिहास' },
-        { id: 'भेट', label: 'भेट नियोजन' },
-        { id: 'हवामान', label: 'हवामान' },
-        { id: 'ऋतू', label: 'ऋतूनुरूप योजना' },
-        { id: 'प्रवास', label: 'कशें पावचें' },
-        { id: 'सुविधा', label: 'सुविधा' },
-        { id: 'नकाशो', label: 'नकाशो' },
-        { id: 'भोंवतणी', label: 'भोंवतणी' },
-        { id: 'मार्ग', label: 'वावर-मार्ग' },
-        { id: 'जबाबदारी', label: 'जबाबदारी' },
-        { id: 'कथा', label: 'कथा' },
-        { id: 'प्रश्नोत्तर', label: 'प्रश्नोत्तर' }
+        { id: 'history', label: 'इतिहास' },
+        { id: 'visit', label: 'भेट नियोजन' },
+        { id: 'weather', label: 'हवामान' },
+        { id: 'season', label: 'ऋतूनुरूप योजना' },
+        { id: 'transport', label: 'कशें पावचें' },
+        { id: 'facilities', label: 'सुविधा' },
+        { id: 'map', label: 'नकाशो' },
+        { id: 'around', label: 'भोंवतणी' },
+        { id: 'itinerary', label: 'वावर-मार्ग' },
+        { id: 'responsibility', label: 'जबाबदारी' },
+        { id: 'stories', label: 'कथा' },
+        { id: 'faq', label: 'प्रश्नोत्तर' }
       ],
       privacy: 'गोपनीयता धोरण',
       terms: 'सेवा अटी',
@@ -74,12 +74,12 @@ const L = locale === 'en'
   <div class="mx-auto max-w-7xl px-5 py-12 lg:px-8">
     <div class="grid gap-9 lg:grid-cols-[.8fr_1.2fr]">
       <div>
-        <div class="inline-flex rounded-xl bg-sand-50 p-2"><Logo compact={true} /></div>
+        <div class="inline-flex rounded-xl bg-sand-50 p-2"><Logo compact={true} locale={locale} /></div>
         <p class="mt-5 max-w-xl text-sm leading-7 text-sand-100/80">{L.intro}</p>
       </div>
       <div class="space-y-4 text-sm leading-7 text-sand-100/80">
         <p>{L.info}</p>
-        <p>{L.imgRights}<a class="font-bold text-white underline" href={`${base}/terms/#चित्र-हक्क`}>{L.termsLink}</a>.</p>
+        <p>{L.imgRights}<a class="font-bold text-white underline" href={`${base}/terms/#image-rights`}>{L.termsLink}</a>.</p>
         <p>{L.copyright}</p>
         <nav aria-label={locale === 'en' ? 'Page topics' : 'पानांतलीं मुखेल प्रकरणां'} class="border-t border-sand-100/15 pt-4">
           <p class="text-xs font-black uppercase tracking-[.18em] text-sand-300">{L.topics}</p>

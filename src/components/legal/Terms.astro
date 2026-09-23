@@ -31,7 +31,7 @@ const L = locale === 'en'
       h2f: 'बाह्य सेवा', f: 'नकाशा आनी, तुमी संमती दिल्यार, वापर विश्लेषण ह्या खातीर बाह्य सेवा उगडूंक शकतात. त्या सेवांच्या स्वतःच्या अटी लागू जातात.'
     };
 ---
-<BaseLayout title={withSiteName(L.title)} description={L.desc} locale={locale}>
+<BaseLayout title={withSiteName(L.title, locale)} description={L.desc} locale={locale}>
   <section class="bg-sand-50 py-16 lg:py-24"><article class="prose-legal mx-auto max-w-3xl px-5 lg:px-8">
     <p class="text-sm font-black text-laterite-500">{L.updated}</p>
     <h1 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">{L.h1}</h1>
@@ -39,7 +39,7 @@ const L = locale === 'en'
     <h2>{L.h2a}</h2><p>{L.a}</p>
     <h2>{L.h2b}</h2><p>{L.b}</p>
     <h2>{L.h2c}</h2><p>{L.c}</p>
-    <h2 id="चित्र-हक्क">{L.h2d}</h2><p>{L.d}</p>
+    <h2 id="image-rights">{L.h2d}</h2><p>{L.d}</p>
     <h2>{L.h2e}</h2><p>{L.e}</p>
     <h2>{L.h2f}</h2><p>{L.f}</p>
   </article></section>

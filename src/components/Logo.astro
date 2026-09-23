@@ -1,8 +1,13 @@
 ---
-const { compact = false } = Astro.props;
+import { type Locale } from '../i18n/utils';
+const { compact = false, locale = 'kok' as Locale } = Astro.props;
+const ariaHome = locale === 'en' ? 'Chapora Fort home' : 'चापोरा किल्ला मुखपान';
+const ariaSvg = locale === 'en' ? 'Chapora Fort logo' : 'चापोरा किल्ला चिन्ह';
+const wordmark = locale === 'en' ? 'Chapora Fort' : 'चापोरा किल्ला';
+const sub = locale === 'en' ? 'Bardez · North Goa' : 'बार्देश · उत्तर गोवा';
 ---
-<a href="/" class="inline-flex items-center gap-3 no-underline" aria-label="चापोरा किल्ला मुखपान">
-  <svg class={compact ? "h-9 w-9" : "h-11 w-11"} viewBox="0 0 64 64" role="img" aria-label="चापोरा किल्ला चिन्ह">
+<a href={locale === 'en' ? '/en/' : '/'} class="inline-flex items-center gap-3 no-underline" aria-label={ariaHome}>
+  <svg class={compact ? "h-9 w-9" : "h-11 w-11"} viewBox="0 0 64 64" role="img" aria-label={ariaSvg}>
     <circle cx="32" cy="32" r="30" fill="#f6edda" />
     <path d="M12 42h40v9H12z" fill="#a95430"/>
     <path d="M15 23h8v7h6v-7h7v7h6v-7h7v19H15z" fill="#71361f"/>
@@ -10,7 +15,7 @@ const { compact = false } = Astro.props;
     <circle cx="45" cy="15" r="6" fill="#ddc59a"/>
   </svg>
   <span class="leading-tight">
-    <span class="block text-[1.05rem] font-black tracking-tight text-laterite-900">चापोरा किल्ला</span>
-    {!compact && <span class="block text-xs font-semibold text-sea-700">बार्देश · उत्तर गोवा</span>}
+    <span class="block text-[1.05rem] font-black tracking-tight text-laterite-900">{wordmark}</span>
+    {!compact && <span class="block text-xs font-semibold text-sea-700">{sub}</span>}
   </span>
 </a>

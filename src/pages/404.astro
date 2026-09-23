@@ -9,7 +9,7 @@ const L = locale === 'en'
   ? { title: 'Page not found', desc: 'The requested page was not found.', h1: 'This page was not found', p: 'Go back to the main tourist guide to see the fort info, map and visit planning.', btn: 'Back to home' }
   : { title: 'पान मेळ्ळें ना', desc: 'मागिल्लें पान मेळ्ळें ना.', h1: 'हें पान मेळ्ळें ना', p: 'मुखेल प्रवासी मार्गदर्शकाक परत वचून किल्ल्याची माहिती, नकाशो आनी भेट नियोजन पळयात.', btn: 'मुखेल पानार वचात' };
 ---
-<BaseLayout title={withSiteName(L.title)} description={L.desc} locale={locale} noindex={true}>
+<BaseLayout title={withSiteName(L.title, locale)} description={L.desc} locale={locale} noindex={true}>
   <section class="bg-sand-50 py-24">
     <div class="mx-auto max-w-3xl px-5 text-center lg:px-8">
       <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">404</p>

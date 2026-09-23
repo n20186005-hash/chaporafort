@@ -31,7 +31,7 @@ const L = locale === 'en'
       h2f: 'संपर्क माहिती', f: 'ह्या आवृत्तीत संपर्क फॉर्म, खातें वा नोंदणी व्यवस्था ना. भविष्यात सार्वजनिक संपर्क मार्ग जोडला जाल्यार, तुमी स्वेच्छेन दिलेली माहिती फकत त्या विनंतीक उत्तर दिवपाखातीर वापरली वतली.'
     };
 ---
-<BaseLayout title={withSiteName(L.title)} description={L.desc} locale={locale}>
+<BaseLayout title={withSiteName(L.title, locale)} description={L.desc} locale={locale}>
   <section class="bg-sand-50 py-16 lg:py-24"><article class="prose-legal mx-auto max-w-3xl px-5 lg:px-8">
     <p class="text-sm font-black text-laterite-500">{L.updated}</p>
     <h1 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">{L.h1}</h1>

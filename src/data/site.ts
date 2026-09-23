@@ -55,10 +55,11 @@ export const TELEPHONE = '+91 832 249 4500';
 
 // --- SEO साइट नांव (संस्था + शार + प्रवासी मार्गदर्शक) ----------------------
 export const SITE_NAME = `Chapora Fort (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME_LOCAL} — प्रवासी मार्गदर्शक`;
+export const SITE_NAME_EN = `Chapora Fort ${CITY_NAME} — Travel Guide`;
 
 /** उप-पानांच्या शीर्षकाक साइट नांव जोडटा (उदा. 'गोपनीयता धोरण | ...'). */
-export function withSiteName(suffix: string): string {
-  return `${suffix} | ${SITE_NAME}`;
+export function withSiteName(suffix: string, locale: 'kok' | 'en' = 'kok'): string {
+  return `${suffix} | ${locale === 'en' ? SITE_NAME_EN : SITE_NAME}`;
 }
 
 // --- भूगोलीय श्रेणी (ब्रेडक्रंब / मजकूर बंधन) -----------------------------

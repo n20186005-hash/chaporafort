@@ -11,18 +11,18 @@ const base = localeBase(locale);
 // नेव्हिगेशन लिंक – दोगांय भासांतले लेबल वेगळे, पूण अँकर (#इतिहास इ.) सगळ्यांक सामायिक.
 const nav = locale === 'en'
   ? [
-      { id: 'इतिहास', label: 'History' },
-      { id: 'भेट', label: 'Visit planning' },
-      { id: 'प्रवास', label: 'How to reach' },
-      { id: 'भोंवतणी', label: 'Around' },
-      { id: 'प्रश्नोत्तर', label: 'FAQ' }
+      { id: 'history', label: 'History' },
+      { id: 'visit', label: 'Visit planning' },
+      { id: 'transport', label: 'How to reach' },
+      { id: 'around', label: 'Around' },
+      { id: 'faq', label: 'FAQ' }
     ]
   : [
-      { id: 'इतिहास', label: 'इतिहास' },
-      { id: 'भेट', label: 'भेट नियोजन' },
-      { id: 'प्रवास', label: 'कशें पावचें' },
-      { id: 'भोंवतणी', label: 'भोंवतणी' },
-      { id: 'प्रश्नोत्तर', label: 'प्रश्नोत्तर' }
+      { id: 'history', label: 'इतिहास' },
+      { id: 'visit', label: 'भेट नियोजन' },
+      { id: 'transport', label: 'कशें पावचें' },
+      { id: 'around', label: 'भोंवतणी' },
+      { id: 'faq', label: 'प्रश्नोत्तर' }
     ];
 
 const mapOpen = locale === 'en' ? 'Open map' : 'नकाशो उगडात';
@@ -35,7 +35,7 @@ const switchHref = locale === 'en'
 ---
 <header class="sticky top-0 z-50 border-b border-laterite-900/10 bg-sand-50/92 backdrop-blur-xl">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-3 lg:px-8">
-    <Logo />
+    <Logo locale={locale} />
     <nav aria-label={locale === 'en' ? 'Main navigation' : 'मुखेल नेव्हिगेशन'} class="hidden items-center gap-5 text-sm font-bold text-laterite-900 md:flex">
       {nav.map((n) => (
         <a class="hover:text-laterite-500" href={`${base}/#${n.id}`}>{n.label}</a>

@@ -324,7 +324,7 @@ const days =
     if (first) activate(first.getAttribute('data-tab'));
   })();
 </script>
-<section id="हवामान" class="bg-laterite-100 py-20 lg:py-28">
+<section id="weather" class="bg-laterite-100 py-20 lg:py-28">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">{H.eyebrow}</p>
     <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight text-laterite-900 sm:text-5xl">{H.title}</h2>
@@ -362,7 +362,7 @@ const days =
               </div>
               <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.precip}</span><strong class="text-lg text-laterite-900">{weather.daily.precipitation_probability_max[0] ?? 0}%</strong></div>
-                <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.wind}</span><strong class="text-lg text-laterite-900">{Math.round(weather.current.wind_speed_10m)} किमी/ता</strong><span class="text-xs text-laterite-900/55">{beaufort(weather.current.wind_speed_10m)} {locale === 'en' ? 'level' : 'श्रेणी'}</span></div>
+                <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.wind}</span><strong class="text-lg text-laterite-900">{Math.round(weather.current.wind_speed_10m)} {locale === 'en' ? 'km/h' : 'किमी/ता'}</strong><span class="text-xs text-laterite-900/55">{beaufort(weather.current.wind_speed_10m)} {locale === 'en' ? 'level' : 'श्रेणी'}</span></div>
                 <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.uv}</span><strong class="text-lg text-laterite-900">{weather.daily.uv_index_max[0]} · {uvLabel(weather.daily.uv_index_max[0])}</strong></div>
                 <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.feels}</span><strong class="text-lg text-laterite-900">{Math.round(weather.current.apparent_temperature)}°C</strong></div>
               </div>
