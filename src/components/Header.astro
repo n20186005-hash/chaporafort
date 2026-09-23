@@ -27,7 +27,11 @@ const nav = locale === 'en'
 
 const mapOpen = locale === 'en' ? 'Open map' : 'नकाशो उगडात';
 const switchLabel = locale === 'en' ? 'कोंकणी' : 'English';
-const switchHref = locale === 'en' ? '/' : '/en/';
+const pathname = Astro.url.pathname;
+// भास बदलताना सद्याचें उप-पान (उदा. /terms ↔ /en/terms) जतन दवरात.
+const switchHref = locale === 'en'
+  ? (pathname.replace(/^\/en/, '') || '/')
+  : ('/en' + (pathname === '/' ? '/' : pathname));
 ---
 <header class="sticky top-0 z-50 border-b border-laterite-900/10 bg-sand-50/92 backdrop-blur-xl">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-3 lg:px-8">
