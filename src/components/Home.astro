@@ -1,0 +1,344 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WeatherSection from './WeatherSection.astro';
+import SeasonalSection from './SeasonalSection.astro';
+import TransportSection from './TransportSection.astro';
+import FacilitiesSection from './FacilitiesSection.astro';
+import ItinerarySection from './ItinerarySection.astro';
+import ResponsibilitySection from './ResponsibilitySection.astro';
+import StoriesSection from './StoriesSection.astro';
+import SourcesSection from './SourcesSection.astro';
+import {
+  ATTRACTION_FULL_NAME, ATTRACTION_FULL_NAME_LOCAL, ATTRACTION_SHORT_NAME, ATTRACTION_ALT_NAMES,
+  CITY_NAME, CITY_NAME_LOCAL, LOCALITY_NAME, STATE_PROVINCE, COUNTRY_NAME, COUNTRY_CODE_2LETTER,
+  POSTAL_CODE, STREET_ADDRESS, LATITUDE, LONGITUDE, PLUS_CODE, MAPS_SHARE_URL, MAPS_EMBED_SRC,
+  NEARBY_LANDMARK_1, NEARBY_LANDMARK_1_LOCAL, NEARBY_LANDMARK_2, NEARBY_LANDMARK_2_LOCAL,
+  GOVT_TOURISM_URL, RATING_VALUE, REVIEW_COUNT, SITE_NAME, SITE_ORIGIN, GEO_HIERARCHY
+} from '../data/site';
+import { type Locale } from '../i18n/utils';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+const siteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
+const heroUrl = Astro.site ? new URL('/images/chapora-fort-hero.jpg', Astro.site).href : undefined;
+const logoUrl = Astro.site ? new URL('/logo.svg', Astro.site).href : undefined;
+const geoTrail = GEO_HIERARCHY.map((g) => g.label).join(' → ');
+
+const L = locale === 'en'
+  ? {
+      pageTitle: `${ATTRACTION_FULL_NAME} (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME}, ${STATE_PROVINCE} — visitor guide`,
+      pageDesc: `${ATTRACTION_FULL_NAME} (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME}, North ${STATE_PROVINCE}: history, opening hours, entry, parking, transport, weather, map and nearby places — all on one page.`,
+      heroEyebrow: `${CITY_NAME} · Bardez · North ${STATE_PROVINCE}`,
+      heroBreadcrumbPre: GEO_HIERARCHY.slice(0, 3).map((g) => g.latin),
+      heroH1Sub: `${CITY_NAME}, ${STATE_PROVINCE}, ${COUNTRY_NAME} — a laterite hill fort above Vagator Beach`,
+      heroP: `${ATTRACTION_FULL_NAME} is a historic fort in ${CITY_NAME}, Bardez, North ${STATE_PROVINCE}, ${COUNTRY_NAME}, on a hill above the Chapora river, the Arabian Sea and Vagator beach — where laterite ramparts meet history and the sea horizon.`,
+      btnPlan: 'Plan your visit', btnMap: 'View map',
+      ratingLabel: 'Google Maps rating', ratingCount: '27,239 reviews',
+      addrLabel: 'Address', plusLabel: 'Plus code', telLabel: 'Phone',
+      histEyebrow: 'About the fort',
+      histTitle: 'Ramparts that bend with the shape of the hill',
+      orgNote: `Entity note: ${ATTRACTION_FULL_NAME} and ${ATTRACTION_SHORT_NAME} are names of the same geographical entity. The fort is in ${CITY_NAME}, Bardez, North ${STATE_PROVINCE}, ${COUNTRY_NAME} — geo hierarchy: ${geoTrail}.`,
+      histP1: `Chapora Fort stands on a high hilltop near the mouth of the Chapora river, in Bardez. Goa Tourism calls it an ancient laterite fort; the walls follow the natural slopes, with irregular bastions and deep emplacements for cannons.`,
+      histP2: `The Portuguese used the fort on the remains of an earlier Adil Shahi military post. Marathas took it in 1684 and 1739; in 1717 the Portuguese rebuilt it and added underground passages. As the northern border moved on, its military importance fell and it was abandoned in 1892.`,
+      histP3: `Today few buildings remain inside; the main experience is the ramparts, the open plateau, the Chapora river mouth, the Vagator–Anjuna beaches and the Arabian Sea sunset.`,
+      histCard: 'Key timeline',
+      tl: [
+        { k: 'Adil Shahi', v: "Under the Adil Shahi rule a post named ‘Shahapura’; later the Portuguese took Bardez and used the fort." },
+        { k: '1684 / 1739', v: 'Per Goa Tourism records, Marathas took the fort in these two periods.' },
+        { k: '1717', v: 'Portuguese retook and rebuilt — bastions, cannon spaces and an emergency path to the river.' },
+        { k: '1741', v: 'After the “New Conquests”, retaken again; border moved north, military value reduced.' },
+        { k: '1892', v: 'Abandoned militarily; today the heritage is open to visitors.' },
+        { k: '2001', v: 'Scenes from “Dil Chahta Hai” filmed here — the fort became known to a new generation.' }
+      ],
+      imgWalls: 'Laterite ramparts of Chapora Fort', imgInterior: 'Open interior of Chapora Fort', imgSea: 'Arabian Sea and coast from Chapora Fort',
+      visitEyebrow: 'Visit planning', visitTitle: 'Time your climb, sun and sunset',
+      visitCards: [
+        { icon: '◷', title: 'Opening hours', text: 'Google Maps shows 10:00–17:00. Times can change with holidays, maintenance or local changes; check before visiting.' },
+        { icon: '₹', title: 'Ticket / cost', text: 'Goa government and Goa Tourism do not list a separate entry fee on the fort page. Vehicle, parking or other service charges may differ.' },
+        { icon: 'P', title: 'Parking', text: 'Limited parking at the foot of the climb; fills when busy. Check on-site for any seasonal fee.' },
+        { icon: '☀', title: 'Best time / how long', text: 'Evening is cooler and good for sunset. Plan ~1–2 hours; carry water, hat and sturdy footwear for the climb.' }
+      ],
+      visitAside: 'Safety: many spots on the ramparts have no modern railing. Keep a safe distance from the cliff edge when taking photos; laterite rock and soil can be slippery in monsoon.',
+      mapEyebrow: 'Location', mapTitle: 'Chapora Fort map',
+      mapDesc: `Chapora Fort Trail, Vagator, Anjuna, Chapora, Goa 403509 · Plus code ${PLUS_CODE} · coordinates ${LATITUDE}, ${LONGITUDE}`,
+      mapIframeTitle: 'Chapora Fort Google Map',
+      nearEyebrow: 'Around the fort', nearTitle: 'Nearby stops to understand the fort’s geography',
+      nearP: `Visiting Chapora Fort, ${NEARBY_LANDMARK_1_LOCAL} (${NEARBY_LANDMARK_1}) and ${NEARBY_LANDMARK_2_LOCAL} (${NEARBY_LANDMARK_2}) are easily combined — include them in one day’s around-route.`,
+      nearCards: [
+        { t: 'Vagator Beach', p: 'The crescent beach seen below the fort. After the sea line from the fort, coming down to the beach is easy.' },
+        { t: 'Anjuna Beach', p: 'The famous North Goa beach stretch seen south of the fort. Near Vagator by road, easy to add in a day’s route.' },
+        { t: 'Chapora river mouth', p: 'North of the fort the river meets the Arabian Sea. This geography helps understand the fort’s old border-defence role.' }
+      ],
+      nearFoodTitle: 'Local flavours around', nearFoodP: `Around Vagator–Chapora–Anjuna you find seafood, vegetarian thali, Goan curry-rice, poi, shakuti and bebinca. This site does not pay to recommend any restaurant.`,
+      nearFoodList: ['Before climb: light food and enough water.', 'After sunset: local meal in Vagator or Chapora.', 'Allergies / diet: ask about ingredients when ordering.'],
+      faqEyebrow: 'Common questions', faqTitle: 'Frequently asked questions before visiting'
+    }
+  : {
+      pageTitle: `${ATTRACTION_FULL_NAME} (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME_LOCAL}, ${STATE_PROVINCE} — प्रवासी मार्गदर्शक`,
+      pageDesc: `${ATTRACTION_FULL_NAME} (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME_LOCAL}, उत्तर ${STATE_PROVINCE}: इतिहास, उगडपाच्यो वेळा, प्रवेश, पार्किंग, प्रवास, हवामान, नकाशो आनी भोंवतणीचीं ठिकाणां — एकाच पानार.`,
+      heroEyebrow: `वागातोर · बार्देश · उत्तर गोवा`,
+      heroBreadcrumbPre: GEO_HIERARCHY.slice(0, 3).map((g) => `${g.label} (${g.latin})`),
+      heroH1Sub: `${ATTRACTION_FULL_NAME}, ${CITY_NAME} — ${STATE_PROVINCE}, ${COUNTRY_NAME}`,
+      heroP: `चापोरा किल्ला (Chapora Fort) हो ${CITY_NAME_LOCAL}, बार्देश, उत्तर ${STATE_PROVINCE}, ${COUNTRY_NAME} हांगा आशिल्लो ऐतिहासिक किल्लो आसून चापोरा नदी, अरबी समुद्र आनी वागातोरच्या किनाऱ्याक वयरसून पळयपी, लाल लेटराइट दगडाच्या तटबंदींत इतिहास आनी समुद्री क्षितिज एकठांय येता.`,
+      btnPlan: 'भेट नियोजन', btnMap: 'नकाशो पळयात',
+      ratingLabel: 'गुगल नकाशा गुणांकन', ratingCount: '27,239 अभिप्राय',
+      addrLabel: 'पत्तो', plusLabel: 'प्लस कोड', telLabel: 'दूरध्वनी',
+      histEyebrow: 'किल्ल्याची ओळख',
+      histTitle: 'तटबंदी जी डोंगराच्या आकाराक धरून वळटा',
+      orgNote: `संस्था ओळख: चापोरा किल्ला (Chapora Fort) आनी ${ATTRACTION_SHORT_NAME} हीं एकाच भूगोलीय संस्थेचीं नांवां आसात. हो किल्लो ${CITY_NAME_LOCAL}, बार्देश, उत्तर ${STATE_PROVINCE}, ${COUNTRY_NAME} हांगा आसा — भूगोलीय श्रेणी: ${geoTrail}.`,
+      histP1: `चापोरा किल्लो बार्देश तालुक्यांत, चापोरा नदीच्या मुखाक लागून उंच डोंगरमाथ्यार आसा. गोवा पर्यटन विकास महामंडळ ताका प्राचीन लेटराइट किल्लो म्हणटा; भिंती नैसर्गिक उतारांबरोबर वळतात, अनियमित बुरुज आनी तोफां खातीर खोल जागा दिसतात.`,
+      histP2: `पोर्तुगीजांनी आदिलशाही काळांतल्या आधीच्या लष्करी ठाण्याच्या अवशेषांवर किल्ल्याचो वापर केला. 1684 आनी 1739 ह्या काळांत मराठ्यांनी ताबो घेतला; 1717 त पोर्तुगीजांनी पुनर्बांधणी करून भूमिगत मार्ग जोडले. उत्तर सीमा पुढें सरकल्यान किल्ल्याचें लष्करी महत्त्व कमी जालें आनी 1892 त तो सोडून दिलो.`,
+      histP3: `आज आतील बराकां वा इमारती फारशा उरल्या नात; मुख्य अनुभव म्हणजें तटबंदी, उघडें पठार, चापोरा नदीचें मुख, वागातोर-अंजुना किनारे आनी अरबी समुद्राचो सूर्यास्त.`,
+      histCard: 'मुखेल काळ-ओळ',
+      tl: [
+        { k: 'आदिलशाही', v: 'आदिलशाही राजवटींत ‘शाहापुरा’ नांवाचें सुरक्षा ठाणें; उपरांत पुर्तुगेजांनी बार्देश घेतल्यान किल्ल्याचो वापर केलो.' },
+        { k: '1684 / 1739', v: 'गोवा पर्यटनाच्या नोंदीप्रमाणें ह्या दोन काळांत मराठ्यांनी किल्ल्याचेर ताबो घेतलो.' },
+        { k: '1717', v: 'पुर्तुगेजांनी परत घेवन पुनर्बांधणी केली – बुरुज, तोफां खातीर जागा आनी न्हंयेक वचपी आपत्कालीन वाट.' },
+        { k: '1741', v: '‘नव्या जैतां’ उपरांत परत जिंकलो; सीमा उत्तरेकडे सरकल्यान लश्करी महत्त्व उणें जालें.' },
+        { k: '1892', v: 'सैनिकी दृष्टीन किल्लो सोडून दिलो; आयज हो वारसा पर्यटकां खातीर उगडो आसा.' },
+        { k: '2001', v: '‘दिल चाहता है’ चित्रपटांतलीं दृश्यां हांगा चित्रित जाल्लीं – किल्लो नव्या पिढयेक परिचित जालो.' }
+      ],
+      imgWalls: 'चापोरा किल्ल्याचें छायाचित्र', imgInterior: 'किल्ल्याच्या आतील भागाचें छायाचित्र', imgSea: 'समुद्री दृश्याचें छायाचित्र',
+      visitEyebrow: 'भेट नियोजन', visitTitle: 'चडण, उन आनी सूर्यास्त ध्यानांत दवरून वेळ आखात',
+      visitCards: [
+        { icon: '◷', title: 'उगडपाची वेळ', text: 'गुगल नकाशांत 10:00–17:00 अशी वेळ दिसता. सुट्टी, देखभाल वा स्थानिक बदलांमुळे वेळा बदलूंक शकतात; भेटी आदी तपासात.' },
+        { icon: '₹', title: 'तिकीट / खर्च', text: 'गोवा सरकार आनी गोवा पर्यटनाच्या किल्ला पानांवर स्वतंत्र प्रवेश दर नमूद ना. वाहन, पार्किंग वा इतर सेवांचे शुल्क वेगळें आसूंक शकता.' },
+        { icon: 'P', title: 'पार्किंग', text: 'चडपी वाटेच्या पायथ्याक पार्किंग मेळटा, पूण गर्दीच्या वेळार जागा मर्यादित आसूंक शकता. मौसमी शुल्क आसल्यार तें जाग्यार तपासात.' },
+        { icon: '☀', title: 'बरी वेळ / कितलो वेळ', text: 'सांजवेळ उश्णपण कमी आनी सूर्यास्ताक योग्य. साधारण 1–2 वरां राखात; चडण खातीर उदक, टोपी आनी घट्ट पादत्राणां घेवात.' }
+      ],
+      visitAside: 'सुरक्षितता: किल्ल्याच्या तटांवर अनेक ठिकाणी आधुनिक रेलिंग ना. कड्यांच्या धारेर फोटो काडताना अंतर दवरात; पावसाळ्यात लेटराइट दगड आनी माती निसरडी जावंक शकता.',
+      mapEyebrow: 'ठिकाण', mapTitle: 'चापोरा किल्ला नकाशो',
+      mapDesc: `चापोरा फोर्ट ट्रेल, वागातोर, अंजुना, चापोरा, गोवा 403509 · प्लस कोड ${PLUS_CODE} · निर्देशांक ${LATITUDE}, ${LONGITUDE}`,
+      mapIframeTitle: 'चापोरा किल्ला गुगल नकाशो',
+      nearEyebrow: 'भोंवतणीचीं ठिकाणां', nearTitle: 'किल्ल्याचो भूगोल समजून घेवपाक जवळचीं थांब्यां',
+      nearP: `चापोरा किल्ल्याक भेट दितना ${NEARBY_LANDMARK_1_LOCAL} (${NEARBY_LANDMARK_1}) आनी ${NEARBY_LANDMARK_2_LOCAL} (${NEARBY_LANDMARK_2}) सारकीं जवळचीं किनारे सहज जोडूंक येतात – एकाच दिसाच्या भोंवतणी-मार्गांत तांचो समावेश करात.`,
+      nearCards: [
+        { t: 'वागातोर किनारो', p: 'किल्ल्याच्या सावलींत दिसपी अर्धचंद्राकृती किनारो. किल्ल्यावयल्यान समुद्ररेषा पळयल्या उपरांत किनाऱ्याचेर उतरप सहज जोडता.' },
+        { t: 'अंजुना किनारो', p: 'किल्ल्याच्या दक्षिण वटेन दिसपी उत्तर गोव्याचो प्रसिद्ध किनारी भाग. रस्त्यान वागातोराक लागून असल्याने एका दिवसाच्या मार्गांत जोडूंक जाता.' },
+        { t: 'चापोरा नदीचें मुख', p: 'किल्ल्याच्या उत्तर वटेन नदी अरबी समुद्राक मेळटा. हाच भूगोल किल्ल्याच्या जुना सीमासुरक्षा भूमिकेचें कारण समजून घेवपाक मदत करता.' }
+      ],
+      nearFoodTitle: 'भोंवतणीचें जेवण',
+      nearFoodP: `वागातोर–चापोरा–अंजुना परिसरांत समुद्री मासे, शाकाहारी थाळी, गोवा करी-भात, पोय, शाकुती आनी बेबिंका सारकें स्थानिक खाणें सोदूंक मेळटा. हें संकेतथळ कोणाच्याच उपाहारगृहाची पैसे घेऊन शिफारस करिना.`,
+      nearFoodList: ['चडणी आदी: हलकें खाणें आनी पुरेसें उदक.', 'सूर्यास्तानंतर: वागातोर वा चापोरा भागांत स्थानिक जेवण.', 'अॅलर्जी / आहार: ऑर्डर दितना पदार्थांची सामग्री थेट विचारात.'],
+      faqEyebrow: 'सामान्य प्रश्न', faqTitle: 'भेटी आदी वारंवार विचारले जाणारे प्रश्न'
+    };
+
+// FAQ (bilingual)
+const faqsKok = [
+  ['चापोरा किल्ल्याक भेट दिवपाची बरी वेळ खंयची?', 'गोवा पर्यटनाच्या माहितीनुसार सांजवेळ बरी, कारण दनपाराचो उश्णपण कमी जाता आनी अरबी समुद्राचो सूर्यास्त पळोवपाक मेळटा. पावसाळ्यात वाट ओली आनी निसरडी आसूंक शकता.'],
+  ['किल्लो पळोवपाक कितलो वेळ राखचो?', 'किल्ल्याच्या भिंती, दृश्यबिंदू आनी चडण धरून साधारण १ ते २ वरां राखप उपेगी. फोटो वा सूर्यास्त खातीर जास्त वेळ राखूंक शकतात.'],
+  ['प्रवेश तिकीट आसा काय?', 'गोवा सरकार आनी गोवा पर्यटनाच्या चापोरा किल्ला पानांवर स्वतंत्र प्रवेश तिकीट दर नमूद ना. पार्किंग, वाहन वा इतर सेवांचे शुल्क वेगळें आसूंक शकता; निघचे आदी ताजी अधिकृत माहिती तपासात.'],
+  ['पार्किंग मेळटा काय?', 'किल्ल्याक चडपी वाटेच्या पायथ्याक वाहन उबोवपाची व्यवस्था मेळटा, पूण जागा मर्यादित आसूंक शकता. हंगाम, गर्दी आनी स्थानिक व्यवस्थापनाप्रमाणें शुल्क बदलूंक शकता.'],
+  ['वागातोर थावन किल्ल्याक कशें पावचें?', 'वागातोर भागातून रस्त्यान पायथ्याक पावून शेवटचो भाग पायी चडचो पडटा. मापुसा थावन अंजुना-वागातोर मार्गान बस सेवा मेळटा, अशी गोवा पर्यटनाची माहिती आसा.'],
+  ['ल्हान भुरग्यां वा चालपाक त्रास आशिल्ल्यां खातीर सोपें आसा काय?', 'शेवटची चडण उंच, उन्हातली आनी काही ठिकाणी असमान आसा. आरामदायी पादत्राणां, उदक आनी मधेमधे विसोवो घेवप उपेगी. व्हीलचेअर प्रवेश मर्यादित आसा.'],
+  ['किल्ल्याचेर शौचालय, उदक वा विसोव घेवपाची सोय आसा काय?', 'किल्ल्याच्या आतल्या प्रदेशांत सार्वजनिक शौचालय आनी पिवपाच्या उदकाची निश्चित सोय ना. वागातोर किनाऱ्याकडलो रस्तो, चापोरा गांव वा किनारपट्टीचेर कांय सोयी आसूंक शकतात. निघतना पिवपाचें उदक आनी जरुरीच्यो वस्तू सोबत दवरात.'],
+  ['जेवण, रावप, दुकानां, इंधन कशीं मेळटात?', 'भोंवतणच्या सोयींचो वर्गवारीन सविस्तर उल्लेख वयल्या ‘सुविधा’ भागांत दिला आसा – जेवण/उपाहार, गेस्टहाउस/हॉमस्टे/रिसॉर्ट, गांवांतलीं दुकानां, इंधन केंद्रां आनी विद्युत वाहन चार्जिंग. हें नाफायद्याचें मार्गदर्शक कोणाचोय खाजगी उपक्रम शिफारस करिना; अचूक जागा भेटेच्या वेळार नकाशांत पळयात.'],
+  ['चापोरा किल्लो खंयच्या शारांत / जिल्ह्यांत आसा?', `चापोरा किल्लो ${CITY_NAME_LOCAL} (${CITY_NAME}) हांगा आसा, ${STATE_PROVINCE} राज्यांत, ${COUNTRY_NAME}ंत. हो बार्देश तालुक्यांत, चापोरा नदीच्या मुखाक लागून आसा.`],
+  ['प्रवेश फुकट (free) आसा काय?', 'गोवा सरकार आनी गोवा पर्यटनाच्या चापोरा किल्ला पानांवर स्वतंत्र प्रवेश तिकीट दर नमूद ना – किल्लो पळोवपाक तिकीट लागना. पार्किंग, वाहन वा इतर सेवांचे शुल्क वेगळें आसूंक शकता; निघचे आदी ताजी अधिकृत माहिती तपासात.'],
+  ['किल्ल्याभोंवतणी कितें पळोवपाक मेळटा?', `${NEARBY_LANDMARK_1_LOCAL} (${NEARBY_LANDMARK_1}) आनी ${NEARBY_LANDMARK_2_LOCAL} (${NEARBY_LANDMARK_2}) सारकीं जवळचीं किनारे पळोवपाक मेळटात; चापोरा नदीचें मुख आनी अरबी समुद्राचो सूर्यास्त हींय किल्ल्यावयल्यान दिसतात.`],
+  ['विमानतळा थावन किल्ल्याक कशें पावचें?', `उत्तर गोव्यांतल्या Mopa विमानतळा पासून किल्ल्याचें अंतर साधारण ४० किमी आसा; डाबोलीम विमानतळा पासून सुमार ४५ किमी. विमानतळा थावन भाड्याने वाहन (टॅक्सी / ऍप-कॅब) वागातोर-चापोरा दिशेन थेट घेवंक जाता – शेवटचो भाग पायी चडचो पडटा.`],
+  ['पावसाळ्यांत किल्ल्याक वचप बरें काय?', 'पावसाळ्यांत (जून–सप्टेंबर) ढगांचीं दृश्यां आनी हिरवळ खूब आसता, पूण वाट निसरडी जावंक शकता आनी कड्यांचेर सावधानेक घेवप बरें. उदक, घट्ट पादत्राणां आनी अस्तुरो सोबत दवरात; सूर्यास्ताची सफाई कमी मेळूंक शकता.']
+];
+const faqsEn = [
+  ['What is the best time to visit Chapora Fort?', 'Per Goa Tourism information, evening is best — the afternoon heat eases and you get the Arabian Sea sunset. In monsoon the path can be wet and slippery.'],
+  ['How long should I keep for seeing the fort?', 'About 1–2 hours for the walls, viewpoints and climb is useful; you may stay longer for photos or sunset.'],
+  ['Is there an entry ticket?', 'Goa government and Goa Tourism do not list a separate entry fee on the Chapora Fort page. Parking, vehicle or other service charges may differ; check the latest official info before you go.'],
+  ['Is parking available?', 'There is vehicle parking at the foot of the climb, but space can be limited. The fee may change with season, crowd and local management.'],
+  ['How to reach the fort from Vagator?', 'From Vagator by road you reach the foot of the climb; the last part is mostly on foot. Per Goa Tourism there is also a bus via Mapusa–Anjuna–Vagator.'],
+  ['Is it easy for small kids or those with mobility issues?', 'The final climb is steep, sunny and uneven in places. Comfortable footwear, water and breaks help. Wheelchair access is limited.'],
+  ['Are there toilets, water or rest facilities on the fort?', 'There is no guaranteed public toilet or drinking water inside the fort grounds. Some facilities may exist along the Vagator beach road, in Chapora village or on the coast. Carry your own water and essentials.'],
+  ['Where to find food, stay, shops and fuel?', 'The “Facilities” section above lists them in detail — eateries, guesthouses/homestays/resorts, village shops, fuel stations and EV charging. This non-commercial guide recommends no private venture; check the exact spot on maps when visiting.'],
+  ['In which town / district is Chapora Fort?', `Chapora Fort is in ${CITY_NAME} (${CITY_NAME_LOCAL}), ${STATE_PROVINCE} state, ${COUNTRY_NAME}. It is in Bardez taluka, near the mouth of the Chapora river.`],
+  ['Is entry free?', 'Goa government and Goa Tourism do not list a separate entry fee — viewing the fort is free. Parking, vehicle or other service charges may differ; check the latest official info before you go.'],
+  ['What is there to see around the fort?', `Nearby beaches like ${NEARBY_LANDMARK_1} (${NEARBY_LANDMARK_1_LOCAL}) and ${NEARBY_LANDMARK_2} (${NEARBY_LANDMARK_2}) are visible; the Chapora river mouth and the Arabian Sea sunset are also seen from the fort.`],
+  ['How to reach the fort from the airport?', `From Mopa airport in North Goa the fort is about 40 km; from Dabolim airport about 45 km. From the airport a hired vehicle (taxi / app-cab) goes directly towards Vagator–Chapora — the final stretch is on foot.`],
+  ['Is it good to visit the fort in monsoon?', 'In monsoon (June–September) the cloud scenery and greenery are great, but the path can be slippery and cliffs need caution. Carry water, sturdy footwear and a raincoat; the sunset clarity may be less.']
+];
+const faqs = locale === 'en' ? faqsEn : faqsKok;
+
+// --- स्कीमा ---
+const attractionSchema = {
+  '@context': 'https://schema.org', '@type': 'TouristAttraction',
+  '@id': siteUrl ? `${siteUrl}#chapora-fort` : '#chapora-fort',
+  name: ATTRACTION_FULL_NAME,
+  alternateName: [ATTRACTION_FULL_NAME_LOCAL, ATTRACTION_SHORT_NAME, ...ATTRACTION_ALT_NAMES],
+  description: 'Chapora Fort is a 17th-century laterite hill fort in North Goa, India, near Vagator Beach. It offers panoramic views of the Chapora River, the Arabian Sea and the coastline, and is famous as the "Dil Chahta Hai Fort". Entry is free; best visited at sunset.',
+  ...(siteUrl ? { url: siteUrl } : {}),
+  ...(heroUrl ? { image: [heroUrl] } : {}),
+  isAccessibleForFree: true, publicAccess: true,
+  identifier: { '@type': 'PropertyValue', name: 'Plus Code', value: PLUS_CODE },
+  telephone: '+91 832 249 4500',
+  address: { '@type': 'PostalAddress', streetAddress: STREET_ADDRESS, addressLocality: LOCALITY_NAME, addressRegion: STATE_PROVINCE, postalCode: POSTAL_CODE, addressCountry: COUNTRY_CODE_2LETTER },
+  geo: { '@type': 'GeoCoordinates', latitude: LATITUDE, longitude: LONGITUDE },
+  containedInPlace: { '@type': 'AdministrativeArea', name: 'Village Panchayat Anjuna-Caisua, Bardez, North Goa' },
+  hasMap: MAPS_SHARE_URL,
+  aggregateRating: { '@type': 'AggregateRating', ratingValue: RATING_VALUE, reviewCount: REVIEW_COUNT, bestRating: 5, worstRating: 1 },
+  openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '10:00', closes: '17:00' }],
+  sameAs: [GOVT_TOURISM_URL, 'https://goa-tourism.com/fort/chapora-fort/', MAPS_SHARE_URL]
+};
+const faqSchema = { '@context':'https://schema.org', '@type':'FAQPage', mainEntity: faqs.map(([q,a]) => ({ '@type':'Question', name:q, acceptedAnswer:{ '@type':'Answer', text:a } })) };
+const breadcrumbSchema = {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: GEO_HIERARCHY.map((g, i) => ({ '@type': 'ListItem', position: i + 1, name: `${g.label} (${g.latin})`, ...(i === GEO_HIERARCHY.length - 1 ? { item: siteUrl || SITE_ORIGIN } : {}) }))
+};
+const organizationSchema = {
+  '@context': 'https://schema.org', '@type': 'Organization',
+  '@id': siteUrl ? `${siteUrl}#organization` : '#organization',
+  name: 'चापोरा किल्ला प्रवासी मार्गदर्शक',
+  description: 'चापोरा किल्ल्याचो स्वतंत्र, नाफायद्याचो प्रवासी माहिती मार्गदर्शक प्रकल्प.',
+  ...(siteUrl ? { url: siteUrl } : {}), ...(logoUrl ? { logo: logoUrl } : {})
+};
+const websiteSchema = {
+  '@context': 'https://schema.org', '@type': 'WebSite',
+  '@id': siteUrl ? `${siteUrl}#website` : '#website',
+  ...(siteUrl ? { url: siteUrl } : {}),
+  name: 'चापोरा किल्ला प्रवासी मार्गदर्शक', inLanguage: 'kok-Deva',
+  publisher: { '@id': siteUrl ? `${siteUrl}#organization` : '#organization' }
+};
+const webpageSchema = {
+  '@context': 'https://schema.org', '@type': 'WebPage',
+  '@id': siteUrl ? `${siteUrl}#webpage` : '#webpage',
+  ...(siteUrl ? { url: siteUrl } : {}),
+  name: L.pageTitle, description: L.pageDesc, inLanguage: locale === 'en' ? 'en' : 'kok-Deva',
+  datePublished: '2026-09-03', dateModified: '2026-09-23',
+  isPartOf: { '@id': siteUrl ? `${siteUrl}#website` : '#website' },
+  about: { '@id': siteUrl ? `${siteUrl}#chapora-fort` : '#chapora-fort' },
+  ...(heroUrl ? { primaryImageOfPage: { '@type': 'ImageObject', url: heroUrl } } : {})
+};
+const mapHl = locale === 'en' ? 'en' : 'kok';
+const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
+---
+<BaseLayout title={L.pageTitle} description={L.pageDesc} locale={locale} jsonLd={[organizationSchema, websiteSchema, webpageSchema, attractionSchema, faqSchema, breadcrumbSchema]}>
+  <section class="relative isolate overflow-hidden bg-laterite-900 text-white">
+    <div class="absolute inset-0">
+      <div class="photo-frame h-full w-full">
+        <div class="photo-fallback"><span class="max-w-md text-sm opacity-80">{L.imgWalls}</span></div>
+        <img src="/images/chapora-fort-hero.jpg" alt={`${ATTRACTION_FULL_NAME} (Chapora Fort) – main view, ${CITY_NAME_LOCAL}, ${STATE_PROVINCE}, ${COUNTRY_NAME}`} width="1600" height="900" onerror="this.style.display='none'" />
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-r from-laterite-900/95 via-laterite-900/72 to-sea-900/25"></div>
+      <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-laterite-900 to-transparent"></div>
+    </div>
+    <div class="relative mx-auto grid min-h-[75vh] max-w-7xl items-end gap-8 px-5 pb-16 pt-28 lg:grid-cols-[1.1fr_.6fr] lg:px-8 lg:pb-24">
+      <div>
+        <p class="mb-5 inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold backdrop-blur">{L.heroEyebrow}</p>
+        <nav aria-label="breadcrumb" class="mb-4 text-xs font-bold text-sand-100/70">
+          <ol class="flex flex-wrap items-center gap-1.5">
+            {L.heroBreadcrumbPre.map((g) => <li>{g}</li>)}
+            <li aria-current="page" class="text-sand-100">{ATTRACTION_FULL_NAME_LOCAL} <span class="text-sand-100/55">({ATTRACTION_FULL_NAME})</span></li>
+          </ol>
+        </nav>
+        <h1 class="max-w-4xl text-5xl font-black leading-[1.05] tracking-tight sm:text-7xl">{ATTRACTION_FULL_NAME} <span class="mt-2 block text-2xl font-bold tracking-normal text-sand-100/85 sm:text-3xl">{L.heroH1Sub}</span></h1>
+        <p class="mt-5 max-w-2xl text-xl leading-9 text-sand-100/92">{L.heroP}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#भेट" class="rounded-full bg-sand-100 px-5 py-3 font-extrabold text-laterite-900 no-underline">{L.btnPlan}</a>
+          <a href="#नकाशो" class="rounded-full border border-white/35 bg-white/10 px-5 py-3 font-extrabold text-white no-underline backdrop-blur">{L.btnMap}</a>
+        </div>
+      </div>
+      <div class="rounded-3xl border border-white/20 bg-black/25 p-6 backdrop-blur-md">
+        <div class="flex items-end justify-between gap-4"><div><div class="text-sm text-sand-100/75">{L.ratingLabel}</div><div class="mt-1 text-3xl font-black">4.2 <span class="text-lg">/ 5</span></div></div><div class="text-right text-sm text-sand-100/75">{L.ratingCount}</div></div>
+        <dl class="mt-6 grid gap-4 border-t border-white/15 pt-5 text-sm">
+          <div><dt class="text-sand-100/65">{L.addrLabel}</dt><dd class="mt-1 font-bold">{STREET_ADDRESS}, {STATE_PROVINCE} {POSTAL_CODE}</dd></div>
+          <div><dt class="text-sand-100/65">{L.plusLabel}</dt><dd class="mt-1 font-bold">{PLUS_CODE}</dd></div>
+          <div><dt class="text-sand-100/65">{L.telLabel}</dt><dd class="mt-1 font-bold"><a href="tel:+918322494500">+91 832 249 4500</a></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="rampart-edge -mt-1 h-10 bg-laterite-500" aria-hidden="true"></section>
+
+  <section id="इतिहास" class="fort-grid bg-sand-50 py-20 lg:py-28">
+    <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[.85fr_1.15fr] lg:px-8">
+      <div>
+        <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">{L.histEyebrow}</p>
+        <h2 class="mt-3 text-4xl font-black tracking-tight text-laterite-900 sm:text-5xl">{L.histTitle}</h2>
+      </div>
+      <div class="space-y-5 text-lg leading-9 text-laterite-900/80">
+        <p class="rounded-2xl border border-laterite-900/10 bg-white p-5 text-base leading-8 text-laterite-900/85"><span class="font-black text-laterite-900">{locale === 'en' ? 'Entity note:' : 'संस्था ओळख:'}</span> {L.orgNote}</p>
+        <p>{L.histP1}</p>
+        <p>{L.histP2}</p>
+        <p>{L.histP3}</p>
+        <div class="mt-8 rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm">
+          <h3 class="text-base font-black uppercase tracking-[.14em] text-laterite-500">{L.histCard}</h3>
+          <ul class="mt-4 space-y-3 text-sm leading-6">
+            {L.tl.map((r) => (
+              <li class="flex gap-4"><span class="w-20 shrink-0 font-black text-sea-700">{r.k}</span><span class="text-laterite-900/75">{r.v}</span></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mx-auto mt-14 grid max-w-7xl gap-5 px-5 md:grid-cols-3 lg:px-8">
+      <figure class="photo-frame aspect-[4/5] rounded-[2rem]"><div class="photo-fallback">{L.imgWalls}</div><img loading="lazy" src="/images/chapora-fort-walls.jpg" alt={`${ATTRACTION_FULL_NAME_LOCAL}, ${CITY_NAME_LOCAL}, ${COUNTRY_NAME}`} width="900" height="1125" onerror="this.style.display='none'" /></figure>
+      <figure class="photo-frame aspect-[4/5] rounded-[2rem] md:translate-y-8"><div class="photo-fallback">{L.imgInterior}</div><img loading="lazy" src="/images/chapora-fort-interior.jpg" alt={`${ATTRACTION_FULL_NAME_LOCAL}, ${CITY_NAME_LOCAL}, ${COUNTRY_NAME}`} width="900" height="1125" onerror="this.style.display='none'" /></figure>
+      <figure class="photo-frame aspect-[4/5] rounded-[2rem]"><div class="photo-fallback">{L.imgSea}</div><img loading="lazy" src="/images/chapora-fort-sea-view.jpg" alt={`${ATTRACTION_FULL_NAME_LOCAL}, ${CITY_NAME_LOCAL}, ${COUNTRY_NAME}`} width="900" height="1125" onerror="this.style.display='none'" /></figure>
+    </div>
+  </section>
+
+  <section id="भेट" class="bg-sea-900 py-20 text-white lg:py-28">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <p class="text-sm font-black uppercase tracking-[.18em] text-sea-300">{L.visitEyebrow}</p>
+      <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">{L.visitTitle}</h2>
+      <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {L.visitCards.map((c) => (
+          <article class="rounded-3xl bg-white/8 p-6 ring-1 ring-white/12"><div class="text-3xl">{c.icon}</div><h3 class="mt-5 text-xl font-black">{c.title}</h3><p class="mt-2 leading-7 text-sea-100/80">{c.text}</p></article>
+        ))}
+      </div>
+      <aside class="mt-8 rounded-3xl border border-sand-300/30 bg-sand-100/10 p-6 text-sm leading-7 text-sand-100/85">{L.visitAside}</aside>
+    </div>
+  </section>
+
+  <WeatherSection locale={locale} />
+  <SeasonalSection locale={locale} />
+  <TransportSection locale={locale} />
+  <FacilitiesSection locale={locale} />
+
+  <section id="नकाशो" class="bg-laterite-100 py-20">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">{L.mapEyebrow}</p><h2 class="mt-2 text-4xl font-black text-laterite-900">{L.mapTitle}</h2></div><p class="max-w-xl text-sm leading-7 text-laterite-900/65">{L.mapDesc}</p></div>
+      <div class="overflow-hidden rounded-[2rem] border border-laterite-900/10 bg-white shadow-xl shadow-laterite-900/10">
+        <iframe title={L.mapIframeTitle} src={mapSrc} width="100%" height="520" style="border:0" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section id="भोंवतणी" class="bg-sand-50 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div>
+          <p class="text-sm font-black uppercase tracking-[.18em] text-sea-700">{L.nearEyebrow}</p>
+          <h2 class="mt-3 text-4xl font-black text-laterite-900">{L.nearTitle}</h2>
+          <p class="mt-5 max-w-2xl text-lg leading-8 text-laterite-900/70">{L.nearP}</p>
+          <div class="mt-7 space-y-4">
+            {L.nearCards.map((n) => (
+              <article class="rounded-3xl border border-laterite-900/10 bg-white p-6"><h3 class="text-xl font-black">{n.t}</h3><p class="mt-2 leading-7 text-laterite-900/70">{n.p}</p></article>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">{L.nearFoodTitle}</p>
+          <h2 class="mt-3 text-4xl font-black text-laterite-900">{locale === 'en' ? 'Seek local flavour, not brand names' : 'व्यावसायिक नावां ऐवजी स्थानिक चव शोधात'}</h2>
+          <p class="mt-5 text-lg leading-8 text-laterite-900/70">{L.nearFoodP}</p>
+          <div class="mt-8 rounded-[2rem] bg-laterite-900 p-7 text-sand-100"><h3 class="text-xl font-black">{locale === 'en' ? 'Handy eating order' : 'खाण्याचो उपयोगी क्रम'}</h3><ol class="mt-4 space-y-3 text-sm leading-7 text-sand-100/80">{L.nearFoodList.map((x) => <li>{x}</li>)}</ol></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ItinerarySection locale={locale} />
+  <ResponsibilitySection locale={locale} />
+  <StoriesSection locale={locale} />
+
+  <section id="प्रश्नोत्तर" class="bg-sand-50 py-20 lg:py-28">
+    <div class="mx-auto max-w-4xl px-5 lg:px-8">
+      <p class="text-sm font-black uppercase tracking-[.18em] text-sea-700">{L.faqEyebrow}</p>
+      <h2 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">{L.faqTitle}</h2>
+      <div class="mt-9 divide-y divide-laterite-900/10 border-y border-laterite-900/10">
+        {faqs.map(([q,a]) => <details class="group py-5"><summary class="flex cursor-pointer list-none items-center justify-between gap-5 text-lg font-black text-laterite-900"><span>{q}</span><span class="text-2xl text-laterite-500 transition group-open:rotate-45">+</span></summary><p class="mt-3 pr-10 leading-8 text-laterite-900/70">{a}</p></details>)}
+      </div>
+    </div>
+  </section>
+
+  <SourcesSection locale={locale} />
+</BaseLayout>

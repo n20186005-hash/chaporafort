@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withSiteName } from '../../data/site';
+import { type Locale } from '../../i18n/utils';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const L = locale === 'en'
+  ? {
+      title: 'Terms of service', desc: 'Terms of use for the Chapora Fort tourist guide.',
+      updated: 'Last updated: September 2026',
+      h1: 'Terms of service',
+      intro: 'Using this site means you accept these terms. It is an independent third-party, non-commercial tourism-information project; it has no official link with Chapora Fort, the Government of Goa or any other government or commercial body.',
+      h2a: 'Use of content', a: 'Content is for general travel planning and information only. The fort’s opening, safety, road, transport, fees or local rules may change.',
+      h2b: 'Accuracy of information', b: 'We try to match government and official tourism sources, but cannot guarantee it is complete or always current. Re-check important travel information from official sources before you go.',
+      h2c: 'Intellectual property', c: 'The site’s original design, logo and self-authored text may be protected under copyright. Google Maps data is embedded under Google’s applicable terms.',
+      h2d: 'Image rights and credit', d: 'Photographs stored as local files in the project belong to the original photographers. Each photo is used only under its licence terms. The distributed project keeps the source, photographer and licence details in public/images/PHOTO-CREDITS.md.',
+      h2e: 'Limitation of liability', e: 'The site is provided “as is”. We do not accept warranty or liability for travel decisions, property damage, personal injury, service changes or other losses based on this information, except where law imposes otherwise.',
+      h2f: 'External services', f: 'Maps, and usage analytics if you consent, may open external services. Those services have their own terms.'
+    }
+  : {
+      title: 'सेवा अटी', desc: 'चापोरा किल्ला प्रवासी मार्गदर्शकाच्या वापराच्या सेवा अटी.',
+      updated: 'शेवटचें अद्ययावत: सप्टेंबर 2026',
+      h1: 'सेवा अटी',
+      intro: 'हें संकेतथळ वापरून तुमी ह्या अटी मान्य करता. हें स्वतंत्र तिसऱ्या पक्षाचें, नाफायद्याचें पर्यटन माहिती प्रकल्प आसा; चापोरा किल्ला, गोवा सरकार वा इतर सरकारी वा व्यावसायिक संस्थेकडेन ताचो अधिकृत संबंध ना.',
+      h2a: 'सामग्रीचो वापर', a: 'मजकूर फकत सामान्य प्रवास नियोजन आनी माहिती खातीर आसा. किल्ल्याचें उगडप, सुरक्षा, रस्ता, वाहतूक, शुल्क वा स्थानिक नियम बदलूंक शकतात.',
+      h2b: 'माहितीची अचूकता', b: 'आमी सरकारी आनी अधिकृत पर्यटन स्रोतांशी ताळो घालपाचो प्रयत्न करतात, पूण पूर्णपण वा सदैव ताजी आसपाची हमी दिवंक शकना. महत्त्वाची यात्रा माहिती निघचे आदी अधिकृत स्रोतांवरून परत तपासात.',
+      h2c: 'बौद्धिक संपदा', c: 'संकेतथळाचो मूळ आराखडो, चिन्ह आनी स्वतः तयार केल्लो मजकूर लागू कॉपीराइट कायद्यांत संरक्षित आसूंक शकता. गुगल नकाशा डेटा गुगलच्या लागू अटींप्रमाणें एम्बेड केला आसा.',
+      h2d: 'चित्र हक्क आनी श्रेय', d: 'प्रकल्पांत स्थानिक फाइल म्हणूंक साठयल्ली छायाचित्रां मूळ छायाचित्रकारांच्या हक्कांत आसतात. प्रत्येक छायाचित्र फकत ताच्या परवान्याच्या अटींप्रमाणें वापरचें. वितरित प्रकल्पांत public/images/PHOTO-CREDITS.md फाइलांत मूळ स्रोत, छायाचित्रकार आनी परवान्याची माहिती दवरपाची रचना केली आसा.',
+      h2e: 'जबाबदारी मर्यादा', e: 'संकेतथळ “जशें आसा” तशें दिलें जाता. ह्या माहितीनुसार घेतिल्ल्या प्रवास निर्णयां, मालमत्ता नुकसान, वैयक्तिक दुखापत, सेवा बदल वा इतर तोट्यांची हमी वा भरपाई आमी स्वीकारना, जिथें कायद्यान वेगळें बंधनकारक नासता.',
+      h2f: 'बाह्य सेवा', f: 'नकाशा आनी, तुमी संमती दिल्यार, वापर विश्लेषण ह्या खातीर बाह्य सेवा उगडूंक शकतात. त्या सेवांच्या स्वतःच्या अटी लागू जातात.'
+    };
+---
+<BaseLayout title={withSiteName(L.title)} description={L.desc} locale={locale}>
+  <section class="bg-sand-50 py-16 lg:py-24"><article class="prose-legal mx-auto max-w-3xl px-5 lg:px-8">
+    <p class="text-sm font-black text-laterite-500">{L.updated}</p>
+    <h1 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">{L.h1}</h1>
+    <p class="mt-6 text-lg">{L.intro}</p>
+    <h2>{L.h2a}</h2><p>{L.a}</p>
+    <h2>{L.h2b}</h2><p>{L.b}</p>
+    <h2>{L.h2c}</h2><p>{L.c}</p>
+    <h2 id="चित्र-हक्क">{L.h2d}</h2><p>{L.d}</p>
+    <h2>{L.h2e}</h2><p>{L.e}</p>
+    <h2>{L.h2f}</h2><p>{L.f}</p>
+  </article></section>
+</BaseLayout>

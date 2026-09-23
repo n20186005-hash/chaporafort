@@ -1,0 +1,67 @@
+---
+// सविस्तर प्रवास मार्गदर्शन – विमानतळ, रेल्वे, बस, टॅक्सी/भाड्याने वाहन.
+// हो नाफायद्याचो प्रकल्प आसून खाजगी कॅब/भाडे कंपनीची नांवां शिफारस करिना;
+// फकत प्रकार आनी साधारण अंतर/वेळ दिता (प्रत्यक्ष वेळ वाहतूक व हंगामाप्रमाणें बदलता).
+import { type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const modesKok = [
+  { icon: '✈️', title: 'विमानतळा थावन', text: 'उत्तर गोव्यांत गोवा मनोहर आंतरराष्ट्रीय विमानतळ (Mopa) चड जवळ आसा; दक्षिण गोव्यांतल्या डाबोलीम विमानतळा पासूनय रस्त्यान येवंक येता. विमानतळा थावन भाड्याने वाहन (टॅक्सी / ऍप-कॅब) वागातोर-चापोरा दिशेन थेट घेवंक जाता – शेवटचो भाग पायी चडचो पडटा.' },
+  { icon: '🚆', title: 'रेल्वे स्थानका थावन', text: 'उत्तर गोव्याक लागून असलेलीं मुखेल स्थानकां म्हळ्यार थिवीम (पेडणें) आनी कारमळी. थिवीम थावन वागातोर/चापोरा अंतर कमी आसा. स्थानका थावन भाड्याने वाहन वा स्थानिक बसान पुढें मापुसा-अंजुना मार्गान वचात.' },
+  { icon: '🚌', title: 'बसान (सरकारी/खाजगी)', text: 'मापुसा बाजार-शहर चापोरा किल्ल्यापासून साधारण १० किमी आसा. पणजी / मापुसा थावन अंजुना-वागातोर वटेन वचपी बस मार्ग मेळटात; उतरपाची अचूक जागा ड्रायव्हर वा कंडक्टराक “चापोरा किल्ला” म्हणपून विचारात.' },
+  { icon: '🛵', title: 'टॅक्सी / भाड्याने वाहन', text: 'वागातोर–चापोरा रस्त्यान किल्ल्याच्या चडणीच्या पायथ्याक पावता. दुचाकी (स्कूटर) वा चारचाकी भाड्यान घेवप हो सुटसुटीत पर्याय; गर्दीच्या वेळार लवकर पावप बरें आनी पार्किंग जागा मेळपाक सोयीची.' }
+];
+const modesEn = [
+  { icon: '✈️', title: 'From the airport', text: 'In North Goa, Manohar International Airport (Mopa) is closer; you can also reach by road from Dabolim airport in South Goa. From the airport a hired vehicle (taxi / app-cab) goes directly towards Vagator–Chapora — the final stretch is on foot.' },
+  { icon: '🚆', title: 'From the railway station', text: 'The main stations near North Goa are Thivim (Pednem) and Karmali. Thivim is closer to Vagator/Chapora. From the station take a hired vehicle or a local bus onward via the Mapusa–Anjuna route.' },
+  { icon: '🚌', title: 'By bus (state/private)', text: 'Mapusa market-town is about 10 km from Chapora Fort. Bus routes from Panaji / Mapusa towards Anjuna–Vagator are available; ask the driver or conductor for “Chapora Fort” to get off at the right spot.' },
+  { icon: '🛵', title: 'Taxi / hired vehicle', text: 'Via the Vagator–Chapora road you reach the foot of the fort climb. Hiring a two-wheeler (scooter) or car is a convenient option; arriving early when busy helps and makes parking easier.' }
+];
+
+const distancesKok = [['पणजी (Panaji)', 'सुमार २० किमी'], ['मापुसा (Mapusa)', 'सुमार १० किमी'], ['थिवीम रेल्वे स्थानक', 'सुमार १५ किमी'], ['Mopa विमानतळ', 'सुमार ४० किमी'], ['डाबोलीम विमानतळ', 'सुमार ४५ किमी']];
+const distancesEn = [['Panaji', 'about 20 km'], ['Mapusa', 'about 10 km'], ['Thivim railway station', 'about 15 km'], ['Mopa airport', 'about 40 km'], ['Dabolim airport', 'about 45 km']];
+
+const L = locale === 'en'
+  ? { eyebrow: 'Getting here in detail', heading: 'Mapusa–Vagator route, then on foot', intro: 'Chapora Fort is close to Vagator, Anjuna and Mapusa. Using the options below you can reach the foot of the fort climb; the last part is almost always on foot.', distTitle: 'Approximate distance (by road)', distNote: 'Distances are approximate; actual time varies with traffic, season and road — check live traffic in maps.', finalTitle: 'Final on-foot climb', finalText: 'From the base parking/road the path up to the fort is short but steep. There is little shade on hot days; carry water, keep hands free and avoid slippery footwear. In monsoon the laterite rock and soil can be slippery — wear sturdy footwear.' }
+  : { eyebrow: 'सविस्तर प्रवास', heading: 'मापुसा–वागातोर मार्ग, मागीर पायी चडण', intro: 'चापोरा किल्लो वागातोर, अंजुना आनी मापुसा हांच्या जवळ आसा. खाली दिल्ले प्रकार वापरून तुमी किल्ल्याच्या चडणीच्या पायथ्याक पावूंक शकतात; शेवटचो भाग नेहमींच पायी चडचो पडटा.', distTitle: 'साधारण अंतर (रस्त्यान)', distNote: 'अंतर साधारण आसात; प्रत्यक्ष वेळ वाहतूक, हंगाम आनी रस्त्याप्रमाणें बदलता – नकाशांत चालू वाहतूक तपासात.', finalTitle: 'शेवटची पायी चडण', finalText: 'पायथ्याच्या पार्किंग/रस्त्या थावन किल्ल्याचेर वचपी वाट छोटी पूण उंच आसा. उश्ण दिवसांत सावली कमी मेळटा; उदक घेवात, हात मोकळे दवरात आनी निसरड्या पादत्राणां टाळात. पावसाळ्यांत लेटराइट दगड आनी माती निसरडी जावंक शकता – घट्ट पादत्राणां वापरात.' };
+
+const modes = locale === 'en' ? modesEn : modesKok;
+const distances = locale === 'en' ? distancesEn : distancesKok;
+---
+<section id="प्रवास" class="bg-sand-50 py-20 lg:py-28">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="grid gap-12 lg:grid-cols-[.9fr_1.1fr]">
+      <div>
+        <p class="text-sm font-black uppercase tracking-[.18em] text-sea-700">{L.eyebrow}</p>
+        <h2 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">{L.heading}</h2>
+        <p class="mt-5 text-lg leading-8 text-laterite-900/75">{L.intro}</p>
+        <div class="mt-7 rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm">
+          <h3 class="text-base font-black uppercase tracking-[.14em] text-laterite-500">{L.distTitle}</h3>
+          <ul class="mt-4 divide-y divide-laterite-900/10 text-sm">
+            {distances.map(([place, d]) => (
+              <li class="flex items-center justify-between gap-4 py-2.5"><span class="font-bold text-laterite-900">{place}</span><span class="text-laterite-900/65">{d}</span></li>
+            ))}
+          </ul>
+          <p class="mt-3 text-xs text-laterite-900/55">{L.distNote}</p>
+        </div>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2">
+        {modes.map((m) => (
+          <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-sea-500/12 text-2xl" aria-hidden="true">{m.icon}</div>
+            <h3 class="mt-4 text-xl font-black text-laterite-900">{m.title}</h3>
+            <p class="mt-3 leading-7 text-laterite-900/70">{m.text}</p>
+          </article>
+        ))}
+        <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm sm:col-span-2">
+          <h3 class="text-xl font-black text-laterite-900">{L.finalTitle}</h3>
+          <p class="mt-3 leading-7 text-laterite-900/70">{L.finalText}</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

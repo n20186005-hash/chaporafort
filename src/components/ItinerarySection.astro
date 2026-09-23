@@ -1,0 +1,68 @@
+---
+// प्रकारान छान वावर-मार्ग (व्यक्ती/कुटुंबानुसार) आनी सामान्य अर्ध-दिवस / पूर्ण-दिवस मार्ग.
+// सगळे मार्ग किल्ल्याच्या चडणीच्या पायथ्याक पावल्या उपरांत सुरू जातात.
+import { type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const personasKok = [
+  { icon: '👨‍👩‍👧', title: 'पालक-भुरगीं (कुटुंब)', points: ['पहाटे वा सकाळींच वचात – उन्हा पयलीं चडण सुखद.', 'चडणीच्या वाटेर हातांक धरपाक रेलिंग ना ती जागा ल्हानांक लक्ष दियात.', 'वागातोर किनाऱ्याचेर सकाळचो पोहणें / वालंद; किल्ल्यावयल्यान सूर्यास्त उपरांत परत येवप.', 'भोंवतणींत स्थानिक जेवणाचो प्रकार – शाकाहारी थाळी सोपो पर्याय.'] },
+  { icon: '📷', title: 'छायाचित्र / निसर्ग', points: ['सांजवेळ (४:३०–६:००) सूर्यास्ता खातीर तटबंदीचेर पयलींच पावात.', 'अरबी समुद्र, वागातोर-अंजुना किनारेरेषा आनी चापोरा नदीचें मुख – तीनूय कोन एकाच ठिकाणांत.', 'पावसाळ्यांत ढगांचीं दृश्यां आनी हिरवळ हेर ऋतूंपरस वेगळीं.', 'ट्रायपॉड घेवात; कड्यांचेर सावध, तटबंदीचेर उभें रावपाक जागा मर्यादित.'] },
+  { icon: '♿', title: 'कमी श्रम / प्रवेशयोग्य', points: ['वाहन थेट चडणीच्या पायथ्याक पावयात (शक्य जाल्यार).', 'शेवटची चडण उंच आनी असमान आसा – व्हीलचेअर प्रवेश मर्यादित; सोबतच्यांक आदार घेवप.', 'खाला पायथ्याचेरच दृश्य, कॅफे/विश्रांती आनी किनारो पळोवपाक मेळटा.', 'उश्ण दिसांत सावली कमी मेळटा – ल्हान वेळेंत भेट दवरात.'] }
+];
+const personasEn = [
+  { icon: '👨‍👩‍👧', title: 'Parents–kids (family)', points: ['Go at dawn or early morning — the climb is pleasant before the heat.', 'On the climb, watch children where there is no railing to hold.', 'Morning swim / splash at Vagator beach; return after the fort sunset.', 'Try local food around — a vegetarian thali is an easy option.'] },
+  { icon: '📷', title: 'Photography / nature', points: ['Reach the ramparts early (4:30–6:00 pm) for the sunset.', 'Arabian Sea, the Vagator–Anjuna coastline and the Chapora river mouth — all three angles in one spot.', 'Monsoon clouds and greenery are different from other seasons.', 'Bring a tripod; be careful on cliffs, space to stand on the ramparts is limited.'] },
+  { icon: '♿', title: 'Low effort / accessible', points: ['Get the vehicle right to the foot of the climb if possible.', 'The final climb is steep and uneven — wheelchair access is limited; lean on companions.', 'Below at the base you can see views, cafés/rest and the beach.', 'Shade is limited on hot days — keep the visit short.'] }
+];
+
+const generalKok = [
+  { title: 'अर्ध-दिवस (२–३ तास)', steps: ['पायथ्याच्या पार्किंग/रस्त्या थावन पायी चडण.', 'तटबंदी फेरफटको, मुख्य बुरुज आनी सूर्यास्त-बिंदू.', 'वागातोर किनाऱ्याचेर उतरप वा स्थानिक जेवण.', 'सकाळीं पावल्यार दुपारीं परत येवप.'] },
+  { title: 'पूर्ण-दिवस (५–६ तास)', steps: ['सकाळीं किल्ल्याक भेट आनी चडण.', 'अंजुना किनारो वा चापोरा नदीचें मुख – भोंवतणीचो मार्ग.', 'दुपारी स्थानिक जेवण / विश्रांती (प्रकारान).', 'सांजवेळ परत किल्ल्यावयल्यान सूर्यास्त पळोवप.'] }
+];
+const generalEn = [
+  { title: 'Half-day (2–3 hours)', steps: ['Walk up from the base parking/road.', 'Rampart circuit, main bastion and the sunset point.', 'Go down to Vagator beach or have local food.', 'Arrive in the morning, return by afternoon.'] },
+  { title: 'Full-day (5–6 hours)', steps: ['Morning visit and climb to the fort.', 'Anjuna beach or the Chapora river mouth — the around route.', 'Afternoon local meal / rest (by type).', 'Return in the evening for the fort sunset.'] }
+];
+
+const L = locale === 'en'
+  ? { eyebrow: 'Itineraries', heading: 'Routes by type and general visit plans' }
+  : { eyebrow: 'वावर-मार्ग', heading: 'प्रकारान छान मार्ग आनी सामान्य भेटीची योजना' };
+
+const personas = locale === 'en' ? personasEn : personasKok;
+const general = locale === 'en' ? generalEn : generalKok;
+---
+<section id="मार्ग" class="bg-sand-50 py-20 lg:py-28">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <p class="text-sm font-black uppercase tracking-[.18em] text-sea-700">{L.eyebrow}</p>
+    <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight text-laterite-900 sm:text-5xl">{L.heading}</h2>
+
+    <div class="mt-9 grid gap-5 lg:grid-cols-3">
+      {personas.map((p) => (
+        <article class="rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-sea-500/12 text-2xl" aria-hidden="true">{p.icon}</div>
+          <h3 class="mt-4 text-xl font-black text-laterite-900">{p.title}</h3>
+          <ol class="mt-4 space-y-2.5 text-sm leading-7 text-laterite-900/75">
+            {p.points.map((pt) => <li class="flex gap-2"><span class="font-black text-sea-700">›</span><span>{pt}</span></li>)}
+          </ol>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-8 grid gap-5 lg:grid-cols-2">
+      {general.map((g) => (
+        <article class="rounded-3xl bg-laterite-900 p-6 text-sand-100 sm:p-7">
+          <h3 class="text-xl font-black">{g.title}</h3>
+          <ol class="mt-4 space-y-3 text-sm leading-7 text-sand-100/85">
+            {g.steps.map((s, i) => (
+              <li class="flex gap-3"><span class="shrink-0 rounded-full bg-sand-100/15 px-2.5 py-0.5 text-xs font-black text-sand-100">{i + 1}</span><span>{s}</span></li>
+            ))}
+          </ol>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

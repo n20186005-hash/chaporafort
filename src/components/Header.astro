@@ -1,16 +1,45 @@
 ---
 import Logo from './Logo.astro';
+import { type Locale, localeBase } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const base = localeBase(locale);
+
+// नेव्हिगेशन लिंक – दोगांय भासांतले लेबल वेगळे, पूण अँकर (#इतिहास इ.) सगळ्यांक सामायिक.
+const nav = locale === 'en'
+  ? [
+      { id: 'इतिहास', label: 'History' },
+      { id: 'भेट', label: 'Visit planning' },
+      { id: 'प्रवास', label: 'How to reach' },
+      { id: 'भोंवतणी', label: 'Around' },
+      { id: 'प्रश्नोत्तर', label: 'FAQ' }
+    ]
+  : [
+      { id: 'इतिहास', label: 'इतिहास' },
+      { id: 'भेट', label: 'भेट नियोजन' },
+      { id: 'प्रवास', label: 'कशें पावचें' },
+      { id: 'भोंवतणी', label: 'भोंवतणी' },
+      { id: 'प्रश्नोत्तर', label: 'प्रश्नोत्तर' }
+    ];
+
+const mapOpen = locale === 'en' ? 'Open map' : 'नकाशो उगडात';
+const switchLabel = locale === 'en' ? 'कोंकणी' : 'English';
+const switchHref = locale === 'en' ? '/' : '/en/';
 ---
 <header class="sticky top-0 z-50 border-b border-laterite-900/10 bg-sand-50/92 backdrop-blur-xl">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-3 lg:px-8">
     <Logo />
-    <nav aria-label="मुखेल नेव्हिगेशन" class="hidden items-center gap-5 text-sm font-bold text-laterite-900 md:flex">
-      <a class="hover:text-laterite-500" href="/#इतिहास">इतिहास</a>
-      <a class="hover:text-laterite-500" href="/#भेट">भेट नियोजन</a>
-      <a class="hover:text-laterite-500" href="/#प्रवास">कशें पावचें</a>
-      <a class="hover:text-laterite-500" href="/#भोंवतणी">भोंवतणी</a>
-      <a class="hover:text-laterite-500" href="/#प्रश्नोत्तर">प्रश्नोत्तर</a>
+    <nav aria-label={locale === 'en' ? 'Main navigation' : 'मुखेल नेव्हिगेशन'} class="hidden items-center gap-5 text-sm font-bold text-laterite-900 md:flex">
+      {nav.map((n) => (
+        <a class="hover:text-laterite-500" href={`${base}/#${n.id}`}>{n.label}</a>
+      ))}
     </nav>
-    <a href="https://maps.app.goo.gl/3z6axsvdHe2spoFg8" rel="noopener noreferrer" target="_blank" class="rounded-full bg-sea-900 px-4 py-2 text-sm font-extrabold text-white no-underline shadow-sm hover:bg-sea-700">नकाशो उगडात</a>
+    <div class="flex items-center gap-2">
+      <a href={switchHref} class="hidden rounded-full border border-laterite-900/15 px-3 py-1.5 text-xs font-extrabold text-laterite-700 hover:bg-laterite-900 hover:text-white sm:inline-block no-underline">{switchLabel}</a>
+      <a href="https://maps.app.goo.gl/3z6axsvdHe2spoFg8" rel="noopener noreferrer" target="_blank" class="rounded-full bg-sea-900 px-4 py-2 text-sm font-extrabold text-white no-underline shadow-sm hover:bg-sea-700">{mapOpen}</a>
+    </div>
   </div>
 </header>

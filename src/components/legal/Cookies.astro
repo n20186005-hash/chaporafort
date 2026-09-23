@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withSiteName } from '../../data/site';
+import { type Locale } from '../../i18n/utils';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const L = locale === 'en'
+  ? {
+      title: 'Cookie policy', desc: 'Set your cookie and browser-storage preferences on this page.',
+      updated: 'Last updated: September 2026',
+      h1: 'Cookie policy',
+      intro: 'Here you can directly change your cookie and browser-storage preferences. Essential storage may be used for the site’s basic operation; analytics runs only with your permission.',
+      essTitle: 'Essential cookies', essText: 'Required to keep the site’s basic setup working. Cannot be turned off.',
+      anTitle: 'Analytics cookies', anText: 'To understand aggregated usage via Google Analytics. Loads only after you enable it.',
+      prefTitle: 'Preference storage', prefText: 'Remembers choices like your cookie settings in this browser.',
+      mktTitle: 'Marketing cookies', mktText: 'No ad or personalised-marketing script is loaded in this project. Always off.',
+      save: 'Save preferences', reject: 'Reject all except essential',
+      change: 'Change consent', changeText: 'You can return to this page any time to change settings. After turning analytics off, the next page visit will not load Google Analytics; any third-party cookies already created may need removal from your browser settings.',
+      statusSaved: 'Your preferences were saved in this browser.'
+    }
+  : {
+      title: 'कुकी मांडावळ', desc: 'कुकी पसंती बदलपाचें स्वतंत्र पान.',
+      updated: 'शेवटचें अद्ययावत: सप्टेंबर 2026',
+      h1: 'कुकी मांडावळ',
+      intro: 'तुमी हांगा कुकी आनी ब्राउझर साठवणीची पसंती थेट बदलूंक शकतात. आवश्यक साठवण संकेतथळाच्या मूलभूत कामा खातीर वापरली जावंक शकता; विश्लेषण फकत तुमच्या परवानगीन चालू जाता.',
+      essTitle: 'आवश्यक कुकी', essText: 'संकेतथळाची मूलभूत मांडावळ चालू दवरपाक गरजेची. बंद करूं येना.',
+      anTitle: 'विश्लेषण कुकी', anText: 'गुगल अॅनालिटिक्स मार्फत एकत्रित वापर समजून घेवपाक. सुरू केल्याबगर लोड जावना.',
+      prefTitle: 'पसंती साठवण', prefText: 'तुमच्या कुकी मांडावळी सारख्या पसंती ह्या ब्राउझरांत लक्षांत दवरता.',
+      mktTitle: 'विपणन कुकी', mktText: 'ह्या प्रकल्पांत जाहिरात वा वैयक्तिकीकृत विपणन स्क्रिप्ट लोड केल्या जात नात. मांडावळ बंदच दवरली आसा.',
+      save: 'पसंती जतन करात', reject: 'आवश्यक सोडून सगळें नाकारात',
+      change: 'संमती बदलप', changeText: 'ह्या पानार परत येऊन तुमी केन्नाय मांडावळ बदलूंक शकतात. विश्लेषण बंद केल्या उपरांत पुढची पान भेट गुगल अॅनालिटिक्स लोड करची ना; आधीच तयार जाल्ले तिसऱ्या पक्षाचे कुकी तुमच्या ब्राउझर मांडावळींतून मिटोवचे लागूंक शकतात.',
+      statusSaved: 'तुमची पसंती ह्या ब्राउझरांत जतन जाली.'
+    };
+const statusSavedJson = JSON.stringify(L.statusSaved);
+---
+<BaseLayout title={withSiteName(L.title)} description={L.desc} locale={locale}>
+  <section class="bg-sand-50 py-16 lg:py-24"><article class="prose-legal mx-auto max-w-3xl px-5 lg:px-8">
+    <p class="text-sm font-black text-laterite-500">{L.updated}</p>
+    <h1 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">{L.h1}</h1>
+    <p class="mt-6 text-lg">{L.intro}</p>
+    <form id="cookie-form" class="mt-9 space-y-4" aria-describedby="save-status">
+      <label class="flex items-start justify-between gap-5 rounded-3xl border border-laterite-900/10 bg-white p-5"><span><strong class="block text-lg">{L.essTitle}</strong><span class="mt-1 block text-sm text-laterite-900/65">{L.essText}</span></span><input class="mt-2 h-5 w-5" type="checkbox" checked disabled /></label>
+      <label class="flex items-start justify-between gap-5 rounded-3xl border border-laterite-900/10 bg-white p-5"><span><strong class="block text-lg">{L.anTitle}</strong><span class="mt-1 block text-sm text-laterite-900/65">{L.anText}</span></span><input id="analytics" class="mt-2 h-5 w-5" type="checkbox" /></label>
+      <label class="flex items-start justify-between gap-5 rounded-3xl border border-laterite-900/10 bg-white p-5"><span><strong class="block text-lg">{L.prefTitle}</strong><span class="mt-1 block text-sm text-laterite-900/65">{L.prefText}</span></span><input id="preferences" class="mt-2 h-5 w-5" type="checkbox" /></label>
+      <label class="flex items-start justify-between gap-5 rounded-3xl border border-laterite-900/10 bg-white p-5"><span><strong class="block text-lg">{L.mktTitle}</strong><span class="mt-1 block text-sm text-laterite-900/65">{L.mktText}</span></span><input class="mt-2 h-5 w-5" type="checkbox" disabled /></label>
+      <div class="flex flex-wrap gap-3 pt-3">
+        <button class="rounded-full bg-sea-900 px-5 py-3 font-black text-white" type="submit">{L.save}</button>
+        <button id="reject" class="rounded-full border border-laterite-900/20 bg-white px-5 py-3 font-black text-laterite-900" type="button">{L.reject}</button>
+      </div>
+      <p id="save-status" class="min-h-6 text-sm font-bold text-sea-700" aria-live="polite"></p>
+    </form>
+    <h2>{L.change}</h2>
+    <p>{L.changeText}</p>
+  </article></section>
+  <script is:inline>
+    (() => {
+      const KEY = 'chapora-consent-v1';
+      const form = document.getElementById('cookie-form');
+      const analytics = document.getElementById('analytics');
+      const preferences = document.getElementById('preferences');
+      const reject = document.getElementById('reject');
+      const status = document.getElementById('save-status');
+      const statusSaved = {statusSaved};
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch {}
+      if (saved) { analytics.checked = !!saved.analytics; preferences.checked = !!saved.preferences; }
+      const store = (data) => { localStorage.setItem(KEY, JSON.stringify(data)); status.textContent = statusSaved; };
+      form.addEventListener('submit', (e) => { e.preventDefault(); store({ necessary:true, analytics:analytics.checked, preferences:preferences.checked, marketing:false }); if (analytics.checked) location.reload(); });
+      reject.addEventListener('click', () => { analytics.checked = false; preferences.checked = false; store({ necessary:true, analytics:false, preferences:false, marketing:false }); });
+    })();
+  </script>
+</BaseLayout>

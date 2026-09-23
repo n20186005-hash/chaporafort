@@ -1,0 +1,64 @@
+---
+// संदर्भ व स्रोत – सार्वजनिक व नाफायद्याचे स्रोत.
+import { type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const sources = [
+  { title: 'Goa Tourism Development Corporation (GTDC)', sub: 'Chapora Fort – official destination page', type: 'अधिकृत संकेतथळ', url: 'https://goa-tourism.com/fort/chapora-fort/' },
+  { title: 'Government of Goa', sub: 'Department of Tourism – North Goa destinations', type: 'अधिकृत संकेतथळ', url: 'https://www.goa.gov.in/' },
+  { title: 'India Code', sub: 'Goa, Daman and Diu Public Parks and Gardens (Preservation) Act, 1963', type: 'सार्वजनिक कायदो', url: 'https://www.indiacode.nic.in/' },
+  { title: 'Wikipedia', sub: 'Chapora Fort – history and overview', type: 'विकिपीडिया', url: 'https://en.wikipedia.org/wiki/Chapora_Fort' },
+  { title: 'Google Maps', sub: 'Chapora Fort, Vagator, Goa — location & ratings', type: 'नकाशा', url: 'https://maps.app.goo.gl/3z6axsvdHe2spoFg8' },
+  { title: 'Local tradition', sub: 'Chapora Fort folk tales (Adil Shahi, Sambhaji Raje, Dil Chahta Hai)', type: 'स्थानिक परंपरा', url: 'https://goa-tourism.com/fort/chapora-fort/' }
+];
+
+const typeMap: Record<string, string> = {
+  'अधिकृत संकेतथळ': 'Official site',
+  'सार्वजनिक कायदो': 'Public law',
+  'विकिपीडिया': 'Wikipedia',
+  'नकाशा': 'Map',
+  'स्थानिक परंपरा': 'Local tradition'
+};
+
+const L = locale === 'en'
+  ? {
+      eyebrow: 'References',
+      title: 'Sources behind this guide',
+      intro: 'The information in this guide is compiled from the following public, non-commercial sources:',
+      note: 'Some mentions are based on tradition and new research may change them.',
+      foot: 'Last edited: 2026-09-23 · This guide is independent, non-commercial and educational.'
+    }
+  : {
+      eyebrow: 'संदर्भ व स्रोत',
+      title: 'ह्या मार्गदर्शकाचे स्रोत',
+      intro: 'ह्या मार्गदर्शकांत दिल्ली माहिती खालील सार्वजनिक व नाफायद्याच्यो स्रोतांकडल्यान तयार केल्या:',
+      note: 'कांय उल्लेख परंपरेचेर आदारीत आसून नवें संशोधन तांच्यांत बदल हाडूंक शकता.',
+      foot: 'संपादन तारीख: 2026-09-23 · हें मार्गदर्शक स्वतंत्र, नाफायद्याचें आनी शिक्षणपर आसा.'
+    };
+---
+<section id="संदर्भ" class="bg-laterite-100 py-20">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">{L.eyebrow}</p>
+    <h2 class="mt-3 text-4xl font-black text-laterite-900">{L.title}</h2>
+    <p class="mt-5 max-w-3xl text-lg leading-8 text-laterite-900/70">{L.intro}</p>
+    <div class="mt-8 grid gap-4 md:grid-cols-2">
+      {sources.map((s) => (
+        <a href={s.url} target="_blank" rel="noopener noreferrer" class="group flex items-center justify-between gap-4 rounded-3xl border border-laterite-900/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <div class="min-w-0">
+            <h3 class="truncate font-black text-laterite-900">{s.title}</h3>
+            <p class="mt-1 truncate text-sm text-laterite-900/60">{s.sub}</p>
+          </div>
+          <span class="shrink-0 rounded-full bg-sand-100 px-3 py-1 text-xs font-bold text-laterite-700">{locale === 'en' ? (typeMap[s.type] ?? s.type) : s.type}</span>
+        </a>
+      ))}
+    </div>
+    <div class="mt-8 rounded-2xl border border-laterite-900/10 bg-white/70 p-5 text-sm leading-7 text-laterite-900/65">
+      <p>{L.note}</p>
+      <p class="mt-2 text-xs text-laterite-900/50">{L.foot}</p>
+    </div>
+  </div>
+</section>

@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chaporafort.com/sitemap-index.xml
+Host: www.chaporafort.com
+Sitemap: https://www.chaporafort.com/sitemap-index.xml

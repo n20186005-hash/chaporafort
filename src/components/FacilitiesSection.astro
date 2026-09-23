@@ -2,67 +2,62 @@
 // सुविधा विभाग – किल्लो व आसपास उपलब्ध असोवपी सामान्य सोयी.
 // हो नाफायद्याचो प्रकल्प आसून कसलोच खाजगी उपक्रम/दुकान/रेस्टॉरंट/सेवा प्रदाता
 // शिफारस करीना – फकत प्रकार आनी सामान्य मार्गदर्शन दिता.
-const facilities = [
-  {
-    icon: '🚻',
-    title: 'शौचालय',
-    text: 'किल्ल्याच्या आतल्या प्रदेशांत सार्वजनिक शौचालय ना. वागातोर किनाऱ्याकडलो रस्तो, चापोरा गांव आनी किनारपट्टीचेर कांय सोयी आसूंक शकतात; त्या सुवाती हंगाम आनी व्यवस्थापनाप्रमाणें बदलतात. निघचे आदी जरूर तपासात.'
-  },
-  {
-    icon: '🅿️',
-    title: 'पार्किंग',
-    text: 'चडपी वाटेच्या पायथ्याशीं मर्यादित पार्किंग जागा मेळटा; दुचाकी-चारचाकी खातीर उपलब्धता हंगामांत बदलटा. गर्दीच्या वेळार जागा लवकर भरता, देखून पहाटे वा पयलीं पावचें बरें. कांय काळांत मौसमी शुल्क आसूंक शकता.'
-  },
-  {
-    icon: '🍽️',
-    title: 'जेवण / उपाहार',
-    text: 'वागातोर, ओझ्राण (किनारपट्टी परिसर), चापोरा गांव आनी अंजुना मार्गार किनारपट्टीचीं उपाहारगृहां, बेकरी आनी स्थानिक खाण्याच्यो सोयी आसात – समुद्री मासे, शाकाहारी थाळी, गोवन करी-भात असो पर्याय मेळूंक शकता. चडण खातीर उदक आनी हलकें खाणें सोबत दवरात.'
-  },
-  {
-    icon: '🛏️',
-    title: 'रावपाची सोय',
-    text: 'वागातोर, अंजुना आनी चापोरा परिसरांत गेस्टहाउस, हॉमस्टे, हॉस्टेल, विला आनी रिसॉर्ट अशा खंयच्याय तरेची रावपाची सोय आसा. पर्यटन हंगामांत आनी सुटयांनी पयलींच बुकिंग करात.'
-  },
-  {
-    icon: '🛍️',
-    title: 'खरेदी / दुकानां',
-    text: 'गांवांतलीं ल्हान दुकानां उदक, स्नॅक्स आनी जरुरीच्यो वस्तू दितात. अंजुन्यांत आठवड्यांतलो एक दीस बाजार भरता तेन्ना हस्तकला आनी फॅब्रिक मेळटात. ह्यो सुवाती आनी तांचो उगडपाचो वेळ काळाप्रमाणें बदलूंक शकता.'
-  },
-  {
-    icon: '⛽',
-    title: 'इंधन / EV चार्जिंग',
-    text: 'मापुसा–वागातोर मुखेल मार्गार आनी अंजुना–चापोरा भोंवतणी इंधन केंद्रां मेळटात. उत्तर गोव्यांत विद्युत वाहन (EV) चार्जिंग पॉइंट वाडटात; ताजी सुविधा आनी उपलब्धता तपासपा खातीर मॅप अॅप्स वापरात.'
-  },
-  {
-    icon: '🏧',
-    title: 'पयशे / ATM',
-    text: 'अंजुन्या आनी मापुसा भागांत ATM केंद्रां आसात. डिजिटल / UPI सारकिल्लें पेमेंट चडतेर जाग्यार चलता, पूण कांय ल्हान दुकानां खातीर थोडें रोख पयशे सोबत दवरप बरें.'
-  },
-  {
-    icon: '🏥',
-    title: 'आरोग्य / फार्मसी',
-    text: 'अंजुन्या आनी मापुसा परिसरांत फार्मसी, आरोग्य केंद्रां आनी हॉस्पिटलां मेळटात. आपत्कालीन परिस्थितींत 108 (आपत्कालीन सेवा) वापरात; भेटे आदी लागींच्या आरोग्य सुविधेची नोंद घेवप उपेगी.'
-  },
-  {
-    icon: '📶',
-    title: 'मोबाईल / इंटरनेट',
-    text: 'किल्ल्याचेर मोबाईल रांग सामान्यपणान मेळटा, पूण कड्यांचेर वा दोंगरामुखार कांय जाग्यांचेर रांग कमजोर जावंक शकता. गर्दीच्या वेळार इंटरनेट सगळ्यांच्या वाट्यान उरता; नकाशो आदींच ऑफलाइन उतरयात.'
-  },
-  {
-    icon: '💧',
-    title: 'उदक / विसवो',
-    text: 'किल्ल्यावेल्या प्रदेशांत पिवपाचें उदक आनी बसपाच्यो सोयी निश्चित मेळच्यो अशें ना. स्वत:कडेन पिवपाचें उदक आनी हलकें खाणें दवरात; तटबंदीचेर सावळी मर्यादित आसता.'
-  }
+import { type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const facilitiesKok = [
+  { icon: '🚻', title: 'शौचालय', text: 'किल्ल्याच्या आतल्या प्रदेशांत सार्वजनिक शौचालय ना. वागातोर किनाऱ्याकडलो रस्तो, चापोरा गांव आनी किनारपट्टीचेर कांय सोयी आसूंक शकतात; त्या सुवाती हंगाम आनी व्यवस्थापनाप्रमाणें बदलतात. निघचे आदी जरूर तपासात.' },
+  { icon: '🅿️', title: 'पार्किंग', text: 'चडपी वाटेच्या पायथ्याशीं मर्यादित पार्किंग जागा मेळटा; दुचाकी-चारचाकी खातीर उपलब्धता हंगामांत बदलटा. गर्दीच्या वेळार जागा लवकर भरता, देखून पहाटे वा पयलीं पावचें बरें. कांय काळांत मौसमी शुल्क आसूंक शकता.' },
+  { icon: '🍽️', title: 'जेवण / उपाहार', text: 'वागातोर, ओझ्राण (किनारपट्टी परिसर), चापोरा गांव आनी अंजुना मार्गार किनारपट्टीचीं उपाहारगृहां, बेकरी आनी स्थानिक खाण्याच्यो सोयी आसात – समुद्री मासे, शाकाहारी थाळी, गोवन करी-भात असो पर्याय मेळूंक शकता. चडण खातीर उदक आनी हलकें खाणें सोबत दवरात.' },
+  { icon: '🛏️', title: 'रावपाची सोय', text: 'वागातोर, अंजुना आनी चापोरा परिसरांत गेस्टहाउस, हॉमस्टे, हॉस्टेल, विला आनी रिसॉर्ट अशा खंयच्याय तरेची रावपाची सोय आसा. पर्यटन हंगामांत आनी सुटयांनी पयलींच बुकिंग करात.' },
+  { icon: '🛍️', title: 'खरेदी / दुकानां', text: 'गांवांतलीं ल्हान दुकानां उदक, स्नॅक्स आनी जरुरीच्यो वस्तू दितात. अंजुन्यांत आठवड्यांतलो एक दीस बाजार भरता तेन्ना हस्तकला आनी फॅब्रिक मेळटात. ह्यो सुवाती आनी तांचो उगडपाचो वेळ काळाप्रमाणें बदलूंक शकता.' },
+  { icon: '⛽', title: 'इंधन / EV चार्जिंग', text: 'मापुसा–वागातोर मुखेल मार्गार आनी अंजुना–चापोरा भोंवतणी इंधन केंद्रां मेळटात. उत्तर गोव्यांत विद्युत वाहन (EV) चार्जिंग पॉइंट वाडटात; ताजी सुविधा आनी उपलब्धता तपासपा खातीर मॅप अॅप्स वापरात.' },
+  { icon: '🏧', title: 'पयशे / ATM', text: 'अंजुन्या आनी मापुसा भागांत ATM केंद्रां आसात. डिजिटल / UPI सारकिल्लें पेमेंट चडतेर जाग्यार चलता, पूण कांय ल्हान दुकानां खातीर थोडें रोख पयशे सोबत दवरप बरें.' },
+  { icon: '🏥', title: 'आरोग्य / फार्मसी', text: 'अंजुन्या आनी मापुसा परिसरांत फार्मसी, आरोग्य केंद्रां आनी हॉस्पिटलां मेळटात. आपत्कालीन परिस्थितींत 108 (आपत्कालीन सेवा) वापरात; भेटे आदी लागींच्या आरोग्य सुविधेची नोंद घेवप उपेगी.' },
+  { icon: '📶', title: 'मोबाईल / इंटरनेट', text: 'किल्ल्याचेर मोबाईल रांग सामान्यपणान मेळटा, पूण कड्यांचेर वा दोंगरामुखार कांय जाग्यांचेर रांग कमजोर जावंक शकता. गर्दीच्या वेळार इंटरनेट सगळ्यांच्या वाट्यान उरता; नकाशो आदींच ऑफलाइन उतरयात.' },
+  { icon: '💧', title: 'उदक / विसवो', text: 'किल्ल्यावेल्या प्रदेशांत पिवपाचें उदक आनी बसपाच्यो सोयी निश्चित मेळच्यो अशें ना. स्वत:कडेन पिवपाचें उदक आनी हलकें खाणें दवरात; तटबंदीचेर सावळी मर्यादित आसता.' }
 ];
+const facilitiesEn = [
+  { icon: '🚻', title: 'Toilets', text: 'There is no public toilet inside the fort grounds. Some facilities may exist along the Vagator beach road, in Chapora village and on the coastline; availability varies with season and management. Check before you set out.' },
+  { icon: '🅿️', title: 'Parking', text: 'Limited parking is available at the base of the climb; two-wheeler and car availability changes with the season. Spaces fill early when busy, so arriving in the morning or ahead of time is best. A seasonal fee may apply at times.' },
+  { icon: '🍽️', title: 'Food / eateries', text: 'Along Vagator, Ozran (the beach stretch), Chapora village and the Anjuna route you will find beach shacks, bakeries and local food options — seafood, vegetarian thali, Goan curry-rice and similar. Carry water and a light snack for the climb.' },
+  { icon: '🛏️', title: 'Where to stay', text: 'Around Vagator, Anjuna and Chapora there is accommodation of every kind — guesthouses, homestays, hostels, villas and resorts. Book ahead during the tourist season and holidays.' },
+  { icon: '🛍️', title: 'Shopping / shops', text: 'Small village shops sell water, snacks and essentials. In Anjuna a weekly market brings handicrafts and fabrics. These spots and their opening times change with the season.' },
+  { icon: '⛽', title: 'Fuel / EV charging', text: 'Fuel stations are found on the Mapusa–Vagator main road and around Anjuna–Chapora. Electric-vehicle (EV) charging points are growing in North Goa; use map apps to check current facilities and availability.' },
+  { icon: '🏧', title: 'Money / ATM', text: 'ATM centres are found around Anjuna and Mapusa. Digital / UPI payments work in most places, but keep some cash handy for smaller shops.' },
+  { icon: '🏥', title: 'Health / pharmacy', text: 'Pharmacies, health centres and hospitals are found around Anjuna and Mapusa. In an emergency dial 108 (emergency services); note the nearest health facility before your visit.' },
+  { icon: '📶', title: 'Mobile / internet', text: 'Mobile signal is usually available on the fort, but can weaken in spots near the cliffs or facing the hill. Internet is shared when busy; download maps offline beforehand.' },
+  { icon: '💧', title: 'Water / rest', text: 'There is no guaranteed drinking water or seating inside the fort grounds. Carry your own water and a light snack; shade on the ramparts is limited.' }
+];
+
+const L = locale === 'en'
+  ? {
+      eyebrow: 'Visitor facilities',
+      heading: 'Toilets, food, stay — understand nearby facilities by type',
+      disclaimer: 'Types only shown — no private names / recommendations',
+      note: 'This guide is non-commercial and does not recommend any private venture, shop, restaurant, lodging or service provider. The information above is general by type; verify the exact place, opening hours and current availability on site or in maps.'
+    }
+  : {
+      eyebrow: 'भेटेची सोयी',
+      heading: 'शौचालय, जेवण, रावप – भोंवतणच्यो सोयी प्रकारान समजून घेवात',
+      disclaimer: 'केवळ प्रकार दाखयल्यात – खाजगी नांव/शिफारस ना',
+      note: 'हें मार्गदर्शक नाफायद्याचें आसून कोणाचोय खाजगी उपक्रम, दुकान, रेस्टॉरंट, वसतिगृह वा सेवा प्रदाता शिफारस करिना. वयर दिल्ली माहिती सामान्य प्रकाराची आसा; अचूक जागा, उगडपाची वेळ आनी ताजी उपलब्धता सुवातीचेर वा नकाशांत तपासात.'
+    };
+
+const facilities = locale === 'en' ? facilitiesEn : facilitiesKok;
 ---
 <section id="सुविधा" class="bg-sea-900 py-20 text-white lg:py-28">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="flex flex-col justify-between gap-5 md:flex-row md:items-end">
       <div>
-        <p class="text-sm font-black uppercase tracking-[.18em] text-sea-300">भेटेची सोयी</p>
-        <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">शौचालय, जेवण, रावप – भोंवतणच्यो सोयी प्रकारान समजून घेवात</h2>
+        <p class="text-sm font-black uppercase tracking-[.18em] text-sea-300">{L.eyebrow}</p>
+        <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">{L.heading}</h2>
       </div>
-      <span class="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-white/10 px-4 py-2 text-xs font-bold text-sea-100 ring-1 ring-white/15 md:self-auto">केवळ प्रकार दाखयल्यात – खाजगी नांव/शिफारस ना</span>
+      <span class="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-white/10 px-4 py-2 text-xs font-bold text-sea-100 ring-1 ring-white/15 md:self-auto">{L.disclaimer}</span>
     </div>
     <div class="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {facilities.map((f) => (
@@ -73,6 +68,6 @@ const facilities = [
         </article>
       ))}
     </div>
-    <aside class="mt-8 rounded-3xl border border-sand-300/30 bg-sand-100/10 p-6 text-sm leading-7 text-sand-100/85">हें मार्गदर्शक नाफायद्याचें आसून कोणाचोय खाजगी उपक्रम, दुकान, रेस्टॉरंट, वसतिगृह वा सेवा प्रदाता शिफारस करिना. वयर दिल्ली माहिती सामान्य प्रकाराची आसा; अचूक जागा, उगडपाची वेळ आनी ताजी उपलब्धता सुवातीचेर वा नकाशांत तपासात.</aside>
+    <aside class="mt-8 rounded-3xl border border-sand-300/30 bg-sand-100/10 p-6 text-sm leading-7 text-sand-100/85">{L.note}</aside>
   </div>
 </section>

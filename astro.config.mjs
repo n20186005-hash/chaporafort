@@ -4,12 +4,24 @@ import tailwindcss from '@tailwindcss/vite';
 
 // 正式域名固定为 chaporafort.com；PUBLIC_SITE_URL 可在 CI/部署环境覆盖（例如临时预览域名）。
 const configuredSite = (process.env.PUBLIC_SITE_URL ?? '').trim();
-const site = configuredSite || 'https://chaporafort.com';
+const site = configuredSite || 'https://www.chaporafort.com';
 
 export default defineConfig({
   site,
   output: 'static',
-  integrations: [sitemap()],
+  i18n: {
+    defaultLocale: 'kok',
+    locales: ['kok', 'en'],
+    routing: { prefixDefaultLocale: false }
+  },
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: 'kok',
+        locales: { kok: 'x-default', en: 'en' }
+      }
+    })
+  ],
   vite: {
     plugins: [tailwindcss()]
   }

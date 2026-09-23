@@ -1,0 +1,54 @@
+---
+// शास्त्र / वारसा + भेटी दितना जबाबदारी – नाफायद्याच्या शिक्षणपर प्रकल्पाचो भाग.
+import { type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const scienceKok = [
+  { icon: '🪨', title: 'लेटराइट दगड', text: 'किल्ल्याची तटबंदी लाल लेटराइट दगडाची आसा – हो गोव्यांत सहज मेळपी, पावसाळ्यांत कडक जावपी प्रादेशिक दगड. उश्ण हवेंत दगड तपता, दवंत निसरडो जावंक शकता.' },
+  { icon: '🏰', title: 'स्थापत्य', text: '१७१७ चेर पुर्तुगेजांनी पुनर्बांधणी केली – डोंगराच्या उताराक धरून वळपी तटबंदी, अनियमित बुरुज, तोफां खातीर खोल जागा आनी न्हंयेक वचपी भूमिगत वाट. ही रचणूक सीमा-दृश्य आनी वाऱ्याक अडोळो दिवपाखातीर आसली.' },
+  { icon: '🦎', title: 'निसर्ग / परिसंस्था', text: 'उकडील्ल्या डोंगरमाथ्यार वनस्पती, सरडे (मॉनिटर लिझार्ड), ससाणे आनी स्थलांतरीत पक्षी दिसतात. किनाऱ्याक लागून डॉल्फिन वा सागरी पक्षी सांजवेळीं दिसूंक शकतात.' }
+];
+const scienceEn = [
+  { icon: '🪨', title: 'Laterite stone', text: 'The fort ramparts are of red laterite — a regional stone common in Goa that hardens in the monsoon. In hot weather the stone heats up and can be slippery when damp.' },
+  { icon: '🏰', title: 'Architecture', text: 'Rebuilt by the Portuguese in 1717 — ramparts following the hill slope, irregular bastions, deep emplacements for cannons and an underground path to the river. The layout served border views and broke the wind.' },
+  { icon: '🦎', title: 'Nature / ecology', text: 'On the open hilltop you see plants, monitor lizards, hawks and migratory birds. Near the coast dolphins or seabirds may appear in the evening.' }
+];
+
+const dutiesKok = ['कचरो परत घेवून वचात; दगड, भिंत वा पुरातन भागांचेर लिहूंक नाका.', 'तटबंदीच्या कड्याक सुरक्षित अंतर दवरात – अनेक ठिकाणी आधुनिक रेलिंग ना.', 'पावसाळ्यांत घसरण टाळपाक घट्ट पादत्राणां वापरात; चडणीचेर घाई करू नाका.', 'उश्ण हवेंत उदक, टोपी आनी सूर्यापासून संरक्षण घेवात; ल्हानांक आनी जाण्यांक लक्ष दियात.', 'लागींच्या गांव-किनाऱ्यांचो आदर करात; आवाज, वाहन-पार्किंग आनी स्थानिक नियम पाळात.'];
+const dutiesEn = ['Take your litter back; do not write on stones, walls or old structures.', 'Keep a safe distance from the rampart edge — many spots have no modern railing.', 'In monsoon wear sturdy footwear to avoid slips; do not rush the climb.', 'In hot weather carry water, a hat and sun protection; watch children and the elderly.', 'Respect nearby villages and beaches; follow noise, parking and local rules.'];
+
+const L = locale === 'en'
+  ? { eyebrow: 'Science & heritage', h1: 'Why the fort stands — a bit of science', h2: 'Visitor responsibility', h3: 'Keep the fort as it is', note: 'This guide is non-commercial and educational. The fort is ancient heritage — its sustainable appreciation and safety are everyone’s responsibility.' }
+  : { eyebrow: 'शास्त्र व वारसा', h1: 'किल्लो कसो उबो रावला – थोडें शास्त्र', h2: 'भेटी दितना जबाबदारी', h3: 'किल्लो तसोच दवरून पळयात', note: 'हें मार्गदर्शक नाफायद्याचें आनी शिक्षणपर आसा. किल्लो पुरातन वारसो आसा – ताची शाश्वत वळख आनी सुरक्षितताय दोगांयची जबाबदारी.' };
+
+const science = locale === 'en' ? scienceEn : scienceKok;
+const duties = locale === 'en' ? dutiesEn : dutiesKok;
+---
+<section id="जबाबदारी" class="bg-laterite-900 py-20 text-white lg:py-28">
+  <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-2 lg:px-8">
+    <div>
+      <p class="text-sm font-black uppercase tracking-[.18em] text-sand-300">{L.eyebrow}</p>
+      <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{L.h1}</h2>
+      <div class="mt-7 space-y-5">
+        {science.map((s) => (
+          <article class="rounded-3xl bg-white/8 p-6 ring-1 ring-white/12">
+            <div class="flex items-center gap-3"><span class="text-2xl" aria-hidden="true">{s.icon}</span><h3 class="text-xl font-black text-white">{s.title}</h3></div>
+            <p class="mt-2 text-sm leading-7 text-sand-100/80">{s.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+    <div class="flex flex-col justify-center">
+      <p class="text-sm font-black uppercase tracking-[.18em] text-sand-300">{L.h2}</p>
+      <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{L.h3}</h2>
+      <ul class="mt-7 space-y-4 text-lg leading-8 text-sand-100/85">
+        {duties.map((d) => <li class="flex gap-3"><span class="font-black text-sea-300">•</span><span>{d}</span></li>)}
+      </ul>
+      <p class="mt-6 rounded-2xl border border-sand-100/20 bg-sand-100/10 p-5 text-sm leading-7 text-sand-100/80">{L.note}</p>
+    </div>
+  </div>
+</section>

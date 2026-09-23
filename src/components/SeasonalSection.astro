@@ -1,0 +1,84 @@
+---
+// कालानुरूप भेटीची योजना – हवामान, समुद्र/पाणी आनी वन्यजीव/निसर्गाचो साधारण अभ्यास.
+// गोव्याच्या ऋतूंचेर आदारीत (स्थानिक हवामान-नमुने); कोणायचोच अधिकृत नोंद-संच
+// नाका म्हणून "साधारण" म्हणून दिलां. प्रत्यक्ष भेटी आदी अधिकृत हवामान व किनारी
+// सुचोवणी तपासात.
+import { type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const rowsKok = [
+  { season: 'हिवाळो / पावसानंतर', period: 'नोव्हेंबर – फेब्रुवारी', weather: '२०–३२°C · कोरडें, सुखद, स्पष्ट आकाश. पर्यटनाची सगळ्यांत बरी वेळ.', sea: 'समुद्र शांत, पाणी स्वच्छ; पोहण्याच्यो पूर्वसूचना स्थानिक पाटयांत पळयात.', wildlife: 'स्थलांतरीत पक्षी, समुद्रांत डॉल्फिन दिसूंक शकतात, ल्हान ससाणे/गिधाडां.', advice: 'दिसभर भेट दिवपाक योग्य; सांजवेळ सूर्यास्ता खातीर सगळ्यांत बरी.' },
+  { season: 'उन्हाळो (ग्रीष्म)', period: 'मार्च – मे', weather: '२५–३५°C · उश्ण आनी दमट; दुपारी उश्णपण कमालाक.', sea: 'समुद्र उबदार; पाण्यांत उतरपाक बरें, पूण दुपारी कडक उन्हाचो त्रास.', wildlife: 'सरपटणारे प्राणी सकाळ/संधिप्रकाशांत दिसूंक शकतात; रानांत फुलां-पानां कमी.', advice: 'पहाटेचेर वा सांजे वचात; उदक, टोपी आनी सूर्यापासून संरक्षण सोबत दवरात.' },
+  { season: 'पावसाळो (मान्सून)', period: 'जून – सप्टेंबर', weather: '२४–३०°C · मुसळधार पावस, वादळी वारे; ढगांची दृश्यां खूब.', sea: 'समुद्र रुक्ष, खोली वाडटा; पोहणें धोकादायक (लाल ध्वज), न्हंयेचो प्रवाह जोराचो.', wildlife: 'टेकड्यांचेर हिरवळ, लागींचे धबधबे, उदकांतले प्राणी व किडे सक्रिय.', advice: 'पूर्ण पावसाळी सामान; चडणीच्या वाटेर घट्ट पादत्राणां, अस्तुरो, सावधानेक.' },
+  { season: 'शरद / खंड-ऋतू', period: 'ऑक्टोबर', weather: '२४–३३°C · पावस कमी जाता, हवा नीट, कमी गर्दी.', sea: 'समुद्र स्थिर जावंक लागता; पाणी नीटसान स्वच्छ जावंक शकता.', wildlife: 'हिरवळ, फुलां-झाडां, परत येवपी पक्षी – छायाचित्रां खातीर बरें.', advice: 'शांत आनी स्वस्त वेळ; दृश्य-छायाचित्रां खातीर उत्कृष्ट.' }
+];
+const rowsEn = [
+  { season: 'Winter / post-monsoon', period: 'November – February', weather: '20–32°C · dry, pleasant, clear skies. The best time for tourism.', sea: 'Sea is calm, water clear; check local boards for swimming advisories.', wildlife: 'Migratory birds, dolphins at sea, small hawks/vultures may be seen.', advice: 'Good for a full-day visit; best of all for the sunset in the evening.' },
+  { season: 'Summer (pre-monsoon)', period: 'March – May', weather: '25–35°C · hot and humid; peak heat in the afternoon.', sea: 'Sea is warm; good for getting in the water, but harsh midday sun.', wildlife: 'Reptiles may appear at dawn/dusk; less flowering foliage in the hills.', advice: 'Go early morning or evening; carry water, a hat and sun protection.' },
+  { season: 'Monsoon (rainy)', period: 'June – September', weather: '24–30°C · heavy rain, stormy winds; lots of cloud scenery.', sea: 'Rough sea, deeper swell; swimming dangerous (red flag), strong river flow.', wildlife: 'Green hills, nearby waterfalls, aquatic life and insects active.', advice: 'Full monsoon gear; sturdy footwear on the climb, raincoat, caution.' },
+  { season: 'Autumn / shoulder', period: 'October', weather: '24–33°C · rain eases, air is clean, less crowd.', sea: 'Sea begins to settle; water can become nicely clear.', wildlife: 'Greenery, flowers, returning birds — good for photography.', advice: 'Quiet and cheaper window; excellent for views and photos.' }
+];
+
+const L = locale === 'en'
+  ? {
+      eyebrow: 'Seasonal visit planning',
+      heading: 'Weather, sea and wildlife — how to plan the visit by season',
+      intro: 'A general read of Goa’s four main seasons is given below. It is based on local weather patterns; before your actual visit, check official weather and coastal advisories.',
+      tSeason: 'Season / period',
+      tWeather: 'Weather & temperature',
+      tSea: 'Sea / water',
+      tWildlife: 'Wildlife / nature',
+      tAdvice: 'Visit recommendation',
+      foot: 'Temperatures and times in the table are approximate; actual conditions vary year to year. Check coastal swimming advisories on the local red/yellow flags.'
+    }
+  : {
+      eyebrow: 'कालानुरूप भेटीची योजना',
+      heading: 'हवामान, समुद्र आनी वन्यजीव – ऋतूप्रमाणें भेट कशी आंखात',
+      intro: 'गोव्याच्या चार मुख्य ऋतूंचो साधारण अभ्यास खाली दिला. ही माहिती स्थानिक हवामान-नमुन्यांवर आदारीत आसा; प्रत्यक्ष भेटी आदी अधिकृत हवामान व किनारी सुचोवणी तपासात.',
+      tSeason: 'ऋतू / काळ',
+      tWeather: 'हवामान व तापमान',
+      tSea: 'समुद्र / पाणी',
+      tWildlife: 'वन्यजीव / निसर्ग',
+      tAdvice: 'भेटीची शिफारस',
+      foot: 'टेबलांतलीं तापमान वेळा साधारण आसात; प्रत्यक्ष परिस्थिती वर्सा-वर्सांक वेगळी आसूंक शकता. किनारी पोहण्याच्यो सुचोवणी स्थानिक लाल/पालो ध्वजांत पळयात.'
+    };
+
+const rows = locale === 'en' ? rowsEn : rowsKok;
+---
+<section id="ऋतू" class="bg-sea-900 py-20 text-white lg:py-28">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <p class="text-sm font-black uppercase tracking-[.18em] text-sea-300">{L.eyebrow}</p>
+    <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">{L.heading}</h2>
+    <p class="mt-5 max-w-3xl text-lg leading-8 text-sea-100/80">{L.intro}</p>
+
+    <div class="mt-9 overflow-hidden rounded-[2rem] border border-white/15">
+      <table class="w-full border-collapse text-left text-sm">
+        <thead class="bg-white/10 text-xs font-black uppercase tracking-[.1em] text-sea-100">
+          <tr>
+            <th class="p-4">{L.tSeason}</th>
+            <th class="p-4">{L.tWeather}</th>
+            <th class="p-4">{L.tSea}</th>
+            <th class="p-4">{L.tWildlife}</th>
+            <th class="p-4">{L.tAdvice}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/10">
+          {rows.map((r) => (
+            <tr class="align-top">
+              <td class="p-4"><span class="block font-black text-white">{r.season}</span><span class="text-xs text-sea-200/80">{r.period}</span></td>
+              <td class="p-4 leading-6 text-sea-100/80">{r.weather}</td>
+              <td class="p-4 leading-6 text-sea-100/80">{r.sea}</td>
+              <td class="p-4 leading-6 text-sea-100/80">{r.wildlife}</td>
+              <td class="p-4 leading-6 text-sea-100/85">{r.advice}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-5 text-xs leading-6 text-sea-100/60">{L.foot}</p>
+  </div>
+</section>
