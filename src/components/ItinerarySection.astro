@@ -9,23 +9,99 @@ interface Props {
 const { locale } = Astro.props;
 
 const personasKok = [
-  { icon: '👨‍👩‍👧', title: 'पालक-भुरगीं (कुटुंब)', points: ['पहाटे वा सकाळींच वचात – उन्हा पयलीं चडण सुखद.', 'चडणीच्या वाटेर हातांक धरपाक रेलिंग ना ती जागा ल्हानांक लक्ष दियात.', 'वागातोर किनाऱ्याचेर सकाळचो पोहणें / वालंद; किल्ल्यावयल्यान सूर्यास्त उपरांत परत येवप.', 'भोंवतणींत स्थानिक जेवणाचो प्रकार – शाकाहारी थाळी सोपो पर्याय.'] },
-  { icon: '📷', title: 'छायाचित्र / निसर्ग', points: ['सांजवेळ (४:३०–६:००) सूर्यास्ता खातीर तटबंदीचेर पयलींच पावात.', 'अरबी समुद्र, वागातोर-अंजुना किनारेरेषा आनी चापोरा नदीचें मुख – तीनूय कोन एकाच ठिकाणांत.', 'पावसाळ्यांत ढगांचीं दृश्यां आनी हिरवळ हेर ऋतूंपरस वेगळीं.', 'ट्रायपॉड घेवात; कड्यांचेर सावध, तटबंदीचेर उभें रावपाक जागा मर्यादित.'] },
-  { icon: '♿', title: 'कमी श्रम / प्रवेशयोग्य', points: ['वाहन थेट चडणीच्या पायथ्याक पावयात (शक्य जाल्यार).', 'शेवटची चडण उंच आनी असमान आसा – व्हीलचेअर प्रवेश मर्यादित; सोबतच्यांक आदार घेवप.', 'खाला पायथ्याचेरच दृश्य, कॅफे/विश्रांती आनी किनारो पळोवपाक मेळटा.', 'उश्ण दिसांत सावली कमी मेळटा – ल्हान वेळेंत भेट दवरात.'] }
+  {
+    "title": "कुटुंबाची भेट",
+    "icon": "👨‍👩‍👧",
+    "points": [
+      "खात्रीच्या उगडपाच्या वेळांत ल्हान भेट निवडात.",
+      "गटाखातीर चडण आनी जमीन तपासात; भुरग्यांक कड्यांपासून दूर दवरात.",
+      "उदक, विसवो आनी परतीची भेट सुवात ठरयात."
+    ]
+  },
+  {
+    "title": "फोटो आनी निसर्ग",
+    "icon": "📷",
+    "points": [
+      "उगडपाची वेळ आनी फोटोची परवानगी विचारात; सूर्यास्ताचें दृश्य म्हळ्यार त्या वेळार प्रवेश न्हय.",
+      "लेटराइट भिंत, न्हंयमुख आनी किनाऱ्याचीं मेळपी दृश्यां निवडात.",
+      "अडथळे मानात आनी झाडां-जनावरांक त्रास दिवं नाकात."
+    ]
+  },
+  {
+    "title": "रसद आनी ल्हान भेट",
+    "icon": "♿",
+    "points": [
+      "प्रवासाआदी खरी वाट आनी योग्य रसद व्यवस्थापनाक विचारात.",
+      "सगळी वाट पांवड्यांबगर वा वाहन थेट चडणेकडेन पावतलें अशें मानूं नाकात.",
+      "वाट आपल्या गरजेक जुळना जाल्यार दुसरो पर्याय निवडात."
+    ]
+  }
 ];
 const personasEn = [
-  { icon: '👨‍👩‍👧', title: 'Parents–kids (family)', points: ['Go at dawn or early morning — the climb is pleasant before the heat.', 'On the climb, watch children where there is no railing to hold.', 'Morning swim / splash at Vagator beach; return after the fort sunset.', 'Try local food around — a vegetarian thali is an easy option.'] },
-  { icon: '📷', title: 'Photography / nature', points: ['Reach the ramparts early (4:30–6:00 pm) for the sunset.', 'Arabian Sea, the Vagator–Anjuna coastline and the Chapora river mouth — all three angles in one spot.', 'Monsoon clouds and greenery are different from other seasons.', 'Bring a tripod; be careful on cliffs, space to stand on the ramparts is limited.'] },
-  { icon: '♿', title: 'Low effort / accessible', points: ['Get the vehicle right to the foot of the climb if possible.', 'The final climb is steep and uneven — wheelchair access is limited; lean on companions.', 'Below at the base you can see views, cafés/rest and the beach.', 'Shade is limited on hot days — keep the visit short.'] }
+  {
+    "title": "Family visit",
+    "icon": "👨‍👩‍👧",
+    "points": [
+      "Choose a short visit during confirmed opening hours.",
+      "Assess the climb and surfaces for your group; keep children away from edges.",
+      "Plan water, breaks and a return meeting point."
+    ]
+  },
+  {
+    "title": "Photography and nature",
+    "icon": "📷",
+    "points": [
+      "Confirm opening and photography permissions first; sunset views do not establish sunset admission.",
+      "Choose accessible views of laterite walls, the river mouth and coastline.",
+      "Respect barriers and avoid disturbing plants or animals."
+    ]
+  },
+  {
+    "title": "Mobility and shorter visits",
+    "icon": "♿",
+    "points": [
+      "Ask management about the actual approach and suitable access before travelling.",
+      "Do not assume a complete step-free route or guaranteed vehicle access to the climb.",
+      "Select an alternative when the route does not meet your needs."
+    ]
+  }
 ];
 
 const generalKok = [
-  { title: 'अर्ध-दिवस (२–३ तास)', steps: ['पायथ्याच्या पार्किंग/रस्त्या थावन पायी चडण.', 'तटबंदी फेरफटको, मुख्य बुरुज आनी सूर्यास्त-बिंदू.', 'वागातोर किनाऱ्याचेर उतरप वा स्थानिक जेवण.', 'सकाळीं पावल्यार दुपारीं परत येवप.'] },
-  { title: 'पूर्ण-दिवस (५–६ तास)', steps: ['सकाळीं किल्ल्याक भेट आनी चडण.', 'अंजुना किनारो वा चापोरा नदीचें मुख – भोंवतणीचो मार्ग.', 'दुपारी स्थानिक जेवण / विश्रांती (प्रकारान).', 'सांजवेळ परत किल्ल्यावयल्यान सूर्यास्त पळोवप.'] }
+  {
+    "title": "ल्हान भेट",
+    "steps": [
+      "चालू प्रवेश आनी पावपाची वाट विचारात.",
+      "उगड्या भागांतलीं थोडीं ठिकाणां निवडात.",
+      "परती आनी विसव्या खातीर वेळ दवरात."
+    ]
+  },
+  {
+    "title": "लांब भेट",
+    "steps": [
+      "परवानगीच्या भागांत वेळ घालात; सगळे भाग उगडे आसतले अशें मानूं नाकात.",
+      "रसद आनी प्रवास तपासून वेगळो किनारी पडाव निवडात.",
+      "परतीचें नियोजन करात; बंद वेळेउपरांत परत प्रवेश मानूं नाकात."
+    ]
+  }
 ];
 const generalEn = [
-  { title: 'Half-day (2–3 hours)', steps: ['Walk up from the base parking/road.', 'Rampart circuit, main bastion and the sunset point.', 'Go down to Vagator beach or have local food.', 'Arrive in the morning, return by afternoon.'] },
-  { title: 'Full-day (5–6 hours)', steps: ['Morning visit and climb to the fort.', 'Anjuna beach or the Chapora river mouth — the around route.', 'Afternoon local meal / rest (by type).', 'Return in the evening for the fort sunset.'] }
+  {
+    "title": "Shorter visit",
+    "steps": [
+      "Confirm the actual entrance and approach.",
+      "Choose a small selection of open fort features.",
+      "Leave time for the return and breaks."
+    ]
+  },
+  {
+    "title": "Longer visit",
+    "steps": [
+      "Spend more time on permitted fort areas without assuming every section is open.",
+      "Consider one separate coastal stop only after checking access and the journey.",
+      "Confirm return arrangements; do not plan re-entry after closing."
+    ]
+  }
 ];
 
 const L = locale === 'en'

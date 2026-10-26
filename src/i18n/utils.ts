@@ -13,7 +13,7 @@ export function otherLocale(locale: Locale): Locale {
 
 // hreflang सूचक: कोंकणीचो x-default म्हणून वापर.
 export function hreflangFor(locale: Locale): string {
-  return locale === 'en' ? 'en' : 'x-default';
+  return locale === 'en' ? 'en' : 'kok-Deva';
 }
 
 // भासानुसार पानाचो पाय रस्तो (default locale प्रीफिक्स ना).

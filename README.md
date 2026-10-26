@@ -10,11 +10,11 @@ Astro + Tailwind CSS + TypeScript वर आधारित, Cloudflare Workers 
 - Tailwind CSS / @tailwindcss/vite 4.3.3
 - TypeScript 6.0.3
 - @astrojs/check 0.9.10
-- Wrangler 4.127.1 (तैनातीवेळी `pnpm dlx` मार्फत अचूक आवृत्ती)
+- Wrangler 4.127.1 (पर्यायी package deploy script); Cloudflare Uses `npx wrangler deploy`
 
 ## डोमेन
 अधिकृत डोमेन: **https://chaporafort.com**. `astro.config.mjs` मधल्या Astro `site` फील्डांत हेंच मूल्य आसा;
-जर `PUBLIC_SITE_URL` पर्यावरण चल दवरल्यार तें (उदा. CI / तात्पुरतें प्रेव्ह्यू डोमेन) प्राधान्यान वापरतात.
+हेंच कॅनॉनिकल मूळ पत्तो आसा.
 Canonical, og:url, sitemap आनी robots.txt सगळीं कायम उत्पन्न जातात.
 
 ## स्थानिक विकास
@@ -37,20 +37,20 @@ pnpm optimize:images
 ## पानांतलीं प्रकरणां
 Hero → इतिहास (काळ-ओळ सयत) → भेट नियोजन → **हवामान (Open-Meteo, 7 दीस)** → प्रवास →
 **सुविधा (प्रकार-आधारीत, शिफारस ना)** → नकाशो → भोंवतणी → **कथा आनी कल्पित कथा** →
-भेटेची यादी → प्रश्नोत्तर → संदर्भ → Footer. हवामान विभाग ब्राउझर Open-Meteo कडल्यान
-माहिती हाडटा आनी ३० मिनिटां खातीर कॅश दवरता; स्थिर होस्टिंगाक लागून सर्व्हर रनटाइम ना.
+भेटेची यादी → प्रश्नोत्तर → संदर्भ → Footer. हवामान आनी पर्यायी समुद्री मॉडेल बांदपाच्या वेळार मेळटा; ब्राउझरांत ताजो जावना वा हवामानाची localStorage कॅश ना.
 
 ## Cloudflare Workers
 `wrangler.jsonc` Workers runtime खातीर दिलां (static assets, `dist/`). डोमेन `chaporafort.com`
-वरवीं Cloudflare account मध्ये binding जाता.
+हे मूळ आनी www प्रवेश आधींच त्याच प्रकल्पाक जोडिल्ले आसात. चालू प्रवेश कॅनॉनिकल HTTPS मूळ पत्त्याक वळटा.
 
 ```bash
-pnpm deploy
+pnpm run build
+npx wrangler deploy
 ```
 
 ## PWA
 `public/manifest.webmanifest` (start_url `/`, theme #71361f), `public/sw.js`
-(नेव्हिगेशन network-first + `/index.html` आड ऑफलाइन), आनी
+(नेव्हिगेशन network-first; फकत तेंच साठयल्लें पान वा offline-unavailable), आनी
 `public/icons/{icon-192.png,icon-512.png,maskable-512.png}` (स्रोत `apple-touch-icon.png`).
 नवें icons बदलपा खातीर: `node scripts/pwa-icons.mjs`. हो पेज मोबाईल/डेस्कटॉप वयर
 स्वतंत्र अॅप म्हणून install करूंक येता.

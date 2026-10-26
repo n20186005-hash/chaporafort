@@ -1,5 +1,5 @@
 /* Service Worker – चापोरा किल्ला प्रवासी मार्गदर्शक */
-const VERSION = 'chapora-fort-v2026-09-03';
+const VERSION = 'chapora-fort-v2026-10-25';
 const PRECACHE = [
   '/',
   '/index.html',
@@ -36,10 +36,10 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(VERSION).then((cache) => cache.put(request, copy));
+          if(response.status===200)caches.open(VERSION).then((cache) => cache.put(request, copy)).catch(()=>{});
           return response;
         })
-        .catch(() => caches.match(request).then((hit) => hit || caches.match('/index.html')))
+        .catch(() => caches.match(request).then((hit) => hit || new Response('Offline — reconnect to open this page.',{status:503,headers:{'content-type':'text/plain; charset=utf-8'}})))
     );
     return;
   }
@@ -51,7 +51,7 @@ self.addEventListener('fetch', (event) => {
       return fetch(request).then((response) => {
         if (response && response.status === 200) {
           const copy = response.clone();
-          caches.open(VERSION).then((cache) => cache.put(request, copy));
+          if(response.status===200)caches.open(VERSION).then((cache) => cache.put(request, copy)).catch(()=>{});
         }
         return response;
       });

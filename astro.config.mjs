@@ -2,9 +2,8 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// 正式域名固定为 chaporafort.com；PUBLIC_SITE_URL 可在 CI/部署环境覆盖（例如临时预览域名）。
-const configuredSite = (process.env.PUBLIC_SITE_URL ?? '').trim();
-const site = configuredSite || 'https://www.chaporafort.com';
+// Canonical production origin; existing www requests are redirected by the Worker.
+const site = 'https://chaporafort.com';
 
 export default defineConfig({
   site,
@@ -16,9 +15,10 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      filter: page => !/\/404(?:\/|\.html)?$/.test(new URL(page).pathname),
       i18n: {
         defaultLocale: 'kok',
-        locales: { kok: 'x-default', en: 'en' }
+        locales: { kok: 'kok-Deva', en: 'en' }
       }
     })
   ],

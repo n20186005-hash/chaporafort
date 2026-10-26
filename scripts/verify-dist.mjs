@@ -101,12 +101,12 @@ if (existsSync(home)) {
   const text = readFileSync(home, 'utf8');
   const blocks = [...text.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
     .map((m) => { try { return JSON.parse(m[1]); } catch { return null; } });
-  if (blocks.length !== 5 || blocks.some((b) => !b)) {
-    console.error(`JSON-LD: अपेक्षित 5 valid blocks ना (मेळ्ळे ${blocks.length})`);
+  if (blocks.length === 0 || blocks.some((b) => !b)) {
+    console.error(`JSON-LD: valid schema blocks ना (मेळ्ळे ${blocks.length})`);
     bad = true;
   }
   const types = new Set(blocks.map((b) => b && b['@type']).filter(Boolean));
-  for (const want of ['Organization', 'WebSite', 'WebPage', 'TouristAttraction', 'FAQPage']) {
+  for (const want of ['Organization', 'WebSite', 'WebPage', 'TouristAttraction', 'FAQPage', 'BreadcrumbList']) {
     if (!types.has(want)) {
       console.error(`JSON-LD: ${want} गायब`);
       bad = true;
@@ -114,12 +114,12 @@ if (existsSync(home)) {
   }
   const ta = blocks.find((b) => b && b['@type'] === 'TouristAttraction');
   if (ta) {
-    if (ta.aggregateRating?.ratingValue !== 4.2 || ta.aggregateRating?.reviewCount !== 27105) {
-      console.error('JSON-LD: aggregateRating 4.2/27105 पासून वेगळें');
+    if ('aggregateRating' in ta || 'telephone' in ta || 'openingHoursSpecification' in ta || 'isAccessibleForFree' in ta) {
+      console.error('JSON-LD: unsupported rating, contact, hours or admission claim');
       bad = true;
     }
-    if (ta.telephone !== '+91 832 249 4500') {
-      console.error('JSON-LD: telephone drift');
+    if (ta.geo?.latitude !== 15.6046375 || ta.geo?.longitude !== 73.7369631) {
+      console.error('JSON-LD: verified place point mismatch');
       bad = true;
     }
     if (ta.hasMap !== 'https://maps.app.goo.gl/3z6axsvdHe2spoFg8') {

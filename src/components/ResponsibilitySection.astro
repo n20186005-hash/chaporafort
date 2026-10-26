@@ -8,18 +8,42 @@ interface Props {
 const { locale } = Astro.props;
 
 const scienceKok = [
-  { icon: '🪨', title: 'लेटराइट दगड', text: 'किल्ल्याची तटबंदी लाल लेटराइट दगडाची आसा – हो गोव्यांत सहज मेळपी, पावसाळ्यांत कडक जावपी प्रादेशिक दगड. उश्ण हवेंत दगड तपता, दवंत निसरडो जावंक शकता.' },
-  { icon: '🏰', title: 'स्थापत्य', text: '१७१७ चेर पुर्तुगेजांनी पुनर्बांधणी केली – डोंगराच्या उताराक धरून वळपी तटबंदी, अनियमित बुरुज, तोफां खातीर खोल जागा आनी न्हंयेक वचपी भूमिगत वाट. ही रचणूक सीमा-दृश्य आनी वाऱ्याक अडोळो दिवपाखातीर आसली.' },
-  { icon: '🦎', title: 'निसर्ग / परिसंस्था', text: 'उकडील्ल्या डोंगरमाथ्यार वनस्पती, सरडे (मॉनिटर लिझार्ड), ससाणे आनी स्थलांतरीत पक्षी दिसतात. किनाऱ्याक लागून डॉल्फिन वा सागरी पक्षी सांजवेळीं दिसूंक शकतात.' }
+  {
+    "icon": "🪨",
+    "title": "लेटराइट",
+    "text": "गोवा सरकार आनी गोवा पर्यटन लाल लेटराइट किल्ल्याचें वर्णन करतात. दगड खरवडीनासतना वा काडीनासतना पळयात."
+  },
+  {
+    "icon": "🏰",
+    "title": "स्थापत्य",
+    "text": "गोवा पर्यटन उताराक धरून भिंत, अनियमित बुरुज आनी तोफांच्या जागेचें वर्णन करता. 1717 च्या पुनर्बांदणीचो उल्लेख सरकारी 1617 च्या बांदपाच्या तारखेपेक्षा वेगळो आसा."
+  },
+  {
+    "icon": "🌿",
+    "title": "निसर्ग",
+    "text": "परवानगीच्या वाटेरून झाडां पळयात आनी वस्तीस्थानाक त्रास दिवं नाकात. ह्या मार्गदर्शकान खंयचेंच जनावर दिसपाची हमी दिल्ली ना."
+  }
 ];
 const scienceEn = [
-  { icon: '🪨', title: 'Laterite stone', text: 'The fort ramparts are of red laterite — a regional stone common in Goa that hardens in the monsoon. In hot weather the stone heats up and can be slippery when damp.' },
-  { icon: '🏰', title: 'Architecture', text: 'Rebuilt by the Portuguese in 1717 — ramparts following the hill slope, irregular bastions, deep emplacements for cannons and an underground path to the river. The layout served border views and broke the wind.' },
-  { icon: '🦎', title: 'Nature / ecology', text: 'On the open hilltop you see plants, monitor lizards, hawks and migratory birds. Near the coast dolphins or seabirds may appear in the evening.' }
+  {
+    "icon": "🪨",
+    "title": "Laterite",
+    "text": "Government of Goa and Goa Tourism describe the red laterite fort. Observe the material without scratching or removing stone."
+  },
+  {
+    "icon": "🏰",
+    "title": "Architecture",
+    "text": "Goa Tourism describes walls following the peninsula’s slopes, irregular bastions and cannon embrasures. Its account of the 1717 rebuilding is distinct from the government’s 1617 construction date."
+  },
+  {
+    "icon": "🌿",
+    "title": "Nature",
+    "text": "Observe vegetation from permitted paths without disturbing habitats. No particular wildlife sighting is promised by this guide."
+  }
 ];
 
-const dutiesKok = ['कचरो परत घेवून वचात; दगड, भिंत वा पुरातन भागांचेर लिहूंक नाका.', 'तटबंदीच्या कड्याक सुरक्षित अंतर दवरात – अनेक ठिकाणी आधुनिक रेलिंग ना.', 'पावसाळ्यांत घसरण टाळपाक घट्ट पादत्राणां वापरात; चडणीचेर घाई करू नाका.', 'उश्ण हवेंत उदक, टोपी आनी सूर्यापासून संरक्षण घेवात; ल्हानांक आनी जाण्यांक लक्ष दियात.', 'लागींच्या गांव-किनाऱ्यांचो आदर करात; आवाज, वाहन-पार्किंग आनी स्थानिक नियम पाळात.'];
-const dutiesEn = ['Take your litter back; do not write on stones, walls or old structures.', 'Keep a safe distance from the rampart edge — many spots have no modern railing.', 'In monsoon wear sturdy footwear to avoid slips; do not rush the climb.', 'In hot weather carry water, a hat and sun protection; watch children and the elderly.', 'Respect nearby villages and beaches; follow noise, parking and local rules.'];
+const dutiesKok = ['कचरो परत घेवून वचात; दगड, भिंत वा पुरातन भागांचेर लिहूंक नाका.', 'कडे आनी संरक्षक अडथळ्यांची स्थिती तपासात; तटबंदीच्या कड्याक सुरक्षित अंतर दवरात.', 'पावसाळ्यांत घसरण टाळपाक घट्ट पादत्राणां वापरात; चडणीचेर घाई करू नाका.', 'उश्ण हवेंत उदक, टोपी आनी सूर्यापासून संरक्षण घेवात; ल्हानांक आनी जाण्यांक लक्ष दियात.', 'लागींच्या गांव-किनाऱ्यांचो आदर करात; आवाज, वाहन-पार्किंग आनी स्थानिक नियम पाळात.'];
+const dutiesEn = ['Take your litter back; do not write on stones, walls or old structures.', 'Check the condition of edges and barriers, and keep a safe distance from the rampart edge.', 'In monsoon wear sturdy footwear to avoid slips; do not rush the climb.', 'In hot weather carry water, a hat and sun protection; watch children and the elderly.', 'Respect nearby villages and beaches; follow noise, parking and local rules.'];
 
 const L = locale === 'en'
   ? { eyebrow: 'Science & heritage', h1: 'Why the fort stands — a bit of science', h2: 'Visitor responsibility', h3: 'Keep the fort as it is', note: 'This guide is non-commercial and educational. The fort is ancient heritage — its sustainable appreciation and safety are everyone’s responsibility.' }

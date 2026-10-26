@@ -32,6 +32,8 @@
    - License: CC BY-SA 4.0
    - Source: https://commons.wikimedia.org/wiki/File:Chapora_Fort_on_the_Way.jpg
 
-## ह्या वितरित प्रतिची स्थिती
+## Image modifications
 
-ह्या ChatGPT runtime कडेन बाह्य binary download network बंद आसा. म्हणून वर दिलेल्या स्रोतांची वास्तविक JPG bytes ह्या प्रतित उतरूंक शकल्या नात. फाइल नावां आनी पानातील संदर्भ तयार आसात, पूण छायाचित्रां जोडल्या बगर ह्या प्रतिक पूर्ण उत्पादन-अॅसेट पॅकेज म्हणूंक येना.
+The site includes resized local JPEG copies; page layouts may crop their displayed views. Each derivative retains the applicable CC BY-SA licence listed above. Licence terms: https://creativecommons.org/licenses/by-sa/3.0/ and https://creativecommons.org/licenses/by-sa/4.0/ .
+
+The two Ranjan Das2 file pages mark capture dates unknown and embedded dates invalid; no capture date is asserted for those photographs. These photographs do not prove current access or conditions.

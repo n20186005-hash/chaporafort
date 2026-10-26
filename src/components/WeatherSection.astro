@@ -4,6 +4,7 @@
 // थेड रेंडर करता. किनारो/समुद्राची माहिती Marine API कडल्यान घेतात.
 // दोनूय भासांतलो मजकूर `D` (सल्लो) आनी `H` (मथळ्यो) हांतूंत आसा.
 import { LATITUDE, LONGITUDE } from '../data/site';
+import {fetchJson,validateForecast,validateMarine} from '../lib/weather-data';
 import { type Locale } from '../i18n/utils';
 
 interface Props {
@@ -47,6 +48,7 @@ const WML: Record<number, WxLabel> = {
   86: { emoji: '🌨️', kok: 'बर्फाची झड', en: 'Snow showers' },
   95: { emoji: '⛈️', kok: 'गरज-विज वादळ', en: 'Thunderstorm' },
   96: { emoji: '⛈️', kok: 'वादळ, गारो शक्य', en: 'Thunderstorm, hail possible' },
+  97: { emoji: '⛈️', kok: 'जोराची गडगड', en: 'Heavy thunderstorm' },
   99: { emoji: '⛈️', kok: 'जोराचें वादळ', en: 'Violent thunderstorm' }
 };
 const wmInfo = (code: number) => {
@@ -54,7 +56,7 @@ const wmInfo = (code: number) => {
   return { emoji: x.emoji, label: locale === 'en' ? x.en : x.kok };
 };
 
-type WxCurrent = { temperature_2m: number; apparent_temperature: number; weather_code: number; wind_speed_10m: number };
+type WxCurrent = { time: string; temperature_2m: number; apparent_temperature: number; weather_code: number; wind_speed_10m: number };
 type WxDaily = {
   time: string[]; weather_code: number[]; temperature_2m_max: number[]; temperature_2m_min: number[];
   precipitation_probability_max: (number | null)[]; sunrise: string[]; sunset: string[]; uv_index_max: number[];
@@ -62,7 +64,6 @@ type WxDaily = {
 type WxPayload = { current: WxCurrent; daily: WxDaily };
 
 let weather: WxPayload | null = null;
-let fetchError = false;
 let sea: { wave_height?: number; sea_surface_temperature?: number } | null = null;
 try {
   const url =
@@ -70,21 +71,14 @@ try {
     `&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m` +
     `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset,uv_index_max` +
     `&timezone=Asia%2FKolkata&forecast_days=7&wind_speed_unit=kmh`;
-  const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
-  if (res.ok) weather = (await res.json()) as WxPayload;
-  else fetchError = true;
-} catch {
-  fetchError = true;
-}
+  weather=validateForecast<WxPayload>(await fetchJson(url,4500));
+} catch { weather=null; }
+
 try {
   const murl =
     `https://marine-api.open-meteo.com/v1/marine?latitude=${LATITUDE}&longitude=${LONGITUDE}` +
     `&current=wave_height,sea_surface_temperature&timezone=Asia%2FKolkata`;
-  const mres = await fetch(murl, { signal: AbortSignal.timeout(10000) });
-  if (mres.ok) {
-    const j = (await mres.json()) as { current?: { wave_height?: number; sea_surface_temperature?: number } };
-    sea = j.current ?? null;
-  }
+  sea=validateMarine(await fetchJson(murl,3500));
 } catch {
   /* समुद्राची माहिती पर्यायी आसा */
 }
@@ -92,8 +86,8 @@ try {
 const B = [1, 6, 12, 20, 29, 39, 50, 62, 75, 89, 103, 118];
 const beaufort = (kmh: number) => B.filter((b) => kmh >= b).length;
 const uvLabel = (uv: number) => (locale === 'en'
-  ? (uv >= 8 ? 'Very high' : uv >= 5 ? 'High' : uv >= 3 ? 'Moderate' : 'Low')
-  : (uv >= 8 ? 'खूब चड' : uv >= 5 ? 'चड' : uv >= 3 ? 'मध्यम' : 'कमी'));
+  ? (uv >= 11 ? 'Extreme' : uv >= 8 ? 'Very high' : uv >= 6 ? 'High' : uv >= 3 ? 'Moderate' : 'Low')
+  : (uv >= 11 ? 'अत्यंत चड' : uv >= 8 ? 'खूब चड' : uv >= 6 ? 'चड' : uv >= 3 ? 'मध्यम' : 'कमी'));
 
 // भासानुसार सल्लो-संच
 type Dict = {
@@ -108,61 +102,61 @@ type Dict = {
 };
 const D: { kok: Dict; en: Dict } = {
   kok: {
-    riskRainHeavy: '🌧️ पावसाचो जोर चड आसा – दोतर, खोल उदकाची जागा टाळात; बोट/रोपवे बंद आसूंक शकतात.',
-    riskThunder: '⛈️ विजांपासून जागो रावात – किल्ल्याचेर चडूं नाका, समुद्रांत न्हावं नाका, झाडा पाल्यांत लिपंचें नाका; पाण्यांतले प्रकल्प बंद आसूंक शकतात.',
-    riskWind: '💨 वारो जोराचो आसा – जाहिरात फळ्यां, दर्याकडच्या खडपां पासून दूर रावात; समुद्री प्रकल्प बंद आसूंक शकतात.',
-    riskFog: '🌫️ दिसपाचें कमी आसा – बोट/विमान उशीराचें जावंक शकता; दोंगरा वयल्यान दर्या/दोंगर पळोवप बरें ना.',
+    riskRainHeavy: 'मॉडेलांत जोराची वर्साद: ओल्या दगडांचेर सावधान रावात; स्थानिक अधिकृत सूचना पळयात. ही बंदीची खबर न्हय.',
+    riskThunder: 'मॉडेलांत विजांचो धोको: भक्कम इमारतींत आसरो घेयात; एकलें झाड आनी उघडो कडो टाळात.',
+    riskWind: 'मॉडेलांत जोराचो वारो: उघडे कडे आनी अस्थिर वस्तूं पासून दूर रावात.',
+    riskFog: 'दिसपाचें कमी आसा; फुडें वचचे आदी प्रत्यक्ष वाट पळयात.',
     dressCold: 'थंडी चड आसा – गरम कोट, मफली घेवात.',
     dressDiff: (d) => `दिस-रातीचो तापमानांत फरक चड (${d}°) – सोपें काडप-घालप जावपी जॅकेट घेवात.`,
     dressHot: (t) => `तापमान चड (${t}°) – दुपारींचो उन्हाचो वेळ टाळात, हलकीं वाय-खेळूपी शिंगाणां घालात, उश्णतायेचें सामान दवरात.`,
-    dressUv: 'अतिनील किरण (UV) चड आसात – संरक्षण घेवात (सनस्क्रीन, डोळ्यांच्यो काचो, सावळीचो टोपी).',
-    dressRainHeavy: 'पावस वारो चड आसा – पावसाळीं कोट घालात.',
+    dressUv: 'अतिनील किरण (UV) आसा – संरक्षण घेवात (सनस्क्रीन, डोळ्यांच्यो काचो, सावळीचो टोपी).',
+    dressRainHeavy: 'मॉडेलांत जोराची वर्साद आसा – पावसापासून योग्य संरक्षण घेवात.',
     dressRain: 'बारीक पावस आसा – घसरपी न्हय तशीं पादत्राणां घालात, फोल्ड करपाची छत्री घेवात.',
     dressProb: (p) => `पावस पडपाची शक्यताय ${p}% – छत्री/पावसाळीं सामान घेवात.`,
     dressWind: (l) => `वारो मध्यम (${l} श्रेणी) – टोपी वारें व्हरून व्हेल्यार पडटा, मोकळ्यो लांब सारी घालूं नाका.`,
-    dressClear: 'हवामान बरें आसा – भायर भोंवडेक सोपें; पूण संरक्षण घेवात.',
-    dressCloudy: 'प्रकाश मळब आसा – छायाचित्रां खातीर बरें; उन्ह ना म्हणून व्हडलो वेळ भायर रावं येता.',
+    dressClear: 'मॉडेलांत आकाश स्वच्छ आसा; ताका लागून आराम वा रसदेची हमी ना.',
+    dressCloudy: 'मळब आसलें तरी UV आनी उश्णताय आसूंक शकता; कपडे आनी विसवो प्रत्यक्ष हवामानाप्रमाणें ठरयात.',
     actThunder: '⚡ विजांपासून जागो रावात: किल्ल्याचेर चडूं नाका, समुद्रांत न्हावं नाका, झाडा पाल्यांत लिपंचें नाका.',
-    actRainHeavy: 'पावसाळीं भायर चडण/समुद्राक वचप बरें ना; बोट/रोपवे बंद आसूंक शकतात – भितरले प्रकल्प वा तारीख उडोवात.',
+    actRainHeavy: 'जोराच्या पावसांत उघड्या भागाची भेट फुडें दवरपाचो विचार करात; अधिकृत स्थानिक सूचना पळयात.',
     actRain: 'वाट निसरडी जाता – चडणींत घसरपाची काळजी घेवात; समुद्री प्रकल्प कमी बरे, उशीराक दवरात.',
     actFog: 'दिसपाचें कमी आसा – दोंगरा वयल्यान दर्या/दोंगर पळोवप बरें ना.',
     actHot: 'भायर चडणाचो वेळ कमी करात, दुपारींचो उन्ह टाळात.',
-    actUv: 'दोंगरा वयल्यान आनी समुद्राकडेन UV चड – न्हावपा व चडणींत संरक्षण घेवात.',
-    actWind: 'समुद्री बोट/प्रकल्प बंद आसूंक शकतात – खडपां पासून दूर रावात.',
-    actClear: 'सूर्योदय/सूर्यास्त आनी दोंगराचें दृश्य पळोवपाक सोपें; चडणींत छायाचित्रां बरीं.',
-    actCloudy: 'उन्ह ना म्हणून व्हडलो वेळ भायर भोंवडें करपाक मेळटा.',
-    actStable: 'हवामान स्थिर आसा – भायर भोंवडेक आनी चडणींत छायाचित्रां काडपाक बरें.',
-    sea: (st, wh) => `समुद्राचें पाणी सुमार ${st}°C; लाटांची उंचाय ${wh} मी – ${wh > 1.5 ? 'खडपां व न्हावपाक सावधान' : 'तुलनेन शांत, न्हावपाक सुखद'}.`,
+    actUv: 'मळब आसलें तरी उघड्या वाटेर उनापासून संरक्षण घेवात.',
+    actWind: 'जोराच्या वाऱ्यांत उघडे कडे टाळात आनी स्थानिक सूचना मानात.',
+    actClear: 'फकत खात्रीच्या उगडपाच्या वेळांत आनी परवानगीच्या जाग्यार दृश्यां आनी फोटो पळयात.',
+    actCloudy: 'मळब म्हळ्यार सुरक्षित रसद अशी हमी न्हय; प्रत्यक्ष परिस्थितीप्रमाणें योजना करात.',
+    actStable: 'प्रत्यक्ष हवामान आनी चालू रसदेच्या सूचनांप्रमाणें योजना करात.',
+    sea: (st, wh) => `समुद्राचें पाणी सुमार ${st}°C; लाटांची उंचाय ${wh} मी – मॉडेलाचें मूल्य पोहपाची सुरक्षितताय वा किनाऱ्याची रसद निश्चित करीना.`,
     itemRaincoat: 'पावसाळीं कोट', itemRaincoatWind: 'रेनकोट (लांब छत्री नाका, वारो चड)', itemUmbrella: 'फोल्ड छत्री',
     itemUmbrellaProb: 'छत्री/रेनकोट', itemSunscreen: 'सनस्क्रीन', itemGlasses: 'डोळ्यांच्यो काचो', itemHat: 'सावळीचो टोपी', itemWater: 'पुरो उदक',
     itemJacket: 'जॅकेट/स्वेटर', itemCoat: 'गरम कोट', itemMuffler: 'मफली', itemMask: 'मास्क'
   },
   en: {
-    riskRainHeavy: '🌧️ Heavy rain — avoid low-lying and waterlogged spots; boats/cable car may be shut.',
-    riskThunder: '⛈️ Beware lightning — do not climb the fort, do not swim, do not shelter under trees; water sports may be shut.',
-    riskWind: '💨 Strong wind — stay away from hoardings and sea rocks; sea activities may be shut.',
-    riskFog: '🌫️ Low visibility — boats/flights may be delayed; hilltop sea/hill views are not good.',
+    riskRainHeavy: '🌧️ Heavy rain in the model: take care on wet stone and exposed paths. Check official local notices; this is not a closure report.',
+    riskThunder: '⛈️ Thunderstorms in the model: seek substantial shelter and avoid isolated trees and exposed edges. Follow local instructions.',
+    riskWind: '💨 Strong wind in the model: avoid exposed edges and unstable objects; follow local instructions.',
+    riskFog: '🌫️ Low visibility in the model: assess the actual route before continuing.',
     dressCold: 'It is quite cold — carry a warm coat and muffler.',
     dressDiff: (d) => `Large day–night temperature swing (${d}°) — carry a layer you can add or remove.`,
     dressHot: (t) => `High temperature (${t}°) — avoid midday sun, wear light breathable clothes, keep heat-relief items.`,
-    dressUv: 'High UV — protect yourself (sunscreen, sunglasses, sun hat).',
-    dressRainHeavy: 'Heavy rain and wind — wear a raincoat.',
+    dressUv: 'UV exposure — protect yourself (sunscreen, sunglasses, sun hat).',
+    dressRainHeavy: 'Heavy rain in the model — carry suitable rain protection.',
     dressRain: 'Light rain — wear non-slip footwear, carry a foldable umbrella.',
     dressProb: (p) => `Rain chance ${p}% — carry an umbrella/rain gear.`,
     dressWind: (l) => `Moderate wind (level ${l}) — hats blow off; avoid loose long dresses.`,
-    dressClear: 'Good weather — easy to go out; but protect yourself.',
-    dressCloudy: 'Soft light — good for photos; little sun so you can stay out longer.',
+    dressClear: 'Clear sky in the model does not establish comfortable conditions or access.',
+    dressCloudy: 'Cloud cover does not remove UV or heat exposure; plan clothing and breaks around actual conditions.',
     actThunder: '⚡ Beware lightning: do not climb the fort, do not swim, do not shelter under trees.',
-    actRainHeavy: 'In heavy rain, climbing outside / going to sea is not good; boats/cable car may be shut — prefer indoor plans or another day.',
+    actRainHeavy: 'In heavy rain, consider postponing exposed sections and check actual local conditions and official notices.',
     actRain: 'Paths get slippery — take care on the climb; sea activities are poorer, delay them.',
     actFog: 'Low visibility — hilltop sea/hill views are not good.',
     actHot: 'Reduce time climbing outside; avoid midday heat.',
-    actUv: 'High UV on the hill and at the sea — protect during swimming and climbing.',
-    actWind: 'Sea boats/activities may be shut — stay away from rocks.',
-    actClear: 'Good for sunrise/sunset and hill views; nice photos on the climb.',
-    actCloudy: 'No harsh sun so you can spend longer outdoors.',
-    actStable: 'Weather is stable — good for outdoor visits and climb photos.',
-    sea: (st, wh) => `Sea water about ${st}°C; wave height ${wh} m — ${wh > 1.5 ? 'careful on rocks and swimming' : 'relatively calm, pleasant for swimming'}.`,
+    actUv: 'Use sun protection on exposed paths, including during cloudy conditions.',
+    actWind: 'Keep clear of exposed edges in strong wind and follow current local instructions.',
+    actClear: 'Consider views and photography only during confirmed opening hours and where permitted.',
+    actCloudy: 'Choose breaks and exposed sections according to actual conditions; clouds do not confirm safe access.',
+    actStable: 'Plan around actual conditions and current access instructions.',
+    sea: (st, wh) => `Sea water about ${st}°C; wave height ${wh} m — model values do not establish swimming safety or beach access.`,
     itemRaincoat: 'Raincoat', itemRaincoatWind: 'Raincoat (no long umbrella, windy)', itemUmbrella: 'Fold umbrella',
     itemUmbrellaProb: 'Umbrella / raincoat', itemSunscreen: 'Sunscreen', itemGlasses: 'Sunglasses', itemHat: 'Sun hat', itemWater: 'Enough water',
     itemJacket: 'Jacket / sweater', itemCoat: 'Warm coat', itemMuffler: 'Muffler', itemMask: 'Mask'
@@ -181,14 +175,14 @@ function buildAdvice(): Advice {
   const uv = weather!.daily.uv_index_max[0];
   const diff = tMax - tMin;
 
-  const isThunder = [95, 96, 99].includes(c);
+  const isThunder = [95, 96, 97, 99].includes(c);
   const isFog = [45, 48].includes(c);
   const isClear = [0, 1].includes(c);
   const isCloudy = c === 3;
   const isPartly = c === 2;
   const isDrizzle = [51, 53, 55, 56, 57].includes(c);
   const isRainLight = [61, 63, 66, 71, 73, 75, 77, 80, 81, 85, 86].includes(c) || isDrizzle;
-  const isRainHeavy = [65, 67, 82].includes(c) || isThunder;
+  const isRainHeavy = [65, 67, 82].includes(c);
   const isRain = isRainLight || isRainHeavy;
 
   const risk: string[] = [];
@@ -204,7 +198,7 @@ function buildAdvice(): Advice {
   if (tMax <= 10) dress.push(S.dressCold);
   else if (diff > 8) dress.push(S.dressDiff(diff));
   if (tMax >= 32) dress.push(S.dressHot(tMax));
-  if (uv >= 5) dress.push(S.dressUv);
+  if (uv >= 3) dress.push(S.dressUv);
   if (isRainHeavy) dress.push(S.dressRainHeavy);
   else if (isRain) dress.push(S.dressRain);
   else if (prob >= 60) dress.push(S.dressProb(prob));
@@ -214,10 +208,11 @@ function buildAdvice(): Advice {
 
   if (isThunder) activity.push(S.actThunder);
   if (isRainHeavy) activity.push(S.actRainHeavy);
-  else if (isRain || prob >= 60) activity.push(S.actRain);
+  else if (isRain) activity.push(S.actRain);
+  else if (prob >= 60) activity.push(S.dressProb(prob));
   if (isFog) activity.push(S.actFog);
   if (tMax >= 32) activity.push(S.actHot);
-  if (uv >= 5) activity.push(S.actUv);
+  if (uv >= 3) activity.push(S.actUv);
   if (lvl >= 7) activity.push(S.actWind);
   if (isClear) activity.push(S.actClear);
   if (isCloudy || isPartly) activity.push(S.actCloudy);
@@ -232,7 +227,7 @@ function buildAdvice(): Advice {
   if (isRainHeavy && lvl >= 5) set.add(S.itemRaincoatWind);
   else if (isRain) set.add(S.itemUmbrella);
   if (prob >= 60 && !isRain) set.add(S.itemUmbrellaProb);
-  if (tMax >= 32 || uv >= 5) {
+  if (tMax >= 32 || uv >= 3) {
     set.add(S.itemSunscreen); set.add(S.itemGlasses); set.add(S.itemHat); set.add(S.itemWater);
   }
   if (diff > 8) set.add(S.itemJacket);
@@ -245,27 +240,27 @@ function buildAdvice(): Advice {
 const advice: Advice | null = weather ? buildAdvice() : null;
 const H = locale === 'en'
   ? {
-      eyebrow: 'Weather & planning', title: 'Current weather and 7-day forecast',
-      intro: 'Climbing, views and sunset all depend on the weather. The fort is open and shade on the cliffs is little; check the weather before you go.',
-      cardBest: 'Best time', cardBestText: 'October to March is dry and pleasant. Evening is best for sunset; also more crowded.',
-      cardSummer: 'Summer (Apr–May)', cardSummerText: 'Days are hot and humid. Go at dawn or evening; carry water, hat and sun protection.',
-      cardMonsoon: 'Monsoon (Jun–Sep)', cardMonsoonText: 'Heavy rain and slippery paths possible. Wear sturdy footwear, raincoat and caution.',
-      curWeather: "Today's weather", precip: 'Rain chance today', wind: 'Wind', uv: 'UV (index)', feels: 'Feels like',
+      eyebrow: 'Weather & planning', title: 'Dated build forecast and seven days',
+      intro: 'Climbing, views and sunset all depend on the weather. The hilltop includes exposed areas; check current access and weather before you go.',
+      cardBest: 'Best time', cardBestText: 'Check actual access and weather before selecting a visit.',
+      cardSummer: 'Heat and sun', cardSummerText: 'In hot conditions, carry water and sun protection and shorten exposed sections.',
+      cardMonsoon: 'Rain and storms', cardMonsoonText: 'In wet or stormy conditions, assess the actual route and follow official local warnings.',
+      curWeather: 'Snapshot conditions', precip: 'Rain chance for the first date', wind: 'Wind', uv: 'UV (index)', feels: 'Feels like',
       riskTitle: '⚠️ Caution (weather-based)', tabDress: 'Outfit / travel', tabAct: 'Activities', tabItems: 'To carry',
-      forecast7: 'Next 7 days', todayBadge: "Today's forecast", srss: 'Sunrise / sunset', uvmax: 'Max UV index today',
-      noData: 'Weather forecast is not available right now; see the seasonal tips above and the “Seasonal visit planning” section. Check local weather before you go.',
+      forecast7: 'Seven dates in the snapshot', todayBadge: 'First forecast date', srss: 'Sunrise / sunset', uvmax: 'UV for the first date',
+      noData: 'The forecast was unavailable when this static page was built. Check a current official forecast and local instructions before travelling.',
       note: 'This is a weather forecast — actual conditions may differ. Check the latest forecast before travelling.'
     }
   : {
-      eyebrow: 'हवामान आनी योजना', title: 'आतांचें हवामान आनी ७ दिसांचो पूर्वानुमान',
+      eyebrow: 'हवामान आनी योजना', title: 'तारीख दिल्लो अंदाज आनी ७ दिसांची पूर्वानुमान',
       intro: 'चडण, दृश्यां आनी सूर्यास्त – हीं सगळीं हवामानाचेर अवलंबून आसात. किल्ल्याचेर हवो उघडो आनी कड्याचेर सावली कमी आसता; निघचे आदी हवामान पळयतात.',
-      cardBest: 'सगळ्यांत बरी वेळ', cardBestText: 'ऑक्टोबर ते मार्च ही कोरडी आनी सुखद वेळ. सांजवेळ सूर्यास्ता खातीर सगळ्यांत बरी; गर्दीय चड आसता.',
-      cardSummer: 'उन्हाळो (एप्रिल–मे)', cardSummerText: 'दीस उश्ण आनी दमट आसतात. पहाटेचेर वा सांजे वचात; उदक, टोपी आनी सूर्यापासून संरक्षण सोबत दवरात.',
-      cardMonsoon: 'पावसाळो (जून–सप्टेंबर)', cardMonsoonText: 'मुसळधार वर्साद आनी वाट निसरडी जावंक शकता. घट्ट पादत्राणां, अस्तुरो आनी सावधानेक देंवता.',
-      curWeather: 'आयचें हवामान', precip: 'आयज पावसाची शक्यताय', wind: 'वारो', uv: 'UV (अतिनील)', feels: 'जाणवपी तापमान',
+      cardBest: 'सगळ्यांत बरी वेळ', cardBestText: 'भेट निवडचे आदी चालू रसद आनी हवामान तपासात.',
+      cardSummer: 'उश्णताय आनी उन', cardSummerText: 'उश्ण परिस्थितींत उदक आनी उनापासून संरक्षण दवरात; उघड्या भागांत वेळ कमी करात.',
+      cardMonsoon: 'वर्साद आनी वादळ', cardMonsoonText: 'पावसांत वा वादळांत खरी वाट तपासात आनी अधिकृत स्थानिक सूचना मानात.',
+      curWeather: 'अंदाजांतली परिस्थिती', precip: 'पयल्या तारखेची पावसाची शक्यताय', wind: 'वारो', uv: 'UV (अतिनील)', feels: 'जाणवपी तापमान',
       riskTitle: '⚠️ सावधानताय (हवामानावयल आदारीत)', tabDress: 'आंग-भेस / प्रवास', tabAct: 'खेळ / भोंवडी', tabItems: 'सोबत घेवपाचें',
-      forecast7: 'पुढिल्ले ७ दीस', todayBadge: 'आयजचो अंदाज', srss: 'सूर्योदय / सूर्यास्त', uvmax: 'UV कमाल सूचकांक आयज',
-      noData: 'हवामानाचो अंदाज सद्या उपलब्ध ना; वरील ऋतू-सल्लो आनी ‘कालानुरूप भेटीची योजना’ भाग पळयात. निघचे आदी स्थानिक हवामान तपासात.',
+      forecast7: 'अंदाजांतल्यो ७ तारखो', todayBadge: 'पयली तारीख', srss: 'सूर्योदय / सूर्यास्त', uvmax: 'पयल्या तारखेचो UV',
+      noData: 'हें स्थिर पान बांदतना अंदाज मेळ्ळो ना. प्रवासाआदी चालू अधिकृत हवामान आनी स्थानिक सूचना पळयात.',
       note: 'हवामानाचो अंदाज आसा – प्रत्यक्ष परिस्थिती वेगळी आसूंक शकता. यात्रा करचे आदी नवीनतम पूर्वानुमान तपासात.'
     };
 
@@ -302,28 +297,7 @@ const days =
     };
   }) || [];
 ---
-<script is:inline>
-  (function () {
-    var root = document.getElementById('wx-tabs');
-    if (!root) return;
-    var btns = root.querySelectorAll('[data-tab]');
-    var panels = root.querySelectorAll('[data-panel]');
-    function activate(id) {
-      btns.forEach(function (b) {
-        var on = b.getAttribute('data-tab') === id;
-        b.setAttribute('aria-selected', on ? 'true' : 'false');
-        b.classList.toggle('bg-laterite-900', on);
-        b.classList.toggle('text-white', on);
-        b.classList.toggle('bg-white', !on);
-        b.classList.toggle('text-laterite-900', !on);
-      });
-      panels.forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== id; });
-    }
-    btns.forEach(function (b) { b.addEventListener('click', function () { activate(b.getAttribute('data-tab')); }); });
-    var first = root.querySelector('[data-tab]');
-    if (first) activate(first.getAttribute('data-tab'));
-  })();
-</script>
+
 <section id="weather" class="bg-laterite-100 py-20 lg:py-28">
   <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">{H.eyebrow}</p>
@@ -361,7 +335,7 @@ const days =
                 </div>
               </div>
               <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.precip}</span><strong class="text-lg text-laterite-900">{weather.daily.precipitation_probability_max[0] ?? 0}%</strong></div>
+                <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.precip}</span><strong class="text-lg text-laterite-900">{weather.daily.precipitation_probability_max[0]===null?'—':weather.daily.precipitation_probability_max[0]+'%'}</strong></div>
                 <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.wind}</span><strong class="text-lg text-laterite-900">{Math.round(weather.current.wind_speed_10m)} {locale === 'en' ? 'km/h' : 'किमी/ता'}</strong><span class="text-xs text-laterite-900/55">{beaufort(weather.current.wind_speed_10m)} {locale === 'en' ? 'level' : 'श्रेणी'}</span></div>
                 <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.uv}</span><strong class="text-lg text-laterite-900">{weather.daily.uv_index_max[0]} · {uvLabel(weather.daily.uv_index_max[0])}</strong></div>
                 <div class="rounded-2xl bg-sand-100/80 p-3"><span class="block text-xs text-laterite-900/60">{H.feels}</span><strong class="text-lg text-laterite-900">{Math.round(weather.current.apparent_temperature)}°C</strong></div>
@@ -427,6 +401,29 @@ const days =
         <p class="mt-8 rounded-3xl border border-laterite-900/10 bg-white p-6 text-sm text-laterite-900/70 shadow-sm">{H.noData}</p>
       )
     }
-    <p class="mt-5 text-xs leading-6 text-laterite-900/60">{H.note}</p>
+    <p class="mt-5 text-xs leading-6 text-laterite-900/60">{locale==='en'?'Static build snapshot; it does not refresh in your browser. Check a current official forecast.':'बांदपाच्या वेळचो अंदाज; ब्राउझरांत ताजो जावना. चालू अधिकृत हवामान पळयात.'} {weather?.current.time} · Asia/Kolkata (UTC+5:30). {H.note}</p>
   </div>
 </section>
+
+<script is:inline>
+  (function () {
+    var root = document.getElementById('wx-tabs');
+    if (!root) return;
+    var btns = root.querySelectorAll('[data-tab]');
+    var panels = root.querySelectorAll('[data-panel]');
+    function activate(id) {
+      btns.forEach(function (b) {
+        var on = b.getAttribute('data-tab') === id;
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+        b.classList.toggle('bg-laterite-900', on);
+        b.classList.toggle('text-white', on);
+        b.classList.toggle('bg-white', !on);
+        b.classList.toggle('text-laterite-900', !on);
+      });
+      panels.forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== id; });
+    }
+    btns.forEach(function (b) { b.addEventListener('click', function () { activate(b.getAttribute('data-tab')); }); });
+    var first = root.querySelector('[data-tab]');
+    if (first) activate(first.getAttribute('data-tab'));
+  })();
+</script>

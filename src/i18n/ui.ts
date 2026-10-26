@@ -31,8 +31,8 @@ export const ui: Dict = {
     en: 'This site is an independent, non-commercial tourist-information guide project. It is not affiliated with any government department, fort management body, or official organisation.'
   },
   footerInfo: {
-    kok: 'हांगाची पर्यटन माहिती {gp} हद्दीची {country} सरकारांत नोंद, {country} सरकार, गोवा पर्यटन विकास महामंडळ आनी भारत सरकारच्या पर्यटन मंत्रालयाच्या सार्वजनिक माहितीकडेन ताळो घालून तयार केल्या; ह्यात व्यावसायिक शिफारशी नात.',
-    en: 'The tourism information here is compiled in line with public information from the {gp} (under {country} government records), the {country} government, the Goa Tourism Development Corporation (GTDC) and the Ministry of Tourism, Government of India; it contains no commercial endorsements.'
+    kok: 'गोवा सरकार आनी GTDC च्या जोडिल्ल्या ठिकाण पानांक आनी तारीख दिल्ल्या नकाशा नोंदीकडेन माहिती ताळो घातला. चालू प्रवेश, सेवा आनी वाट पयलींच विचारात.',
+    en: 'Information is checked against the linked Government of Goa and GTDC destination pages and a dated Maps listing. Confirm current entry, services and routes before travelling.'
   },
   imgRights: {
     kok: 'चित्र हक्क: ह्या संकेतथळार दाखयल्ल्या छायाचित्रांचो कॉपीराइट मूळ छायाचित्रकारांकडेन आसा; परवान्यांची माहिती ',

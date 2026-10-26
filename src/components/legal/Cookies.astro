@@ -8,38 +8,38 @@ const { locale } = Astro.props;
 const L = locale === 'en'
   ? {
       title: 'Cookie policy', desc: 'Set your cookie and browser-storage preferences on this page.',
-      updated: 'Last updated: September 2026',
+      updated: 'Last updated: 25 October 2026',
       h1: 'Cookie policy',
       intro: 'Here you can directly change your cookie and browser-storage preferences. Essential storage may be used for the site’s basic operation; analytics runs only with your permission.',
       essTitle: 'Essential cookies', essText: 'Required to keep the site’s basic setup working. Cannot be turned off.',
-      anTitle: 'Analytics cookies', anText: 'To understand aggregated usage via Google Analytics. Loads only after you enable it.',
-      prefTitle: 'Preference storage', prefText: 'Remembers choices like your cookie settings in this browser.',
+      anTitle: 'Analytics cookies', anText: 'To understand aggregated usage via Google Analytics. Loads only after permission is saved and verified; a successful allowance may load it immediately.',
+      prefTitle: 'Preference storage', prefText: 'Records this optional flag; it does not restore a theme or choose the page language. Your consent choice is stored separately.',
       mktTitle: 'Marketing cookies', mktText: 'No ad or personalised-marketing script is loaded in this project. Always off.',
       save: 'Save preferences', reject: 'Reject all except essential',
-      change: 'Change consent', changeText: 'You can return to this page any time to change settings. After turning analytics off, the next page visit will not load Google Analytics; any third-party cookies already created may need removal from your browser settings.',
+      change: 'Change consent', changeText: 'You can return to this page any time to change settings. Withdrawing permission turns analytics off immediately on this page and attempts to clear accessible GA cookies. Saving failures are reported because an older choice may affect another page or future visit. Earlier requests cannot be recalled.',
       statusSaved: 'Your preferences were saved in this browser.'
     }
   : {
       title: 'कुकी मांडावळ', desc: 'कुकी पसंती बदलपाचें स्वतंत्र पान.',
-      updated: 'शेवटचें अद्ययावत: सप्टेंबर 2026',
+      updated: 'शेवटचें अद्ययावत: 25 ऑक्टोबर 2026',
       h1: 'कुकी मांडावळ',
       intro: 'तुमी हांगा कुकी आनी ब्राउझर साठवणीची पसंती थेट बदलूंक शकतात. आवश्यक साठवण संकेतथळाच्या मूलभूत कामा खातीर वापरली जावंक शकता; विश्लेषण फकत तुमच्या परवानगीन चालू जाता.',
       essTitle: 'आवश्यक कुकी', essText: 'संकेतथळाची मूलभूत मांडावळ चालू दवरपाक गरजेची. बंद करूं येना.',
-      anTitle: 'विश्लेषण कुकी', anText: 'गुगल अॅनालिटिक्स मार्फत एकत्रित वापर समजून घेवपाक. सुरू केल्याबगर लोड जावना.',
-      prefTitle: 'पसंती साठवण', prefText: 'तुमच्या कुकी मांडावळी सारख्या पसंती ह्या ब्राउझरांत लक्षांत दवरता.',
+      anTitle: 'विश्लेषण कुकी', anText: 'गुगल अॅनालिटिक्स मार्फत एकत्रित वापर समजून घेवपाक. परवानगी जतन करून खात्री जाल्या उपरांतच लोड जाता.',
+      prefTitle: 'पसंती साठवण', prefText: 'ही पर्यायी खूण जतन करता; थीम वा पानाची भास निवडीना. संमतीची पसंती वेगळी जतन जाता.',
       mktTitle: 'विपणन कुकी', mktText: 'ह्या प्रकल्पांत जाहिरात वा वैयक्तिकीकृत विपणन स्क्रिप्ट लोड केल्या जात नात. मांडावळ बंदच दवरली आसा.',
       save: 'पसंती जतन करात', reject: 'आवश्यक सोडून सगळें नाकारात',
-      change: 'संमती बदलप', changeText: 'ह्या पानार परत येऊन तुमी केन्नाय मांडावळ बदलूंक शकतात. विश्लेषण बंद केल्या उपरांत पुढची पान भेट गुगल अॅनालिटिक्स लोड करची ना; आधीच तयार जाल्ले तिसऱ्या पक्षाचे कुकी तुमच्या ब्राउझर मांडावळींतून मिटोवचे लागूंक शकतात.',
+      change: 'संमती बदलप', changeText: 'ह्या पानार परत येऊन तुमी केन्नाय मांडावळ बदलूंक शकतात. परवानगी फाटीं घेतकच ह्या पानार विश्लेषण बंद जाता आनी मेळपी GA कुकी पुसपाचो यत्न जाता. जतन करप अपेशी जाल्यार संदेश दिसता; दुसऱ्या पानार वा फुडल्या भेटीं पोरनी पसंती लागू जावंक शकता. आधी धाडिल्लो डेटा परत घेवंक मेळना.',
       statusSaved: 'तुमची पसंती ह्या ब्राउझरांत जतन जाली.'
     };
-const statusSavedJson = JSON.stringify(L.statusSaved);
+
 ---
 <BaseLayout title={withSiteName(L.title, locale)} description={L.desc} locale={locale}>
   <section class="bg-sand-50 py-16 lg:py-24"><article class="prose-legal mx-auto max-w-3xl px-5 lg:px-8">
     <p class="text-sm font-black text-laterite-500">{L.updated}</p>
     <h1 class="mt-3 text-4xl font-black text-laterite-900 sm:text-5xl">{L.h1}</h1>
     <p class="mt-6 text-lg">{L.intro}</p>
-    <form id="cookie-form" class="mt-9 space-y-4" aria-describedby="save-status">
+    <form data-locale={locale} data-saved={L.statusSaved} id="cookie-form" class="mt-9 space-y-4" aria-describedby="save-status">
       <label class="flex items-start justify-between gap-5 rounded-3xl border border-laterite-900/10 bg-white p-5"><span><strong class="block text-lg">{L.essTitle}</strong><span class="mt-1 block text-sm text-laterite-900/65">{L.essText}</span></span><input class="mt-2 h-5 w-5" type="checkbox" checked disabled /></label>
       <label class="flex items-start justify-between gap-5 rounded-3xl border border-laterite-900/10 bg-white p-5"><span><strong class="block text-lg">{L.anTitle}</strong><span class="mt-1 block text-sm text-laterite-900/65">{L.anText}</span></span><input id="analytics" class="mt-2 h-5 w-5" type="checkbox" /></label>
       <label class="flex items-start justify-between gap-5 rounded-3xl border border-laterite-900/10 bg-white p-5"><span><strong class="block text-lg">{L.prefTitle}</strong><span class="mt-1 block text-sm text-laterite-900/65">{L.prefText}</span></span><input id="preferences" class="mt-2 h-5 w-5" type="checkbox" /></label>
@@ -55,19 +55,13 @@ const statusSavedJson = JSON.stringify(L.statusSaved);
   </article></section>
   <script is:inline>
     (() => {
-      const KEY = 'chapora-consent-v1';
-      const form = document.getElementById('cookie-form');
-      const analytics = document.getElementById('analytics');
-      const preferences = document.getElementById('preferences');
-      const reject = document.getElementById('reject');
-      const status = document.getElementById('save-status');
-      const statusSaved = {statusSaved};
-      let saved = null;
-      try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch {}
-      if (saved) { analytics.checked = !!saved.analytics; preferences.checked = !!saved.preferences; }
-      const store = (data) => { localStorage.setItem(KEY, JSON.stringify(data)); status.textContent = statusSaved; };
-      form.addEventListener('submit', (e) => { e.preventDefault(); store({ necessary:true, analytics:analytics.checked, preferences:preferences.checked, marketing:false }); if (analytics.checked) location.reload(); });
-      reject.addEventListener('click', () => { analytics.checked = false; preferences.checked = false; store({ necessary:true, analytics:false, preferences:false, marketing:false }); });
+      const form=document.getElementById('cookie-form'),analytics=document.getElementById('analytics'),preferences=document.getElementById('preferences'),reject=document.getElementById('reject'),status=document.getElementById('save-status'),api=window.chaporaAnalytics;
+      if(!form||!analytics||!preferences||!reject||!status||!api)return;
+      const en=form.dataset.locale==='en';analytics.checked=api.get();
+      try{preferences.checked=JSON.parse(localStorage.getItem('chapora-consent-v1')||'{}').preferences===true;}catch{}
+      const save=allow=>{const result=api.set(allow,preferences.checked);analytics.checked=result.effective;status.textContent=result.saved?form.dataset.saved:result.sharedOff?(en?'Analytics is off and shared refusal is confirmed, but the requested preferences were not saved.':'विश्लेषण बंद आसा आनी सामायिक नकाराची खात्री जाली; पूण मागिल्ली पसंती जतन जावंक ना.'):(en?'Analytics is off on this page. Saving failed; another page or future visit may read an older choice. Try again or clear this site’s stored choice.':'ह्या पानार विश्लेषण बंद आसा. जतन करप अपेशी जालें; दुसरें पान वा फुडली भेट पोरनी पसंती वाचूंक शकता. परत यत्न करात वा ह्या संकेतथळाची साठयल्ली पसंती पुसात.');};
+      form.addEventListener('submit',event=>{event.preventDefault();save(analytics.checked);});
+      reject.addEventListener('click',()=>{preferences.checked=false;save(false);});
     })();
   </script>
 </BaseLayout>

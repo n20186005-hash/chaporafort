@@ -10,24 +10,66 @@ interface Props {
 const { locale } = Astro.props;
 
 const modesKok = [
-  { icon: '✈️', title: 'विमानतळा थावन', text: 'उत्तर गोव्यांत गोवा मनोहर आंतरराष्ट्रीय विमानतळ (Mopa) चड जवळ आसा; दक्षिण गोव्यांतल्या डाबोलीम विमानतळा पासूनय रस्त्यान येवंक येता. विमानतळा थावन भाड्याने वाहन (टॅक्सी / ऍप-कॅब) वागातोर-चापोरा दिशेन थेट घेवंक जाता – शेवटचो भाग पायी चडचो पडटा.' },
-  { icon: '🚆', title: 'रेल्वे स्थानका थावन', text: 'उत्तर गोव्याक लागून असलेलीं मुखेल स्थानकां म्हळ्यार थिवीम (पेडणें) आनी कारमळी. थिवीम थावन वागातोर/चापोरा अंतर कमी आसा. स्थानका थावन भाड्याने वाहन वा स्थानिक बसान पुढें मापुसा-अंजुना मार्गान वचात.' },
-  { icon: '🚌', title: 'बसान (सरकारी/खाजगी)', text: 'मापुसा बाजार-शहर चापोरा किल्ल्यापासून साधारण १० किमी आसा. पणजी / मापुसा थावन अंजुना-वागातोर वटेन वचपी बस मार्ग मेळटात; उतरपाची अचूक जागा ड्रायव्हर वा कंडक्टराक “चापोरा किल्ला” म्हणपून विचारात.' },
-  { icon: '🛵', title: 'टॅक्सी / भाड्याने वाहन', text: 'वागातोर–चापोरा रस्त्यान किल्ल्याच्या चडणीच्या पायथ्याक पावता. दुचाकी (स्कूटर) वा चारचाकी भाड्यान घेवप हो सुटसुटीत पर्याय; गर्दीच्या वेळार लवकर पावप बरें आनी पार्किंग जागा मेळपाक सोयीची.' }
+  {
+    "icon": "✈️",
+    "title": "आपल्या विमानतळाथावन",
+    "text": "आपल्या खऱ्या विमानतळाथावन चालू रस्त्याचो प्रवास तपासात. वाहन पुरवणदाराक मंजूर उतरपाची सुवात आनी परतीचें नियोजन विचारात; थेट सेवा वा ठरावीक वेळाची हमी ना."
+  },
+  {
+    "icon": "🚆",
+    "title": "आपल्या रेल्वे स्थानकाथावन",
+    "text": "तिकीटावेलें स्थानक सुरवात म्हणून वापरात. फुडली चालू वाहतूक, शेवटली पायी वाट आनी परतीची सोय तपासात."
+  },
+  {
+    "icon": "🚌",
+    "title": "बस मार्ग",
+    "text": "गोवा पर्यटन मापुसा–अंजुना–वागातोर बस मार्गाचो उल्लेख करता. तारीख नाशिल्लें पान वेळापत्रक न्हय; चालू मार्ग, थांबो, फेऱ्यो आनी परतीची सेवा पुरवणदाराक विचारात."
+  },
+  {
+    "icon": "🛵",
+    "title": "टॅक्सी वा भाड्याचें वाहन",
+    "text": "मंजूर उतरपाची सुवात, पार्किंग आनी परतीची भेट सुवात ठरयात. नकाशांतलो बिंदू किल्लो आसा; वाहनाच्या प्रवेशाची खात्री न्हय."
+  }
 ];
 const modesEn = [
-  { icon: '✈️', title: 'From the airport', text: 'In North Goa, Manohar International Airport (Mopa) is closer; you can also reach by road from Dabolim airport in South Goa. From the airport a hired vehicle (taxi / app-cab) goes directly towards Vagator–Chapora — the final stretch is on foot.' },
-  { icon: '🚆', title: 'From the railway station', text: 'The main stations near North Goa are Thivim (Pednem) and Karmali. Thivim is closer to Vagator/Chapora. From the station take a hired vehicle or a local bus onward via the Mapusa–Anjuna route.' },
-  { icon: '🚌', title: 'By bus (state/private)', text: 'Mapusa market-town is about 10 km from Chapora Fort. Bus routes from Panaji / Mapusa towards Anjuna–Vagator are available; ask the driver or conductor for “Chapora Fort” to get off at the right spot.' },
-  { icon: '🛵', title: 'Taxi / hired vehicle', text: 'Via the Vagator–Chapora road you reach the foot of the fort climb. Hiring a two-wheeler (scooter) or car is a convenient option; arriving early when busy helps and makes parking easier.' }
+  {
+    "icon": "✈️",
+    "title": "From your airport",
+    "text": "Check the current road journey from your actual airport. Arrange the permitted drop-off and return with your transport provider; no direct service or fixed travel time is guaranteed here."
+  },
+  {
+    "icon": "🚆",
+    "title": "From your railway station",
+    "text": "Use the station named on your ticket as the starting point. Check current onward transport, the last walking section and the return arrangement."
+  },
+  {
+    "icon": "🚌",
+    "title": "Bus connection",
+    "text": "Goa Tourism describes a Mapusa–Anjuna–Vagator bus connection. Its undated destination page is not a timetable: confirm the current route, stop, frequency and return service with the operator."
+  },
+  {
+    "icon": "🛵",
+    "title": "Taxi or hired vehicle",
+    "text": "Agree a lawful drop-off, parking and return meeting point before relying on a vehicle reaching the approach. The map pin is the fort, not a guaranteed vehicle entrance."
+  }
 ];
 
-const distancesKok = [['पणजी (Panaji)', 'सुमार २० किमी'], ['मापुसा (Mapusa)', 'सुमार १० किमी'], ['थिवीम रेल्वे स्थानक', 'सुमार १५ किमी'], ['Mopa विमानतळ', 'सुमार ४० किमी'], ['डाबोलीम विमानतळ', 'सुमार ४५ किमी']];
-const distancesEn = [['Panaji', 'about 20 km'], ['Mapusa', 'about 10 km'], ['Thivim railway station', 'about 15 km'], ['Mopa airport', 'about 40 km'], ['Dabolim airport', 'about 45 km']];
+const distancesKok = [
+  [
+    "मापुसा",
+    "गोवा पर्यटन सुमार 10 किमी म्हणटा; तुमच्या सुरवातीथावन मापिल्लो प्रवास न्हय."
+  ]
+];
+const distancesEn = [
+  [
+    "Mapusa",
+    "Goa Tourism describes about 10 km; not a measured journey from your origin."
+  ]
+];
 
 const L = locale === 'en'
-  ? { eyebrow: 'Getting here in detail', heading: 'Mapusa–Vagator route, then on foot', intro: 'Chapora Fort is close to Vagator, Anjuna and Mapusa. Using the options below you can reach the foot of the fort climb; the last part is almost always on foot.', distTitle: 'Approximate distance (by road)', distNote: 'Distances are approximate; actual time varies with traffic, season and road — check live traffic in maps.', finalTitle: 'Final on-foot climb', finalText: 'From the base parking/road the path up to the fort is short but steep. There is little shade on hot days; carry water, keep hands free and avoid slippery footwear. In monsoon the laterite rock and soil can be slippery — wear sturdy footwear.' }
-  : { eyebrow: 'सविस्तर प्रवास', heading: 'मापुसा–वागातोर मार्ग, मागीर पायी चडण', intro: 'चापोरा किल्लो वागातोर, अंजुना आनी मापुसा हांच्या जवळ आसा. खाली दिल्ले प्रकार वापरून तुमी किल्ल्याच्या चडणीच्या पायथ्याक पावूंक शकतात; शेवटचो भाग नेहमींच पायी चडचो पडटा.', distTitle: 'साधारण अंतर (रस्त्यान)', distNote: 'अंतर साधारण आसात; प्रत्यक्ष वेळ वाहतूक, हंगाम आनी रस्त्याप्रमाणें बदलता – नकाशांत चालू वाहतूक तपासात.', finalTitle: 'शेवटची पायी चडण', finalText: 'पायथ्याच्या पार्किंग/रस्त्या थावन किल्ल्याचेर वचपी वाट छोटी पूण उंच आसा. उश्ण दिवसांत सावली कमी मेळटा; उदक घेवात, हात मोकळे दवरात आनी निसरड्या पादत्राणां टाळात. पावसाळ्यांत लेटराइट दगड आनी माती निसरडी जावंक शकता – घट्ट पादत्राणां वापरात.' };
+  ? { eyebrow: 'Getting here in detail', heading: 'Mapusa–Vagator route, then on foot', intro: 'Chapora Fort is close to Vagator, Anjuna and Mapusa. Check the actual approach and current access before choosing transport.', distTitle: 'Approximate distance (by road)', distNote: 'Distances are approximate; actual time varies with traffic, season and road — check live traffic in maps.', finalTitle: 'Final on-foot climb', finalText: 'From the base parking/road the path up to the fort is short but steep. There is little shade on hot days; carry water, keep hands free and avoid slippery footwear. In monsoon the laterite rock and soil can be slippery — wear sturdy footwear.' }
+  : { eyebrow: 'सविस्तर प्रवास', heading: 'मापुसा–वागातोर मार्ग, मागीर पायी चडण', intro: 'चापोरा किल्लो वागातोर, अंजुना आनी मापुसा हांच्या जवळ आसा. वाहतूक निवडचे आदी खरी वाट आनी चालू रसद तपासात.', distTitle: 'साधारण अंतर (रस्त्यान)', distNote: 'अंतर साधारण आसात; प्रत्यक्ष वेळ वाहतूक, हंगाम आनी रस्त्याप्रमाणें बदलता – नकाशांत चालू वाहतूक तपासात.', finalTitle: 'शेवटची पायी चडण', finalText: 'पायथ्याच्या पार्किंग/रस्त्या थावन किल्ल्याचेर वचपी वाट छोटी पूण उंच आसा. उश्ण दिवसांत सावली कमी मेळटा; उदक घेवात, हात मोकळे दवरात आनी निसरड्या पादत्राणां टाळात. पावसाळ्यांत लेटराइट दगड आनी माती निसरडी जावंक शकता – घट्ट पादत्राणां वापरात.' };
 
 const modes = locale === 'en' ? modesEn : modesKok;
 const distances = locale === 'en' ? distancesEn : distancesKok;

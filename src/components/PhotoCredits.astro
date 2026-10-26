@@ -1,0 +1,6 @@
+---
+import {photos} from '../data/photos';
+interface Props{locale:'kok'|'en'}
+const {locale}=Astro.props;
+---
+<section class="bg-sand-50 py-12"><div class="mx-auto max-w-7xl px-5 lg:px-8"><h2 class="text-2xl font-black">{locale==='en'?'Photograph credits':'फोटो श्रेय'}</h2><ul class="mt-5 space-y-3 text-sm">{photos.map(p=><li><strong>{p.file}</strong> — {p.author} · <a class="underline" href={p.source}>Wikimedia Commons</a> · <a class="underline" href={p.licenceUrl}>{p.licence}</a>. {locale==='en'?p.modification:'आकार बदलिल्लो; पानाची मांडावळ दृश्य कापूंक शकता.'}</li>)}</ul></div></section>
