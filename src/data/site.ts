@@ -48,8 +48,17 @@ export const INDIA_TOURISM_URL = 'https://tourism.gov.in/';
 
 // --- गुणांकन (गूगल नकाशा स्नॅपशॉट) ---------------------------------------
 export const RATING_VALUE = 4.2;
-export const REVIEW_COUNT = 27533;
+export const REVIEW_COUNT = 27591;
 export const ATTRACTION_TYPE = 'Fortress';
+
+// --- म्हायती तपासणी दिस (last verified) -----------------------------------
+// दर मार्गदर्शक पानार दिसपी तपासणी-दिस. दर, वेळा आनी प्रवास-म्हायती बदलता,
+// म्हणून दिस कोणाकूय स्पश्ट दिसचो अशें हें मूल्य वापरतात.
+export const LAST_VERIFIED_ISO = '2026-10-31';
+export const LAST_VERIFIED_LABEL = {
+  en: '31 October 2026',
+  kok: '३१ ऑक्टोबर २०२६'
+};
 
 // --- SEO साइट नांव (संस्था + शार + प्रवासी मार्गदर्शक) ----------------------
 export const SITE_NAME = `Chapora Fort (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME_LOCAL} — प्रवासी मार्गदर्शक`;

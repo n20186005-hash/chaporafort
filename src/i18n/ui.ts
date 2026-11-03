@@ -47,6 +47,7 @@ export const ui: Dict = {
   footerPrivacy: { kok: 'गोपनीयता धोरण', en: 'Privacy policy' },
   footerTerms: { kok: 'सेवा अटी', en: 'Terms of service' },
   footerCookies: { kok: 'कुकी मांडावळ', en: 'Cookie policy' },
+  footerGuides: { kok: 'मार्गदर्शक', en: 'Guides' },
 
   // 404 (चुकीचें पान)
   nfTitle: { kok: 'पान मेळ्ळें ना', en: 'Page not found' },

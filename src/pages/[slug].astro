@@ -1,0 +1,12 @@
+---
+import GuidePage from '../components/GuidePage.astro';
+import { guides } from '../data/guides';
+
+// कोंकणी (default भास) पानां — प्रीफिक्स ना.
+export function getStaticPaths() {
+  return guides.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+---
+<GuidePage guide={guide} locale="kok" />

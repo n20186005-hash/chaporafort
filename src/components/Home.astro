@@ -11,15 +11,22 @@ import StoriesSection from './StoriesSection.astro';
 import SourcesSection from './SourcesSection.astro';
 import {
   ATTRACTION_FULL_NAME, ATTRACTION_FULL_NAME_LOCAL, ATTRACTION_SHORT_NAME, ATTRACTION_ALT_NAMES,
-  CITY_NAME, CITY_NAME_LOCAL, LOCALITY_NAME, STATE_PROVINCE, COUNTRY_NAME, COUNTRY_CODE_2LETTER,
+  CITY_NAME, CITY_NAME_LOCAL, LOCALITY_NAME, STATE_PROVINCE, STATE_PROVINCE_LOCAL, COUNTRY_NAME, COUNTRY_NAME_LOCAL, COUNTRY_CODE_2LETTER,
   POSTAL_CODE, STREET_ADDRESS, LATITUDE, LONGITUDE, PLUS_CODE, MAPS_SHARE_URL, MAPS_EMBED_SRC,
   NEARBY_LANDMARK_1, NEARBY_LANDMARK_1_LOCAL, NEARBY_LANDMARK_2, NEARBY_LANDMARK_2_LOCAL,
   GOVT_TOURISM_URL, RATING_VALUE, REVIEW_COUNT, SITE_ORIGIN, GEO_HIERARCHY
 } from '../data/site';
-import { type Locale } from '../i18n/utils';
+import { type Locale, localeBase } from '../i18n/utils';
+import { GUIDE_CATEGORIES, guidesByCategory } from '../data/guides';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
+const base = localeBase(locale);
+const guideCategories = GUIDE_CATEGORIES.map((c) => ({
+  id: c.id,
+  label: locale === 'en' ? c.en : c.kok,
+  count: guidesByCategory(c.id).length
+}));
 
 const siteUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
 const heroUrl = Astro.site ? new URL('/images/chapora-fort-hero.jpg', Astro.site).href : undefined;
@@ -36,14 +43,14 @@ const photoAlt = locale === 'en'
 
 const L = locale === 'en'
   ? {
-      pageTitle: `${ATTRACTION_FULL_NAME} (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME}, ${STATE_PROVINCE} — visitor guide`,
-      pageDesc: `${ATTRACTION_FULL_NAME} (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME}, North ${STATE_PROVINCE}: history, opening hours, entry, parking, transport, weather, map and nearby places — all on one page.`,
+      pageTitle: `Chapora Fort, Goa: Entry, Timings, Trail & Nearby Places`,
+      pageDesc: `Plan your visit to Chapora Fort in ${CITY_NAME}, North ${STATE_PROVINCE}. Explore entry information, the uphill trail, transport options, nearby beaches, history and practical itineraries.`,
       heroEyebrow: `${CITY_NAME} · Bardez · North ${STATE_PROVINCE}`,
       heroBreadcrumbPre: GEO_HIERARCHY.slice(0, 3).map((g) => g.latin),
       heroH1Sub: `${CITY_NAME}, ${STATE_PROVINCE}, ${COUNTRY_NAME} — a laterite hill fort above Vagator Beach`,
       heroP: `${ATTRACTION_FULL_NAME} is a historic fort in ${CITY_NAME}, Bardez, North ${STATE_PROVINCE}, ${COUNTRY_NAME}, on a hill above the Chapora river, the Arabian Sea and Vagator beach — where laterite ramparts meet history and the sea horizon.`,
       btnPlan: 'Plan your visit', btnMap: 'View map',
-      ratingLabel: 'Google Maps snapshot · 25 Oct 2026', ratingCount: '27,533 reviews',
+      ratingLabel: 'Google Maps snapshot · 25 Oct 2026', ratingCount: '27,591 reviews',
       addrLabel: 'Address', plusLabel: 'Plus code', telLabel: 'Phone',
       histEyebrow: 'About the fort',
       histTitle: 'Ramparts that bend with the shape of the hill',
@@ -81,17 +88,22 @@ const L = locale === 'en'
       ],
       nearFoodTitle: 'Local flavours around', nearFoodP: `Around Vagator–Chapora–Anjuna you find seafood, vegetarian thali, Goan curry-rice, poi, shakuti and bebinca. Choose the actual venue by its current information; this guide does not verify an individual restaurant.`,
       nearFoodList: ['Before climb: light food and enough water.', 'After sunset: local meal in Vagator or Chapora.', 'Allergies / diet: ask about ingredients when ordering.'],
-      faqEyebrow: 'Common questions', faqTitle: 'Frequently asked questions before visiting'
+      faqEyebrow: 'Common questions', faqTitle: 'Frequently asked questions before visiting',
+      guideEyebrow: 'Explore in depth',
+      guideTitle: 'Choose a guide for your visit',
+      guideP: 'This page answers the main questions. For a specific concern, the focused guides go deeper — the fort’s history, planning your visit, what is nearby, food and cafés, and ready-made itineraries.',
+      guideCount: (n: number) => `${n} guides`,
+      guideCta: 'Browse all guides'
     }
   : {
       pageTitle: `${ATTRACTION_FULL_NAME} (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME_LOCAL}, ${STATE_PROVINCE} — प्रवासी मार्गदर्शक`,
       pageDesc: `${ATTRACTION_FULL_NAME} (${ATTRACTION_FULL_NAME_LOCAL}) ${CITY_NAME_LOCAL}, उत्तर ${STATE_PROVINCE}: इतिहास, उगडपाच्यो वेळा, प्रवेश, पार्किंग, प्रवास, हवामान, नकाशो आनी भोंवतणीचीं ठिकाणां — एकाच पानार.`,
       heroEyebrow: `वागातोर · बार्देश · उत्तर गोवा`,
       heroBreadcrumbPre: GEO_HIERARCHY.slice(0, 3).map((g) => `${g.label} (${g.latin})`),
-      heroH1Sub: `${ATTRACTION_FULL_NAME}, ${CITY_NAME} — ${STATE_PROVINCE}, ${COUNTRY_NAME}`,
+      heroH1Sub: `${CITY_NAME_LOCAL} (${CITY_NAME}), ${STATE_PROVINCE_LOCAL}, ${COUNTRY_NAME_LOCAL} — वागातोर किनाऱ्याच्या वयर आशिल्लो लेटराइट डोंगर किल्लो`,
       heroP: `चापोरा किल्ला (Chapora Fort) हो ${CITY_NAME_LOCAL}, बार्देश, उत्तर ${STATE_PROVINCE}, ${COUNTRY_NAME} हांगा आशिल्लो ऐतिहासिक किल्लो आसून चापोरा नदी, अरबी समुद्र आनी वागातोरच्या किनाऱ्याक वयरसून पळयपी, लाल लेटराइट दगडाच्या तटबंदींत इतिहास आनी समुद्री क्षितिज एकठांय येता.`,
       btnPlan: 'भेट नियोजन', btnMap: 'नकाशो पळयात',
-      ratingLabel: 'गुगल नकाशा · 25 ऑक्टोबर 2026', ratingCount: '27,533 अभिप्राय',
+      ratingLabel: 'गुगल नकाशा · 25 ऑक्टोबर 2026', ratingCount: '27,591 अभिप्राय',
       addrLabel: 'पत्तो', plusLabel: 'प्लस कोड', telLabel: 'दूरध्वनी',
       histEyebrow: 'किल्ल्याची ओळख',
       histTitle: 'तटबंदी जी डोंगराच्या आकाराक धरून वळटा',
@@ -130,7 +142,12 @@ const L = locale === 'en'
       nearFoodTitle: 'भोंवतणीचें जेवण',
       nearFoodP: `वागातोर–चापोरा–अंजुना परिसरांत समुद्री मासे, शाकाहारी थाळी, गोवा करी-भात, पोय, शाकुती आनी बेबिंका सारकें स्थानिक खाणें सोदूंक मेळटा. हें संकेतथळ कोणाच्याच उपाहारगृहाची पैसे घेऊन शिफारस करिना.`,
       nearFoodList: ['चडणी आदी: हलकें खाणें आनी पुरेसें उदक.', 'सूर्यास्तानंतर: वागातोर वा चापोरा भागांत स्थानिक जेवण.', 'अॅलर्जी / आहार: ऑर्डर दितना पदार्थांची सामग्री थेट विचारात.'],
-      faqEyebrow: 'सामान्य प्रश्न', faqTitle: 'भेटी आदी वारंवार विचारले जाणारे प्रश्न'
+      faqEyebrow: 'सामान्य प्रश्न', faqTitle: 'भेटी आदी वारंवार विचारले जाणारे प्रश्न',
+      guideEyebrow: 'सविस्तर पळयात',
+      guideTitle: 'तुमच्या भेटेखातीर मार्गदर्शक निवडात',
+      guideP: 'हें पान मुखेल प्रश्नांचीं उत्तरां दिता. खंयच्याय खास गरजेखातीर, वेगळीं मार्गदर्शक पानां आनीक सविस्तर वचतात — किल्ल्याचो इतिहास, भेट नियोजन, भोंवतणचीं थळां, जेवण आनी कॅफे, आनी तयार भोंवडी-मार्ग.',
+      guideCount: (n: number) => `${n} मार्गदर्शक`,
+      guideCta: 'सगळे मार्गदर्शक पळयात'
     };
 
 // FAQ (bilingual)
@@ -190,8 +207,11 @@ const breadcrumbSchema = {
 const organizationSchema = {
   '@context': 'https://schema.org', '@type': 'Organization',
   '@id': siteUrl ? `${siteUrl}#organization` : '#organization',
-  name: 'चापोरा किल्ला प्रवासी मार्गदर्शक',
-  description: 'चापोरा किल्ल्याचो स्वतंत्र, नाफायद्याचो प्रवासी माहिती मार्गदर्शक प्रकल्प.',
+  name: 'Chapora Fort guide',
+  alternateName: ['चापोरा किल्ला प्रवासी मार्गदर्शक'],
+  description: locale === 'en'
+    ? 'An independent, non-commercial visitor information guide to Chapora Fort in North Goa, India.'
+    : 'चापोरा किल्ल्याचो स्वतंत्र, नाफायद्याचो प्रवासी माहिती मार्गदर्शक प्रकल्प.',
   ...(siteUrl ? { url: siteUrl } : {}), ...(logoUrl ? { logo: logoUrl } : {})
 };
 const websiteSchema = {
@@ -234,7 +254,7 @@ const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
             <li aria-current="page" class="text-sand-100">{locale === 'en' ? ATTRACTION_FULL_NAME : `${ATTRACTION_FULL_NAME_LOCAL} (${ATTRACTION_FULL_NAME})`}</li>
           </ol>
         </nav>
-        <h1 class="max-w-4xl text-5xl font-black leading-[1.05] tracking-tight sm:text-7xl">{ATTRACTION_FULL_NAME} <span class="mt-2 block text-2xl font-bold tracking-normal text-sand-100/85 sm:text-3xl">{L.heroH1Sub}</span></h1>
+        <h1 class="max-w-4xl text-5xl font-black leading-[1.05] tracking-tight sm:text-7xl">{locale === 'en' ? ATTRACTION_FULL_NAME : ATTRACTION_FULL_NAME_LOCAL} <span class="mt-2 block text-2xl font-bold tracking-normal text-sand-100/85 sm:text-3xl">{L.heroH1Sub}</span></h1>
         <p class="mt-5 max-w-2xl text-xl leading-9 text-sand-100/92">{L.heroP}</p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a href="#visit" class="rounded-full bg-sand-100 px-5 py-3 font-extrabold text-laterite-900 no-underline">{L.btnPlan}</a>
@@ -327,6 +347,25 @@ const mapSrc = `${MAPS_EMBED_SRC.split('&hl=')[0]}&hl=${mapHl}&gl=IN`;
           <p class="mt-5 text-lg leading-8 text-laterite-900/70">{L.nearFoodP}</p>
           <div class="mt-8 rounded-[2rem] bg-laterite-900 p-7 text-sand-100"><h3 class="text-xl font-black">{locale === 'en' ? 'Handy eating order' : 'खाण्याचो उपयोगी क्रम'}</h3><ol class="mt-4 space-y-3 text-sm leading-7 text-sand-100/80">{L.nearFoodList.map((x) => <li>{x}</li>)}</ol></div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guides" class="fort-grid bg-laterite-100 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <p class="text-sm font-black uppercase tracking-[.18em] text-laterite-500">{L.guideEyebrow}</p>
+      <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight text-laterite-900 sm:text-5xl">{L.guideTitle}</h2>
+      <p class="mt-5 max-w-3xl text-lg leading-8 text-laterite-900/70">{L.guideP}</p>
+      <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {guideCategories.map((c) => (
+          <a href={`${base}/guides/#${c.id}`} class="group flex flex-col justify-between rounded-3xl border border-laterite-900/10 bg-white p-6 no-underline shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+            <span class="text-xl font-black text-laterite-900">{c.label}</span>
+            <span class="mt-3 text-sm font-bold text-laterite-500">{L.guideCount(c.count)}</span>
+          </a>
+        ))}
+      </div>
+      <div class="mt-8">
+        <a href={`${base}/guides/`} class="inline-flex rounded-full bg-sea-900 px-6 py-3 font-extrabold text-white no-underline">{L.guideCta}</a>
       </div>
     </div>
   </section>

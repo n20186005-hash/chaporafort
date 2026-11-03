@@ -1,0 +1,12 @@
+---
+import GuidePage from '../../components/GuidePage.astro';
+import { guides } from '../../data/guides';
+
+// इंग्रजी पानां — `/en/` प्रीफिक्स.
+export function getStaticPaths() {
+  return guides.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+---
+<GuidePage guide={guide} locale="en" />
